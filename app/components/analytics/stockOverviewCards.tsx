@@ -65,9 +65,9 @@ export default function StockOverviewCards({
         <p className="mt-2 text-2xl font-bold text-white">
           {loading
             ? "Loading..."
-            : error || !overview
-              ? "Pending live data"
-              : `$${overview.price.toFixed(2)}`}
+            : error || !overview || overview.price === undefined
+            ? "Pending live data"
+            : `$${overview.price.toFixed(2)}`}
         </p>
 
         <p
@@ -77,9 +77,9 @@ export default function StockOverviewCards({
         >
           {loading
             ? "Loading"
-            : error || !overview
-              ? "Pending"
-              : `${isPositive ? "+" : ""}${overview.change.toFixed(2)} (${overview.changePercent})`}
+            : error || !overview || overview.change === undefined
+            ? "Pending"
+            : `${isPositive ? "+" : ""}${(overview.change || 0).toFixed(2)} (${overview.changePercent})`}
         </p>
       </div>
 
@@ -92,8 +92,8 @@ export default function StockOverviewCards({
           {loading
             ? "Loading..."
             : error || !overview
-              ? "Pending live data"
-              : overview.marketCap}
+            ? "Pending live data"
+            : overview.marketCap}
         </p>
 
         <p className="mt-1 text-sm text-slate-400">

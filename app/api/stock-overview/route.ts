@@ -1,7 +1,15 @@
-import { NextResponse } from "next/server"
+﻿import { NextResponse } from "next/server"
 
 type CachedOverview = {
-  data: unknown
+  data: {
+    ticker: string
+    price: number
+    change: number
+    changePercent: string
+    marketCap: string
+    companyName: string
+    updatedAt: string
+  }
   timestamp: number
 }
 
@@ -14,7 +22,7 @@ function isValidTicker(ticker: string) {
 }
 
 function formatMarketCap(value: string | number | undefined) {
-  if (!value) return "Pending"
+  if (value === undefined || value === null) return "Pending"
 
   const numberValue = Number(value)
 
@@ -35,87 +43,62 @@ function formatMarketCap(value: string | number | undefined) {
   return `$${numberValue.toLocaleString()}`
 }
 
+const FINNHUB_BASE = "https://finnhub.io/api/v1"
+
 export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const ticker = searchParams.get("ticker")?.toUpperCase()
+
+  if (!ticker || !isValidTicker(ticker)) {
+    return new Response(JSON.stringify({ error: "Missing or invalid ticker" }), { status: 400 })
+  }
+
+  const now = Date.now()
+  const cachedOverview = overviewCache.get(ticker)
+
+  if (cachedOverview && now - cachedOverview.timestamp < CACHE_DURATION_MS) {
+    return NextResponse.json(cachedOverview.data, {
+      headers: {
+        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
+      },
+    })
+  }
+
+  const apiKey = process.env.FINNHUB_API_KEY
+
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "Missing Finnhub API key" },
+      { status: 500 }
+    )
+  }
+
   try {
-    const { searchParams } = new URL(req.url)
-    const ticker = searchParams.get("ticker")?.trim().toUpperCase()
-
-    if (!ticker) {
-      return NextResponse.json({ error: "Missing ticker" }, { status: 400 })
-    }
-
-    if (!isValidTicker(ticker)) {
-      return NextResponse.json({ error: "Invalid ticker" }, { status: 400 })
-    }
-
-    const cached = overviewCache.get(ticker)
-    const now = Date.now()
-
-    if (cached && now - cached.timestamp < CACHE_DURATION_MS) {
-      return NextResponse.json(cached.data, {
-        headers: {
-          "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
-        },
-      })
-    }
-
-    const apiKey = process.env.ALPHA_VANTAGE_API_KEY
-
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Missing Alpha Vantage API key" },
-        { status: 500 }
-      )
-    }
-
-    const [quoteRes, overviewRes] = await Promise.all([
-      fetch(
-        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${apiKey}`
-      ),
-      fetch(
-        `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${apiKey}`
-      ),
+    const [quoteRes, profileRes] = await Promise.all([
+      fetch(`${FINNHUB_BASE}/quote?symbol=${ticker}&token=${apiKey}`),
+      fetch(`${FINNHUB_BASE}/stock/profile2?symbol=${ticker}&token=${apiKey}`),
     ])
 
-    const quoteData = await quoteRes.json()
-    const overviewData = await overviewRes.json()
+    const [quote, profile] = await Promise.all([quoteRes.json(), profileRes.json()])
 
-    if (
-      quoteData.Note ||
-      quoteData.Information ||
-      overviewData.Note ||
-      overviewData.Information
-    ) {
-      if (cached) {
-        return NextResponse.json(cached.data, {
-          headers: {
-            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
-          },
-        })
-      }
-
-      return NextResponse.json(
-        { error: "Rate limit reached. Try again later." },
-        { status: 429 }
-      )
+    if (!quoteRes.ok || !profileRes.ok || quote?.c === undefined || quote?.pc === undefined) {
+      throw new Error("No price data")
     }
 
-    const quote = quoteData["Global Quote"]
-
-    if (!quote) {
-      return NextResponse.json(
-        { error: "No quote data found" },
-        { status: 404 }
-      )
-    }
+    const price = Number(quote.c)
+    const prevClose = Number(quote.pc)
+    const change = Number(price - prevClose)
+    const changePercent = prevClose
+      ? `${((change / prevClose) * 100).toFixed(2)}%`
+      : "0.00%"
 
     const responseData = {
       ticker,
-      price: Number(quote["05. price"]),
-      change: Number(quote["09. change"]),
-      changePercent: quote["10. change percent"] || "Pending",
-      marketCap: formatMarketCap(overviewData.MarketCapitalization),
-      companyName: overviewData.Name || ticker,
+      price,
+      change,
+      changePercent,
+      marketCap: formatMarketCap(profile?.marketCapitalization),
+      companyName: profile?.name || ticker,
       updatedAt: new Date().toISOString(),
     }
 
@@ -130,8 +113,23 @@ export async function GET(req: Request) {
       },
     })
   } catch {
+    if (cachedOverview) {
+      return NextResponse.json(
+        {
+          ...cachedOverview.data,
+          warning:
+            "Showing cached data while live market data could not be retrieved.",
+        },
+        {
+          headers: {
+            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
+          },
+        }
+      )
+    }
+
     return NextResponse.json(
-      { error: "Failed to fetch stock overview" },
+      { error: "Failed to fetch data" },
       { status: 500 }
     )
   }

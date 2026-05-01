@@ -5,39 +5,42 @@ export type ChartPoint = {
   price: number
 }
 
-type AlphaVantageTimeSeries = Record<
+type FinnhubTimeSeries = Record<
   string,
   {
-    "1. open": string
-    "2. high": string
-    "3. low": string
-    "4. close": string
-    "5. volume": string
+    o: string // open
+    h: string // high
+    l: string // low
+    c: string // close
+    v: string // volume
   }
 >
 
-export function getAlphaVantageFunction(range: ChartRange) {
+// Updated function to fetch Finnhub data
+export function getFinnhubFunction(range: ChartRange) {
   if (range === "1D") {
     return {
-      functionName: "TIME_SERIES_INTRADAY",
-      interval: "5min",
+      functionName: "intraday",
+      interval: "5",
     }
   }
 
   return {
-    functionName: "TIME_SERIES_DAILY",
+    functionName: "daily",
     interval: null,
   }
 }
 
+// Updated Series Key function for Finnhub
 export function getSeriesKey(range: ChartRange) {
   if (range === "1D") {
-    return "Time Series (5min)"
+    return "intraday" // Finnhub's intraday response key
   }
 
-  return "Time Series (Daily)"
+  return "daily" // Finnhub's daily response key
 }
 
+// Adjusted Point Limit for Finnhub's Data
 export function getPointLimit(range: ChartRange) {
   switch (range) {
     case "1D":
@@ -55,25 +58,28 @@ export function getPointLimit(range: ChartRange) {
   }
 }
 
-export function formatChartData(
-  timeSeries: AlphaVantageTimeSeries,
-  range: ChartRange
-): ChartPoint[] {
-  const pointLimit = getPointLimit(range)
-
-  return Object.entries(timeSeries)
-    .slice(0, pointLimit)
-    .reverse()
-    .map(([timestamp, values]) => {
-      const closePrice = Number(values["4. close"])
-
-      return {
-        label: formatChartLabel(timestamp, range),
-        price: closePrice,
-      }
-    })
+// Adjusted function to format Finnhub chart data
+export function formatFinnhubChart(points: any[], range: string) {
+  return points.map(p => ({
+    price: parseFloat(p.c), // Finnhub's close price is in `c`
+    label: formatLabel(p.t, range) // `t` is the timestamp in Finnhub's response
+  }))
 }
 
+function formatLabel(ts: number, range: string) {
+  const date = new Date(ts * 1000)
+
+  if (range === "1D") {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  }
+
+  return date.toLocaleDateString([], {
+    month: "short",
+    day: "numeric"
+  })
+}
+
+// Adjusted Chart Label formatting for Finnhub data
 function formatChartLabel(timestamp: string, range: ChartRange) {
   const date = new Date(timestamp.replace(" ", "T"))
 
@@ -97,6 +103,7 @@ function formatChartLabel(timestamp: string, range: ChartRange) {
   })
 }
 
+// Price summary calculation stays the same as the price data handling changes
 export function calculatePriceSummary(chartData: ChartPoint[]) {
   const first = chartData[0]?.price ?? 0
   const last = chartData[chartData.length - 1]?.price ?? 0
@@ -109,4 +116,11 @@ export function calculatePriceSummary(chartData: ChartPoint[]) {
     changePercent,
     isPositive: changeAmount >= 0,
   }
+}
+
+export function formatChartData(data: { price: number; timestamp: number }[], range: string) {
+  return data.map(item => ({
+    price: item.price,
+    label: formatLabel(item.timestamp, range),
+  }))
 }
