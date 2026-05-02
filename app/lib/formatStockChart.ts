@@ -5,83 +5,54 @@ export type ChartPoint = {
   price: number
 }
 
-type FinnhubTimeSeries = Record<
-  string,
-  {
-    o: string // open
-    h: string // high
-    l: string // low
-    c: string // close
-    v: string // volume
-  }
->
+export type RawChartPoint = {
+  timestamp: number
+  price: number
+}
 
-// Updated function to fetch Finnhub data
-export function getFinnhubFunction(range: ChartRange) {
-  if (range === "1D") {
-    return {
-      functionName: "intraday",
-      interval: "5",
-    }
+export function getFinnhubResolution(range: ChartRange) {
+  switch (range) {
+    case "1D":
+      return "5"
+    case "7D":
+      return "30"
+    case "1M":
+      return "D"
+    case "3M":
+      return "D"
+    case "1Y":
+      return "W"
+    default:
+      return "D"
+  }
+}
+
+export function getUnixRange(range: ChartRange) {
+  const now = Math.floor(Date.now() / 1000)
+
+  const secondsByRange: Record<ChartRange, number> = {
+    "1D": 60 * 60 * 24,
+    "7D": 60 * 60 * 24 * 7,
+    "1M": 60 * 60 * 24 * 30,
+    "3M": 60 * 60 * 24 * 90,
+    "1Y": 60 * 60 * 24 * 365,
   }
 
   return {
-    functionName: "daily",
-    interval: null,
+    from: now - secondsByRange[range],
+    to: now,
   }
 }
 
-// Updated Series Key function for Finnhub
-export function getSeriesKey(range: ChartRange) {
-  if (range === "1D") {
-    return "intraday" // Finnhub's intraday response key
-  }
-
-  return "daily" // Finnhub's daily response key
-}
-
-// Adjusted Point Limit for Finnhub's Data
-export function getPointLimit(range: ChartRange) {
-  switch (range) {
-    case "1D":
-      return 78 // roughly one trading day of 5-min candles
-    case "7D":
-      return 7
-    case "1M":
-      return 22
-    case "3M":
-      return 66
-    case "1Y":
-      return 252
-    default:
-      return 22
-  }
-}
-
-// Adjusted function to format Finnhub chart data
-export function formatFinnhubChart(points: any[], range: string) {
-  return points.map(p => ({
-    price: parseFloat(p.c), // Finnhub's close price is in `c`
-    label: formatLabel(p.t, range) // `t` is the timestamp in Finnhub's response
+export function formatChartData(data: RawChartPoint[], range: ChartRange) {
+  return data.map((item) => ({
+    price: item.price,
+    label: formatChartLabel(item.timestamp, range),
   }))
 }
 
-function formatLabel(ts: number, range: string) {
-  const date = new Date(ts * 1000)
-
-  if (range === "1D") {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  }
-
-  return date.toLocaleDateString([], {
-    month: "short",
-    day: "numeric"
-  })
-}
-
-// Adjusted Chart Label formatting for Finnhub data
-function formatChartLabel(timestamp: string, range: ChartRange) {
-  const date = new Date(timestamp.replace(" ", "T"))
+function formatChartLabel(timestamp: number, range: ChartRange) {
+  const date = new Date(timestamp * 1000)
 
   if (range === "1D") {
     return date.toLocaleTimeString("en-US", {
@@ -90,7 +61,15 @@ function formatChartLabel(timestamp: string, range: ChartRange) {
     })
   }
 
-  if (range === "7D" || range === "1M") {
+  if (range === "7D") {
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    })
+  }
+
+  if (range === "1M" || range === "3M") {
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -103,7 +82,6 @@ function formatChartLabel(timestamp: string, range: ChartRange) {
   })
 }
 
-// Price summary calculation stays the same as the price data handling changes
 export function calculatePriceSummary(chartData: ChartPoint[]) {
   const first = chartData[0]?.price ?? 0
   const last = chartData[chartData.length - 1]?.price ?? 0
@@ -116,11 +94,4 @@ export function calculatePriceSummary(chartData: ChartPoint[]) {
     changePercent,
     isPositive: changeAmount >= 0,
   }
-}
-
-export function formatChartData(data: { price: number; timestamp: number }[], range: string) {
-  return data.map(item => ({
-    price: item.price,
-    label: formatLabel(item.timestamp, range),
-  }))
 }

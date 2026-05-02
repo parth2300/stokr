@@ -32,7 +32,7 @@ export default function StockOverviewCards({
         setError("")
 
         const res = await fetch(
-          `/api/stock-overview?ticker=${encodeURIComponent(ticker)}`
+          `/api/stock-overview?ticker=${ticker}`
         )
 
         const data = await res.json()

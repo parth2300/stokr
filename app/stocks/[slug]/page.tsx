@@ -138,7 +138,7 @@ export default async function StockAnalysisPage({
     params: Promise<{ slug: string }>
 }) {
     const { slug } = await params
-    const ticker = getTickerFromSlug(slug)
+    const ticker = (slug?.split("-")[0] || "").toUpperCase()
 
     const cachedAnalysis = await getCachedAnalysis(ticker)
     const aiAnalysis = cachedAnalysis?.analysis_json as AnalysisJson | null

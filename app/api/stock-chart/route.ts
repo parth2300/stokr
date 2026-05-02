@@ -1,120 +1,133 @@
 ﻿import { NextResponse } from "next/server"
 import {
-    ChartRange,
-    formatChartData,
-    getFinnhubFunction,
+  ChartRange,
+  calculatePriceSummary,
+  formatChartData,
+  getFinnhubResolution,
+  getUnixRange,
+  RawChartPoint,
 } from "../../lib/formatStockChart"
+import { getFinnhubCandles, isValidTicker } from "../../lib/finnhub"
+import { getMarketCache, saveMarketCache } from "../../lib/marketCache"
 
-const FINNHUB_BASE = "https://finnhub.io/api/v1"
+type StockChartResponse = {
+  ticker: string
+  range: ChartRange
+  price: number
+  changeAmount: number
+  changePercent: number
+  isPositive: boolean
+  chartData: { label: string; price: number }[]
+  updatedAt: string
+  warning?: string
+}
 
 type CachedChartData = {
-  data: {
-    ticker: string
-    range: ChartRange
-    price: number
-    changeAmount: number
-    changePercent: number
-    isPositive: boolean
-    chartData: { label: string; price: number }[]
-    updatedAt: string
-    isFallback?: boolean
-    warning?: string
-  }
+  data: StockChartResponse
   timestamp: number
 }
 
 const chartCache = new Map<string, CachedChartData>()
-const CACHE_DURATION_MS = 15 * 60 * 1000 // 15 minutes
 
-function getUnixRange(range: string): { from: number; to: number } {
-  const now = Math.floor(Date.now() / 1000)
+const CACHE_DURATION_BY_RANGE: Record<ChartRange, number> = {
+  "1D": 5 * 60 * 1000,
+  "7D": 15 * 60 * 1000,
+  "1M": 60 * 60 * 1000,
+  "3M": 6 * 60 * 60 * 1000,
+  "1Y": 12 * 60 * 60 * 1000,
+}
 
-  const ranges: Record<string, number> = {
-    "1D": 60 * 60 * 24,
-    "7D": 60 * 60 * 24 * 7,
-    "1M": 60 * 60 * 24 * 30,
-    "3M": 60 * 60 * 24 * 90,
-    "1Y": 60 * 60 * 24 * 365,
-  }
-
-  return {
-    from: now - ranges[range],
-    to: now,
-  }
+function isValidRange(range: string): range is ChartRange {
+  return ["1D", "7D", "1M", "3M", "1Y"].includes(range)
 }
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const ticker = searchParams.get("ticker")
-  const range = (searchParams.get("range") as ChartRange) || "1M"
-
-  if (!ticker) {
-    return new Response(JSON.stringify({ error: "Missing ticker" }), { status: 400 })
-  }
-
-  if (!["1D", "7D", "1M", "3M", "1Y"].includes(range)) {
-    return new Response(JSON.stringify({ error: "Invalid range parameter" }), { status: 400 })
-  }
-
-  const cacheKey = `${ticker}:${range}`
-  const now = Date.now()
-  const cached = chartCache.get(cacheKey)
-
-  if (cached && now - cached.timestamp < CACHE_DURATION_MS) {
-    return NextResponse.json(cached.data, {
-      headers: {
-        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
-      },
-    })
-  }
-
-  const { interval } = getFinnhubFunction(range)
-  const { from, to } = getUnixRange(range)
-  const apiKey = process.env.FINNHUB_API_KEY
-
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: "Missing Finnhub API key" }), { status: 500 })
-  }
-
   try {
-    const res = await fetch(
-      `${FINNHUB_BASE}/stock/candle?symbol=${ticker}&resolution=${interval || "D"}&from=${from}&to=${to}&token=${apiKey}`
-    )
+    const { searchParams } = new URL(req.url)
+    const ticker = searchParams.get("ticker")?.trim().toUpperCase()
+    const rangeParam = searchParams.get("range")?.trim().toUpperCase() || "1M"
 
-    const data = await res.json()
-
-    if (!res.ok || data?.s !== "ok" || !Array.isArray(data?.t) || !Array.isArray(data?.c)) {
-      throw new Error("No chart data")
+    if (!ticker) {
+      return NextResponse.json({ error: "Missing ticker" }, { status: 400 })
     }
 
-    const chartData = data.t.map((timestamp: number, i: number) => ({
-      price: Number(data.c[i]),
+    if (!isValidTicker(ticker)) {
+      return NextResponse.json({ error: "Invalid ticker" }, { status: 400 })
+    }
+
+    if (!isValidRange(rangeParam)) {
+      return NextResponse.json({ error: "Invalid range" }, { status: 400 })
+    }
+
+    const supabaseCached = await getMarketCache({
+      ticker,
+      type: "chart",
+      range: rangeParam,
+    })
+
+    if (supabaseCached) {
+      return NextResponse.json({
+        ...supabaseCached,
+        source: "cache",
+      })
+    }
+
+    const cacheKey = `${ticker}:${rangeParam}`
+    const now = Date.now()
+    const memoryCached = chartCache.get(cacheKey)
+
+    if (memoryCached && now - memoryCached.timestamp < CACHE_DURATION_BY_RANGE[rangeParam]) {
+      return NextResponse.json({
+        ...memoryCached.data,
+        source: "cache",
+      })
+    }
+
+    const { from, to } = getUnixRange(rangeParam)
+    const resolution = getFinnhubResolution(rangeParam)
+
+    const rawData = await getFinnhubCandles({
+      ticker,
+      resolution,
+      from,
+      to,
+    })
+
+    if (
+      rawData.s !== "ok" ||
+      !Array.isArray(rawData.t) ||
+      !Array.isArray(rawData.c) ||
+      rawData.t.length === 0 ||
+      rawData.c.length === 0
+    ) {
+      throw new Error("No chart data found for this ticker")
+    }
+
+    const rawChartData: RawChartPoint[] = rawData.t.map((timestamp, index) => ({
       timestamp,
+      price: Number(rawData.c?.[index] ?? 0),
     }))
 
-    if (chartData.length === 0) {
-      throw new Error("No chart data")
-    }
+    const chartData = formatChartData(rawChartData, rangeParam)
+    const summary = calculatePriceSummary(chartData)
 
-    const formattedChartData = formatChartData(chartData, range)
-
-    const first = formattedChartData[0]
-    const last = formattedChartData[formattedChartData.length - 1]
-    const changeAmount = last.price - first.price
-    const changePercent = first.price
-      ? (changeAmount / first.price) * 100
-      : 0
-
-    const responseData = {
+    const responseData: StockChartResponse = {
       ticker,
-      range,
-      price: last.price,
-      changeAmount,
-      changePercent,
-      isPositive: changeAmount >= 0,
-      chartData: formattedChartData,
+      range: rangeParam,
+      price: summary.price,
+      changeAmount: summary.changeAmount,
+      changePercent: summary.changePercent,
+      isPositive: summary.isPositive,
+      chartData,
       updatedAt: new Date().toISOString(),
     }
+
+    await saveMarketCache({
+      ticker,
+      type: "chart",
+      range: rangeParam,
+      data: responseData,
+    })
 
     chartCache.set(cacheKey, {
       data: responseData,
@@ -126,14 +139,19 @@ export async function GET(req: Request) {
         "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
       },
     })
-  } catch {
+  } catch (err) {
+    const { searchParams } = new URL(req.url)
+    const ticker = searchParams.get("ticker")?.trim().toUpperCase()
+    const rangeParam = searchParams.get("range")?.trim().toUpperCase() || "1M"
+    const cacheKey = ticker ? `${ticker}:${rangeParam}` : ""
+    const cached = chartCache.get(cacheKey)
+
     if (cached) {
       return NextResponse.json(
         {
           ...cached.data,
-          isFallback: true,
           warning:
-            "Showing cached chart data while live market data is temporarily unavailable.",
+            "Showing cached chart data while Finnhub market data is temporarily unavailable.",
         },
         {
           headers: {
@@ -143,12 +161,12 @@ export async function GET(req: Request) {
       )
     }
 
-    return new Response(
-      JSON.stringify({
-        error: "Chart failed",
-        isFallback: true,
-      }),
-      { status: 500 }
+    return NextResponse.json(
+      {
+        error:
+          err instanceof Error ? err.message : "Failed to fetch Finnhub chart data",
+      },
+      { status: 503 }
     )
   }
 }

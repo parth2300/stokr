@@ -47,11 +47,10 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
         setError("")
 
         const res = await fetch(
-          `/api/stock-chart?ticker=${encodeURIComponent(
-            ticker
-          )}&range=${selectedRange}`
+          `/api/stock-chart?ticker=${encodeURIComponent(ticker)}&range=${selectedRange}`
         )
-
+        console.log("Request URL:", `/api/stock-chart?ticker=${ticker}&range=${selectedRange}`);
+        console.log("Response status:", res.status);
         const data = await res.json()
 
         if (!res.ok) {

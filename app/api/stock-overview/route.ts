@@ -1,25 +1,26 @@
 ﻿import { NextResponse } from "next/server"
+import { getFinnhubProfile, getFinnhubQuote, isValidTicker } from "../../lib/finnhub"
+import { getMarketCache, saveMarketCache } from "../../lib/marketCache"
+
+type StockOverviewResponse = {
+  ticker: string
+  price: number
+  change: number
+  changePercent: string
+  marketCap: string
+  companyName: string
+  updatedAt: string
+  source?: "finnhub" | "cache"
+  warning?: string
+}
 
 type CachedOverview = {
-  data: {
-    ticker: string
-    price: number
-    change: number
-    changePercent: string
-    marketCap: string
-    companyName: string
-    updatedAt: string
-  }
+  data: StockOverviewResponse
   timestamp: number
 }
 
 const overviewCache = new Map<string, CachedOverview>()
-
-const CACHE_DURATION_MS = 15 * 60 * 1000 // 15 minutes
-
-function isValidTicker(ticker: string) {
-  return /^[A-Z]{1,10}$/.test(ticker)
-}
+const CACHE_DURATION_MS = 60 * 1000 // 1 min
 
 function formatMarketCap(value: string | number | undefined) {
   if (value === undefined || value === null) return "Pending"
@@ -28,79 +29,93 @@ function formatMarketCap(value: string | number | undefined) {
 
   if (Number.isNaN(numberValue)) return "Pending"
 
-  if (numberValue >= 1_000_000_000_000) {
-    return `$${(numberValue / 1_000_000_000_000).toFixed(2)}T`
+  // Finnhub profile2 returns marketCapitalization in millions.
+  const marketCapUsd = numberValue * 1_000_000
+
+  if (marketCapUsd >= 1_000_000_000_000) {
+    return `$${(marketCapUsd / 1_000_000_000_000).toFixed(2)}T`
   }
 
-  if (numberValue >= 1_000_000_000) {
-    return `$${(numberValue / 1_000_000_000).toFixed(2)}B`
+  if (marketCapUsd >= 1_000_000_000) {
+    return `$${(marketCapUsd / 1_000_000_000).toFixed(2)}B`
   }
 
-  if (numberValue >= 1_000_000) {
-    return `$${(numberValue / 1_000_000).toFixed(2)}M`
+  if (marketCapUsd >= 1_000_000) {
+    return `$${(marketCapUsd / 1_000_000).toFixed(2)}M`
   }
 
-  return `$${numberValue.toLocaleString()}`
+  return `$${marketCapUsd.toLocaleString()}`
 }
 
-const FINNHUB_BASE = "https://finnhub.io/api/v1"
-
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const ticker = searchParams.get("ticker")?.toUpperCase()
-
-  if (!ticker || !isValidTicker(ticker)) {
-    return new Response(JSON.stringify({ error: "Missing or invalid ticker" }), { status: 400 })
-  }
-
-  const now = Date.now()
-  const cachedOverview = overviewCache.get(ticker)
-
-  if (cachedOverview && now - cachedOverview.timestamp < CACHE_DURATION_MS) {
-    return NextResponse.json(cachedOverview.data, {
-      headers: {
-        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
-      },
-    })
-  }
-
-  const apiKey = process.env.FINNHUB_API_KEY
-
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "Missing Finnhub API key" },
-      { status: 500 }
-    )
-  }
-
   try {
-    const [quoteRes, profileRes] = await Promise.all([
-      fetch(`${FINNHUB_BASE}/quote?symbol=${ticker}&token=${apiKey}`),
-      fetch(`${FINNHUB_BASE}/stock/profile2?symbol=${ticker}&token=${apiKey}`),
-    ])
+    const { searchParams } = new URL(req.url)
+    const ticker = searchParams.get("ticker")?.trim().toUpperCase()
 
-    const [quote, profile] = await Promise.all([quoteRes.json(), profileRes.json()])
-
-    if (!quoteRes.ok || !profileRes.ok || quote?.c === undefined || quote?.pc === undefined) {
-      throw new Error("No price data")
+    if (!ticker) {
+      return NextResponse.json({ error: "Missing ticker" }, { status: 400 })
     }
 
-    const price = Number(quote.c)
-    const prevClose = Number(quote.pc)
-    const change = Number(price - prevClose)
-    const changePercent = prevClose
-      ? `${((change / prevClose) * 100).toFixed(2)}%`
-      : "0.00%"
+    if (!isValidTicker(ticker)) {
+      return NextResponse.json({ error: "Invalid ticker" }, { status: 400 })
+    }
 
-    const responseData = {
+    const now = Date.now()
+
+    const supabaseCached = await getMarketCache({
+      ticker,
+      type: "overview",
+    })
+
+    if (supabaseCached) {
+      return NextResponse.json({
+        ...supabaseCached,
+        source: "cache",
+      })
+    }
+
+    const memoryCached = overviewCache.get(ticker)
+
+    if (memoryCached && now - memoryCached.timestamp < CACHE_DURATION_MS) {
+      return NextResponse.json({
+        ...memoryCached.data,
+        source: "cache",
+      })
+    }
+
+    const [quote, profile] = await Promise.all([getFinnhubQuote(ticker), getFinnhubProfile(ticker)])
+
+    const price = Number(quote.c)
+    const previousClose = Number(quote.pc)
+
+    if (!Number.isFinite(price) || price <= 0) {
+      throw new Error("No quote data found for this ticker")
+    }
+
+    const change = Number.isFinite(Number(quote.d)) ? Number(quote.d) : previousClose ? price - previousClose : 0
+    const changePercent = Number.isFinite(Number(quote.dp))
+      ? `${Number(quote.dp).toFixed(2)}%`
+      : previousClose
+        ? `${((change / previousClose) * 100).toFixed(2)}%`
+        : "0.00%"
+
+    const responseData: StockOverviewResponse = {
       ticker,
       price,
       change,
       changePercent,
-      marketCap: formatMarketCap(profile?.marketCapitalization),
-      companyName: profile?.name || ticker,
+      marketCap: formatMarketCap(profile.marketCapitalization),
+      companyName: profile.name || ticker,
       updatedAt: new Date().toISOString(),
+      source: "finnhub",
     }
+
+    // Cache the data
+    await saveMarketCache({
+      ticker,
+      type: "overview",
+      data: responseData,
+    })
 
     overviewCache.set(ticker, {
       data: responseData,
@@ -112,25 +127,29 @@ export async function GET(req: Request) {
         "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
       },
     })
-  } catch {
-    if (cachedOverview) {
-      return NextResponse.json(
-        {
-          ...cachedOverview.data,
-          warning:
-            "Showing cached data while live market data could not be retrieved.",
-        },
-        {
-          headers: {
-            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900",
-          },
-        }
-      )
+  } catch (err) {
+    const { searchParams } = new URL(req.url)
+    const ticker = searchParams.get("ticker")?.trim().toUpperCase()
+
+    if (ticker && isValidTicker(ticker)) {
+      const cached = await getMarketCache({
+        ticker,
+        type: "overview",
+      })
+
+      if (cached) {
+        return NextResponse.json({
+          ...cached,
+          source: "cache",
+        })
+      }
     }
 
     return NextResponse.json(
-      { error: "Failed to fetch data" },
-      { status: 500 }
+      {
+        error: err instanceof Error ? err.message : "Failed to fetch Finnhub overview data",
+      },
+      { status: 503 }
     )
   }
 }

@@ -41,8 +41,8 @@ export default function TopStocksTable() {
   <div className="w-full max-w-[460px]">
     <div className="rounded-[28px] border border-[#7C9DFF]/70 bg-white/[0.03] p-3 shadow-[0_0_18px_rgba(124,157,255,0.16)] backdrop-blur-xl">
       <div className="mb-3 px-3">
-        <h2 className="text-xl font-bold text-blue-100">Top 10 Active Today</h2>
-        <p className="text-xs text-slate-400">Most actively traded stocks</p>
+        <h2 className="text-xl font-bold text-blue-100">Popular Stocks</h2>
+        <p className="text-xs text-slate-400">Commonly searched stocks</p>
       </div>
 
       <div className="grid grid-cols-[1fr_80px_90px] border-b border-[#7C9DFF]/55 px-3 pb-2 text-sm font-bold text-blue-100">
@@ -82,7 +82,7 @@ export default function TopStocksTable() {
               <div>
                 <p className="font-semibold text-white">{stock.ticker}</p>
                 <p className="text-xs text-slate-500">
-                  Vol {stock.volume.toLocaleString()}
+                  Vol {stock.volume ? stock.volume.toLocaleString() : "N/A"}
                 </p>
               </div>
 
@@ -103,7 +103,7 @@ export default function TopStocksTable() {
     </div>
 
     <p className="mt-3 px-2 text-center text-xs leading-relaxed text-slate-500">
-      Market data is cached and refreshed approximately every 15 minutes. Prices may be delayed and should not be treated as real-time trading data.
+      Market data is cached and refreshed approximately every 15 minutes. This list is curated and not ranked by trading volume.
     </p>
   </div>
 )
