@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 import NavBar from "@/app/components/navBar"
 import StockPriceChart from "@/app/components/analytics/stockPriceChart"
 import { appleAnalytics } from "@/app/lib/mock/appleAnalytics"
@@ -5,6 +8,7 @@ import { getCachedAnalysis } from "@/app/lib/analysisCache"
 import FinancialMetricCards from "@/app/components/analytics/financialMetricCards"
 import FilingComparisonCard from "@/app/components/analytics/filingComparisonCard"
 import StockOverviewCards from "@/app/components/analytics/stockOverviewCards"
+import AnalysisReportLoading from "@/app/components/analytics/analysisReportLoading"
 
 function getTickerFromSlug(slug: string) {
     return slug.replace("-stock-analysis", "").toUpperCase()
@@ -82,6 +86,19 @@ type AnalysisJson = {
     }[]
 }
 
+type FinancialMetricsApiResponse = {
+    financialScore?: number
+    valuationScore?: number
+    finalFundamentalScore?: number
+}
+
+type StockOverviewApiResponse = {
+    price?: number
+    change?: number
+    changePercent?: string
+    marketCap?: string
+}
+
 function normalizeRisks(risks: (AnalysisRisk | string)[] | undefined, fallback: AnalysisRisk[]) {
     if (!risks || risks.length === 0) return fallback
 
@@ -103,6 +120,38 @@ function getRatingFromScore(score: number) {
     if (score >= 70) return "Stable"
     if (score >= 50) return "Watch"
     return "Weak"
+}
+
+async function getFinancialMetrics(ticker: string): Promise<FinancialMetricsApiResponse | null> {
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+
+        const res = await fetch(`${baseUrl}/api/sec/metrics?ticker=${ticker}`, {
+            cache: "no-store",
+        })
+
+        if (!res.ok) return null
+
+        return res.json()
+    } catch {
+        return null
+    }
+}
+
+async function getStockOverview(ticker: string): Promise<StockOverviewApiResponse | null> {
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+
+        const res = await fetch(`${baseUrl}/api/stock-overview?ticker=${ticker}`, {
+            cache: "no-store",
+        })
+
+        if (!res.ok) return null
+
+        return res.json()
+    } catch {
+        return null
+    }
 }
 
 function PlaceholderChart({ ticker }: { ticker: string }) {
@@ -138,15 +187,39 @@ export default async function StockAnalysisPage({
     params: Promise<{ slug: string }>
 }) {
     const { slug } = await params
-    const ticker = (slug?.split("-")[0] || "").toUpperCase()
+    const ticker = getTickerFromSlug(slug)
 
-    const cachedAnalysis = await getCachedAnalysis(ticker)
-    const aiAnalysis = cachedAnalysis?.analysis_json as AnalysisJson | null
+    const [cachedAnalysis, financialMetrics, marketOverview] = await Promise.all([
+        getCachedAnalysis(ticker),
+        getFinancialMetrics(ticker),
+        getStockOverview(ticker),
+    ])
+
+    const rawAnalysis = cachedAnalysis?.analysis_json
+
+    const aiAnalysis =
+        typeof rawAnalysis === "string"
+            ? (JSON.parse(rawAnalysis) as AnalysisJson)
+            : (rawAnalysis as AnalysisJson | null)
+
 
     const fallback = appleAnalytics
     const isCached = Boolean(cachedAnalysis)
+    
+    if (!cachedAnalysis || !aiAnalysis) {
+        return <AnalysisReportLoading ticker={ticker} />
+    }
 
-    const healthScore = aiAnalysis?.healthScore || fallback.company.healthScore
+    const aiHealthScore = aiAnalysis?.healthScore || fallback.company.healthScore
+    const financialScore = financialMetrics?.financialScore ?? 0
+    const valuationScore = financialMetrics?.valuationScore ?? 0
+    const marketConnectionScore = marketOverview?.price && marketOverview?.marketCap ? 100 : 0
+
+    const healthScore =
+        financialScore > 0
+            ? Math.round(aiHealthScore * 0.45 + financialScore * 0.55)
+            : aiHealthScore
+
     const rating = getRatingFromScore(healthScore)
 
     const pageData = {
@@ -162,9 +235,12 @@ export default async function StockAnalysisPage({
         healthScore,
         rating,
 
-        price: "Pending live data",
-        change: "Pending",
-        marketCap: "Pending live data",
+        price: marketOverview?.price ? `$${marketOverview.price.toFixed(2)}` : "Pending live data",
+        change:
+            typeof marketOverview?.change === "number" && marketOverview?.changePercent
+                ? `${marketOverview.change >= 0 ? "+" : ""}${marketOverview.change.toFixed(2)} (${marketOverview.changePercent})`
+                : "Pending",
+        marketCap: marketOverview?.marketCap || "Pending live data",
 
         note: isCached
             ? "This page is using cached AI analysis. Live market data, SEC metrics, and filing comparisons will be connected next."
@@ -202,20 +278,34 @@ export default async function StockAnalysisPage({
         healthBreakdown: [
             {
                 label: "AI Filing Analysis",
-                score: isCached ? healthScore : 0,
+                score: isCached ? aiHealthScore : 0,
                 blurb: isCached
                     ? "Generated from cached company analysis."
                     : "Pending OpenAI filing analysis.",
             },
             {
                 label: "Live Financial Metrics",
-                score: 0,
-                blurb: "SEC companyfacts integration is partially connected.",
+                score: financialScore,
+                blurb:
+                    financialScore > 0
+                        ? "Generated from SEC companyfacts financial metrics."
+                        : "SEC company facts integration is partially connected.",
             },
             {
-                label: "Market Data",
-                score: 0,
-                blurb: "Pending live price and market cap integration.",
+                label: "Market Valuation",
+                score: valuationScore,
+                blurb:
+                    valuationScore > 0
+                        ? "Generated from market cap compared against revenue, earnings, and free cash flow."
+                        : "Pending market valuation calculation.",
+            },
+            {
+                label: "Market Data Connection",
+                score: marketConnectionScore,
+                blurb:
+                    marketConnectionScore > 0
+                        ? "Live price and market cap data are connected."
+                        : "Pending live price and market cap integration.",
             },
         ],
 
@@ -288,7 +378,7 @@ export default async function StockAnalysisPage({
                 <div className="absolute inset-0 bg-black/20" />
 
                 <div className="relative z-10 mx-auto max-w-7xl">
-                    <NavBar />
+                    <NavBar showSearch />
 
                     <section className="grid gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
                         <div>
@@ -411,53 +501,25 @@ export default async function StockAnalysisPage({
 
                     <FinancialMetricCards ticker={pageData.ticker} />
 
-                    <section className="mt-8 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                Revenue Mix
-                            </p>
-                            <h2 className="mt-3 text-2xl font-bold text-white">Segment Contribution</h2>
-                            <p className="mt-2 text-sm text-slate-400">
-                                Useful for spotting concentration risk and business quality shifts.
-                            </p>
+                    <FilingComparisonCard ticker={pageData.ticker} />
 
-                            <div className="mt-8 space-y-5">
-                                {pageData.revenueBreakdown.map((segment) => (
-                                    <div
-                                        key={segment.label}
-                                        className="rounded-2xl border border-white/10 bg-black/15 p-4"
-                                    >
-                                        <div className="flex items-center justify-between gap-4">
-                                            <p className="text-sm font-semibold text-white">{segment.label}</p>
-                                            <p className="text-xs text-blue-100">
-                                                {segment.percentage > 0 ? `${segment.percentage}%` : "Qualitative"}
-                                            </p>
-                                        </div>
-
-                                        {"note" in segment && (
-                                            <p className="mt-3 text-sm leading-relaxed text-slate-400">
-                                                {segment.note}
-                                            </p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
+                    <section className="mt-8 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+                        <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
                             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
                                 Top Risks
                             </p>
+
                             <h2 className="mt-3 text-2xl font-bold text-white">Ranked Risk Factors</h2>
 
-                            <div className="mt-7 space-y-4">
+                            <div className="mt-6 space-y-4">
                                 {pageData.risks.map((risk) => (
                                     <div
                                         key={risk.title}
-                                        className="rounded-2xl border border-white/10 bg-black/15 p-4"
+                                        className="rounded-2xl border border-white/10 bg-black/20 p-4"
                                     >
                                         <div className="flex flex-wrap items-center justify-between gap-3">
-                                            <h3 className="text-base font-semibold text-white">{risk.title}</h3>
+                                            <h3 className="text-base font-bold text-white">{risk.title}</h3>
+
                                             <span
                                                 className={`rounded-full px-3 py-1 text-xs font-semibold ${severityStyles(
                                                     risk.severity
@@ -467,80 +529,42 @@ export default async function StockAnalysisPage({
                                             </span>
                                         </div>
 
-                                        <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                                        <p className="mt-3 text-sm leading-relaxed text-slate-400">
                                             {risk.description}
                                         </p>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </section>
 
-                    <FilingComparisonCard ticker={pageData.ticker} />
-
-                    <section className="mt-8 grid gap-8 lg:grid-cols-2">
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
+                        <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
                             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                MD&A Summary
+                                MD&amp;A Summary
                             </p>
+
                             <h2 className="mt-3 text-2xl font-bold text-white">Management Discussion</h2>
 
-                            <div className="mt-7 grid gap-6 md:grid-cols-2">
-                                <div>
-                                    <h3 className="text-base font-semibold text-white">Performance Drivers</h3>
-                                    <ul className="mt-4 space-y-3">
-                                        {pageData.mdna.drivers.map((item) => (
-                                            <li
-                                                key={item}
-                                                className="rounded-2xl border border-white/10 bg-black/15 p-4 text-sm leading-relaxed text-slate-300"
-                                            >
-                                                {item}
-                                            </li>
+                            <div className="mt-6 grid gap-5 md:grid-cols-2">
+                                <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+                                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-300">
+                                        Performance Drivers
+                                    </h3>
+
+                                    <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                        {pageData.mdna.drivers.map((driver) => (
+                                            <li key={driver}>• {driver}</li>
                                         ))}
                                     </ul>
                                 </div>
 
-                                <div>
-                                    <h3 className="text-base font-semibold text-white">Management Concerns</h3>
-                                    <ul className="mt-4 space-y-3">
-                                        {pageData.mdna.concerns.map((item) => (
-                                            <li
-                                                key={item}
-                                                className="rounded-2xl border border-white/10 bg-black/15 p-4 text-sm leading-relaxed text-slate-300"
-                                            >
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                                <div className="rounded-2xl border border-orange-400/20 bg-orange-500/10 p-4">
+                                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
+                                        Management Concerns
+                                    </h3>
 
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                Decision Framing
-                            </p>
-                            <h2 className="mt-3 text-2xl font-bold text-white">Bull vs Bear Case</h2>
-
-                            <div className="mt-7 grid gap-5 md:grid-cols-2">
-                                <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5">
-                                    <h3 className="text-lg font-bold text-emerald-300">Bull Case</h3>
-                                    <ul className="mt-4 space-y-3">
-                                        {pageData.bullCase.map((item) => (
-                                            <li key={item} className="text-sm leading-relaxed text-slate-200">
-                                                • {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                <div className="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
-                                    <h3 className="text-lg font-bold text-red-300">Bear Case</h3>
-                                    <ul className="mt-4 space-y-3">
-                                        {pageData.bearCase.map((item) => (
-                                            <li key={item} className="text-sm leading-relaxed text-slate-200">
-                                                • {item}
-                                            </li>
+                                    <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                        {pageData.mdna.concerns.map((concern) => (
+                                            <li key={concern}>• {concern}</li>
                                         ))}
                                     </ul>
                                 </div>
@@ -548,59 +572,138 @@ export default async function StockAnalysisPage({
                         </div>
                     </section>
 
-                    <section className="mt-8 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                Alert Layer
-                            </p>
-                            <h2 className="mt-3 text-2xl font-bold text-white">Red Flags</h2>
+                    <section className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
+                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                            Decision Framing
+                        </p>
 
-                            <div className="mt-6 space-y-3">
-                                {pageData.redFlags.map((flag) => (
-                                    <div
-                                        key={flag}
-                                        className="rounded-2xl border border-white/10 bg-black/15 p-4 text-sm leading-relaxed text-slate-300"
-                                    >
-                                        {flag}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        <h2 className="mt-3 text-2xl font-bold text-white">Bull vs Bear Case</h2>
 
-                        <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                Source Transparency
-                            </p>
-                            <h2 className="mt-3 text-2xl font-bold text-white">Filing Coverage</h2>
+                        <div className="mt-6 grid gap-5 md:grid-cols-2">
+                            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5">
+                                <h3 className="text-lg font-bold text-emerald-300">Bull Case</h3>
 
-                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                                {pageData.filings.map((filing) => (
-                                    <div
-                                        key={filing.title}
-                                        className="rounded-2xl border border-white/10 bg-black/15 p-4"
-                                    >
-                                        <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                                            {filing.title}
-                                        </p>
-                                        <p className="mt-3 text-base font-semibold text-white">
-                                            {filing.value}
-                                        </p>
-                                    </div>
-                                ))}
+                                <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                    {pageData.bullCase.map((item) => (
+                                        <li key={item}>• {item}</li>
+                                    ))}
+                                </ul>
                             </div>
 
-                            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5">
-                                <h3 className="text-base font-semibold text-white">Source Stack</h3>
-                                <ul className="mt-4 space-y-2">
-                                    {pageData.sources.map((source) => (
-                                        <li key={source} className="text-sm text-slate-300">
-                                            • {source}
-                                        </li>
+                            <div className="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
+                                <h3 className="text-lg font-bold text-red-300">Bear Case</h3>
+
+                                <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                    {pageData.bearCase.map((item) => (
+                                        <li key={item}>• {item}</li>
                                     ))}
                                 </ul>
                             </div>
                         </div>
                     </section>
+
+                    <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr]">
+                        <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                                Revenue Mix
+                            </p>
+
+                            <h2 className="mt-3 text-2xl font-bold text-white">Segment Contribution</h2>
+
+                            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                                Useful for spotting concentration risk, business quality shifts, and which parts of the company are driving growth.
+                            </p>
+
+                            <div className="mt-6 space-y-4">
+                                {pageData.revenueBreakdown.map((segment) => (
+                                    <div
+                                        key={`${segment.label}-${segment.note}`}
+                                        className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                                    >
+                                        <div className="flex flex-wrap items-center justify-between gap-3">
+                                            <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">
+                                                {segment.label}
+                                            </p>
+
+                                            {segment.percentage > 0 && (
+                                                <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                                                    {segment.percentage}%
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {segment.percentage > 0 && (
+                                            <div className="mt-3 h-2 rounded-full bg-white/10">
+                                                <div
+                                                    className="h-2 rounded-full bg-emerald-400"
+                                                    style={{ width: `${segment.percentage}%` }}
+                                                />
+                                            </div>
+                                        )}
+
+                                        <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                                            {segment.note}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                                Alert Layer
+                            </p>
+
+                            <h2 className="mt-3 text-2xl font-bold text-white">Red Flags</h2>
+
+                            <ul className="mt-6 space-y-3 text-sm leading-relaxed text-slate-300">
+                                {pageData.redFlags.map((flag) => (
+                                    <li
+                                        key={flag}
+                                        className="rounded-2xl border border-red-400/20 bg-red-500/10 p-4 text-red-100"
+                                    >
+                                        • {flag}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl">
+                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                            Source Transparency
+                        </p>
+
+                        <h2 className="mt-3 text-2xl font-bold text-white">Filing Coverage</h2>
+
+                        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                            {pageData.filings.map((filing) => (
+                                <div
+                                    key={filing.title}
+                                    className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                                >
+                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                        {filing.title}
+                                    </p>
+
+                                    <p className="mt-3 break-words text-sm font-semibold text-white">
+                                        {filing.value}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                            <p className="text-sm font-semibold text-white">Source Stack</p>
+
+                            <ul className="mt-3 space-y-2 text-sm text-slate-400">
+                                {pageData.sources.map((source) => (
+                                    <li key={source}>• {source}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </section>
+
 
                     <section className="mt-8 mb-16 rounded-[28px] border border-white/10 bg-black/20 p-6">
                         <p className="text-sm leading-relaxed text-slate-300">

@@ -59,6 +59,7 @@ export async function getMarketCache({
   if (Date.now() - updatedAt > ttl) {
     return null
   }
+  
 
   return data.data
 }

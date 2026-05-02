@@ -26,7 +26,7 @@ export default function PricingPage() {
         <div className="absolute inset-0 bg-black/10" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
-          <NavBar />
+          <NavBar showSearch />
 
           <div className="py-16 text-center">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-[#7C9DFF]">

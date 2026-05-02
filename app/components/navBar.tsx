@@ -3,8 +3,9 @@
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { supabase } from "../lib/supabase"
+import StockSearchBar from "./stockSearchBar"
 
-export default function NavBar() {
+export default function NavBar({ showSearch = false }: { showSearch?: boolean }) {
   const [username, setUsername] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -68,6 +69,8 @@ export default function NavBar() {
         <a href="/pricing" className="rounded-xl px-4 py-2 hover:bg-black/5">Pricing</a>
         <a href="#" className="rounded-xl px-4 py-2 hover:bg-black/5">News</a>
         <a href="/about" className="rounded-xl px-4 py-2 hover:bg-black/5">About</a>
+
+        {showSearch && <StockSearchBar variant="nav" />}
 
         {username ? (
           <div className="relative" ref={menuRef}>

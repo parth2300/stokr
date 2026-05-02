@@ -31,7 +31,11 @@ function SearchIcon({ size = 28, strokeWidth = 1.8 }) {
 
 const clientSearchCache = new Map<string, StockSearchResult[]>()
 
-export default function StockSearchBar() {
+export default function StockSearchBar({
+    variant = "hero",
+}: {
+    variant?: "hero" | "nav"
+}) {
     const router = useRouter()
 
     const [query, setQuery] = useState("")
@@ -156,28 +160,40 @@ export default function StockSearchBar() {
         }
     }
 
+    const wrapperClass =
+        variant === "nav"
+            ? "relative w-full max-w-[280px]"
+            : "relative mt-24 w-full max-w-xl"
+
+    const formClass =
+        variant === "nav"
+            ? "rounded-full border border-slate-300/40 bg-white/90 px-4 py-2 shadow-md"
+            : "rounded-full border border-slate-300/50 bg-gradient-to-b from-white/90 to-slate-200/85 px-7 py-4 shadow-[0_8px_28px_rgba(0,0,0,0.35),inset_0_2px_8px_rgba(0,0,0,0.12)]"
+
+    const inputClass =
+        variant === "nav"
+            ? "w-full bg-transparent text-sm uppercase text-slate-900 outline-none placeholder:normal-case placeholder:text-slate-600"
+            : "w-full bg-transparent text-xl uppercase text-slate-900 outline-none placeholder:normal-case placeholder:text-slate-700"
+
+    const iconSize = variant === "nav" ? 20 : 28
+
     return (
-        <div ref={wrapperRef} className="relative mt-24 w-full max-w-xl">
-            <form
-                onSubmit={handleSubmit}
-                className="rounded-full border border-slate-300/50 bg-gradient-to-b from-white/90 to-slate-200/85 px-7 py-4 
-                shadow-[0_8px_28px_rgba(0,0,0,0.35),inset_0_2px_8px_rgba(0,0,0,0.12)]"
-            >
+        <div ref={wrapperRef} className={wrapperClass}>
+            <form onSubmit={handleSubmit} className={formClass}>
                 <div className="flex items-center justify-between gap-4">
                     <input
                         placeholder="Enter a Ticker"
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="w-full bg-transparent text-xl uppercase text-slate-900 outline-none placeholder:normal-case placeholder:text-slate-700"
-                    />
+                        className={inputClass} />
 
                     <button
                         type="submit"
                         aria-label="Search ticker"
                         className="text-slate-700 transition hover:text-slate-950"
                     >
-                        <SearchIcon />
+                        <SearchIcon size={iconSize} />
                     </button>
                 </div>
             </form>

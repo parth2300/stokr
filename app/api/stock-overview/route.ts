@@ -1,4 +1,5 @@
-﻿import { NextResponse } from "next/server"
+﻿// src/pages/api/stock-overview.ts
+import { NextResponse } from "next/server"
 import { getFinnhubProfile, getFinnhubQuote, isValidTicker } from "../../lib/finnhub"
 import { getMarketCache, saveMarketCache } from "../../lib/marketCache"
 
@@ -62,27 +63,34 @@ export async function GET(req: Request) {
 
     const now = Date.now()
 
+    // Check for cached data in Supabase
     const supabaseCached = await getMarketCache({
       ticker,
       type: "overview",
     })
 
     if (supabaseCached) {
+      console.log("Cache hit:", supabaseCached)  // Added log for cache hit
       return NextResponse.json({
         ...supabaseCached,
         source: "cache",
       })
+    } else {
+      console.log("Cache miss: Fetching new data...")  // Added log for cache miss
     }
 
+    // Check for memory cache
     const memoryCached = overviewCache.get(ticker)
 
     if (memoryCached && now - memoryCached.timestamp < CACHE_DURATION_MS) {
+      console.log("Memory cache hit:", memoryCached)  // Log for memory cache hit
       return NextResponse.json({
         ...memoryCached.data,
         source: "cache",
       })
     }
 
+    // Fetch live data from Finnhub
     const [quote, profile] = await Promise.all([getFinnhubQuote(ticker), getFinnhubProfile(ticker)])
 
     const price = Number(quote.c)
@@ -104,19 +112,20 @@ export async function GET(req: Request) {
       price,
       change,
       changePercent,
-      marketCap: formatMarketCap(profile.marketCapitalization),
+      marketCap: formatMarketCap(profile.marketCapitalization),  // Ensure this is being set correctly
       companyName: profile.name || ticker,
       updatedAt: new Date().toISOString(),
       source: "finnhub",
     }
 
-    // Cache the data
+    // Cache the data in Supabase
     await saveMarketCache({
       ticker,
       type: "overview",
       data: responseData,
     })
 
+    // Cache the data in memory
     overviewCache.set(ticker, {
       data: responseData,
       timestamp: now,

@@ -8,7 +8,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/10" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
-          <NavBar />
+          <NavBar showSearch />
 
           <div className="grid min-h-[calc(100vh-88px)] grid-cols-1 items-center gap-14 py-16 lg:grid-cols-[1fr_0.9fr]">
             <section>

@@ -221,3 +221,171 @@ export function extractFinancialMetrics({
         cash,
     }
 }
+
+export function scoreRevenueGrowth(growthPercent: number) {
+    if (growthPercent >= 20) return 100
+    if (growthPercent >= 10) return 85
+    if (growthPercent >= 5) return 70
+    if (growthPercent >= 0) return 55
+    if (growthPercent >= -10) return 35
+    return 15
+}
+
+export function scoreNetIncomeMargin(marginPercent: number) {
+    if (marginPercent >= 25) return 100
+    if (marginPercent >= 15) return 85
+    if (marginPercent >= 10) return 70
+    if (marginPercent >= 5) return 55
+    if (marginPercent >= 0) return 35
+    return 10
+}
+
+export function scoreFreeCashFlowMargin(marginPercent: number) {
+    if (marginPercent >= 20) return 100
+    if (marginPercent >= 12) return 85
+    if (marginPercent >= 7) return 70
+    if (marginPercent >= 3) return 55
+    if (marginPercent >= 0) return 35
+    return 10
+}
+
+export function scoreDebtPressure(debtToRevenuePercent: number) {
+    if (debtToRevenuePercent <= 10) return 100
+    if (debtToRevenuePercent <= 25) return 85
+    if (debtToRevenuePercent <= 50) return 70
+    if (debtToRevenuePercent <= 100) return 45
+    if (debtToRevenuePercent <= 200) return 25
+    return 10
+}
+
+export function calculateSecFinancialScore({
+    revenueGrowthPercent,
+    netIncome,
+    freeCashFlow,
+    totalDebt,
+    revenue,
+}: {
+    revenueGrowthPercent: number
+    netIncome: number
+    freeCashFlow: number
+    totalDebt: number
+    revenue: number
+}) {
+    const netIncomeMargin = revenue > 0 ? (netIncome / revenue) * 100 : 0
+    const freeCashFlowMargin = revenue > 0 ? (freeCashFlow / revenue) * 100 : 0
+    const debtToRevenue = revenue > 0 ? (totalDebt / revenue) * 100 : 999
+
+    const revenueGrowthScore = scoreRevenueGrowth(revenueGrowthPercent)
+    const netIncomeMarginScore = scoreNetIncomeMargin(netIncomeMargin)
+    const freeCashFlowMarginScore = scoreFreeCashFlowMargin(freeCashFlowMargin)
+    const debtPressureScore = scoreDebtPressure(debtToRevenue)
+
+    const secScore =
+        revenueGrowthScore * 0.25 +
+        netIncomeMarginScore * 0.25 +
+        freeCashFlowMarginScore * 0.25 +
+        debtPressureScore * 0.25
+
+    return {
+        score: Math.round(secScore),
+        breakdown: {
+            revenueGrowthPercent,
+            netIncomeMargin,
+            freeCashFlowMargin,
+            debtToRevenue,
+            revenueGrowthScore,
+            netIncomeMarginScore,
+            freeCashFlowMarginScore,
+            debtPressureScore,
+        },
+    }
+}
+
+export function calculateFinalHealthScore({
+    secFinancialScore,
+    aiFilingScore,
+}: {
+    secFinancialScore: number
+    aiFilingScore: number
+}) {
+    return Math.round(secFinancialScore * 0.55 + aiFilingScore * 0.45)
+}
+
+export function scorePriceToSales(priceToSales: number) {
+    if (priceToSales <= 2) return 100
+    if (priceToSales <= 5) return 85
+    if (priceToSales <= 8) return 70
+    if (priceToSales <= 12) return 50
+    if (priceToSales <= 20) return 30
+    return 10
+}
+
+export function scorePriceToEarnings(priceToEarnings: number) {
+    if (priceToEarnings <= 0) return 10
+    if (priceToEarnings <= 15) return 100
+    if (priceToEarnings <= 25) return 85
+    if (priceToEarnings <= 35) return 65
+    if (priceToEarnings <= 50) return 40
+    return 15
+}
+
+export function scorePriceToFreeCashFlow(priceToFreeCashFlow: number) {
+    if (priceToFreeCashFlow <= 0) return 10
+    if (priceToFreeCashFlow <= 15) return 100
+    if (priceToFreeCashFlow <= 25) return 85
+    if (priceToFreeCashFlow <= 35) return 65
+    if (priceToFreeCashFlow <= 50) return 40
+    return 15
+}
+
+export function calculateMarketValuationScore({
+    marketCap,
+    revenue,
+    netIncome,
+    freeCashFlow,
+}: {
+    marketCap: number
+    revenue: number
+    netIncome: number
+    freeCashFlow: number
+}) {
+    if (marketCap <= 0 || revenue <= 0) {
+        return {
+            score: 0,
+            breakdown: {
+                priceToSales: 0,
+                priceToEarnings: 0,
+                priceToFreeCashFlow: 0,
+                priceToSalesScore: 0,
+                priceToEarningsScore: 0,
+                priceToFreeCashFlowScore: 0,
+            },
+        }
+    }
+
+    const priceToSales = marketCap / revenue
+    const priceToEarnings = netIncome > 0 ? marketCap / netIncome : 0
+    const priceToFreeCashFlow = freeCashFlow > 0 ? marketCap / freeCashFlow : 0
+
+    const priceToSalesScore = scorePriceToSales(priceToSales)
+    const priceToEarningsScore = scorePriceToEarnings(priceToEarnings)
+    const priceToFreeCashFlowScore =
+        scorePriceToFreeCashFlow(priceToFreeCashFlow)
+
+    const score =
+        priceToSalesScore * 0.3 +
+        priceToEarningsScore * 0.35 +
+        priceToFreeCashFlowScore * 0.35
+
+    return {
+        score: Math.round(score),
+        breakdown: {
+            priceToSales,
+            priceToEarnings,
+            priceToFreeCashFlow,
+            priceToSalesScore,
+            priceToEarningsScore,
+            priceToFreeCashFlowScore,
+        },
+    }
+}
