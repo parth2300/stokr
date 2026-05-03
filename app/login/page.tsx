@@ -9,7 +9,7 @@ import { validateSignup } from "../lib/validateSignup"
 export default function LoginPage() {
     const router = useRouter()
 
-    const [mode, setMode] = useState<"login" | "signup">("signup")
+    const [mode, setMode] = useState<"login" | "signup">("login")
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [identifier, setIdentifier] = useState("")
