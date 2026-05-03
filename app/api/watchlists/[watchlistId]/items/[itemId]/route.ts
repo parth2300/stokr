@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { supabaseAdmin } from "@/app/lib/supabaseAdmin"
 import { getApiUser } from "@/app/lib/apiAuth"
+import { cleanOptionalText, isValidUuid } from "@/app/lib/validation"
 
 export async function PATCH(
   req: Request,
@@ -19,11 +20,25 @@ export async function PATCH(
     }
 
     const { watchlistId, itemId } = await params
+
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidUuid(itemId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist item id" },
+        { status: 400 }
+      )
+    }
+
     const body = await req.json().catch(() => null)
 
-    const companyName =
-      typeof body?.companyName === "string" ? body.companyName.trim() : null
-    const notes = typeof body?.notes === "string" ? body.notes.trim() : null
+    const companyName = cleanOptionalText(body?.companyName, 120)
+    const notes = cleanOptionalText(body?.notes, 500)
 
     const { data, error } = await supabaseAdmin
       .from("watchlist_items")
@@ -72,6 +87,26 @@ export async function DELETE(
     }
 
     const { watchlistId, itemId } = await params
+    console.log("DELETE WATCHLIST PARAMS:", {
+      watchlistId,
+      itemId,
+      validWatchlistId: isValidUuid(watchlistId),
+      validItemId: isValidUuid(itemId),
+    })
+
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidUuid(itemId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist item id" },
+        { status: 400 }
+      )
+    }
 
     const { error } = await supabaseAdmin
       .from("watchlist_items")

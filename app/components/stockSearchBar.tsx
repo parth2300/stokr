@@ -50,16 +50,26 @@ export default function StockSearchBar({
         const cleanedQuery = query.trim().toLowerCase()
 
         if (cleanedQuery.length < 2) {
-            setResults([])
-            setIsOpen(false)
-            setActiveIndex(-1)
+            queueMicrotask(() => {
+                setResults([])
+                setIsOpen(false)
+                setActiveIndex(-1)
+            })
+
             return
         }
 
         if (clientSearchCache.has(cleanedQuery)) {
-            setResults(clientSearchCache.get(cleanedQuery) || [])
-            setIsOpen(true)
-            return
+            const cachedResults = clientSearchCache.get(cleanedQuery) || []
+
+            const timeoutId = window.setTimeout(() => {
+                setResults(cachedResults)
+                setIsOpen(true)
+            }, 0)
+
+            return () => {
+                window.clearTimeout(timeoutId)
+            }
         }
 
         const timeoutId = window.setTimeout(async () => {

@@ -1,17 +1,12 @@
 import { NextResponse } from "next/server"
 import { supabaseAdmin } from "@/app/lib/supabaseAdmin"
 import { getApiUser } from "@/app/lib/apiAuth"
-import { canCreateWatchlist } from "@/app/lib/watchlistLimits"
 import type { PremiumProfile } from "@/app/lib/premium"
+import { cleanOptionalText, cleanRequiredText } from "@/app/lib/validation"
+import { canCreateWatchlist } from "@/app/lib/watchlistLimits"
 
 type Profile = PremiumProfile & {
   id: string
-}
-
-function cleanWatchlistName(value: unknown) {
-  if (typeof value !== "string") return ""
-
-  return value.trim()
 }
 
 export async function GET(req: Request) {
@@ -71,9 +66,8 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json().catch(() => null)
-    const name = cleanWatchlistName(body?.name)
-    const description =
-      typeof body?.description === "string" ? body.description.trim() : null
+    const name = cleanRequiredText(body?.name, 60)
+    const description = cleanOptionalText(body?.description, 300)
     const requestedDefault = body?.isDefault === true
 
     if (!name) {

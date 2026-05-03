@@ -1,11 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import NavBar from "../components/navBar"
 import { supabase } from "../lib/supabase"
 import { PremiumProfile, isUserPremium } from "../lib/premium"
 import { canCreateWatchlist, getWatchlistLimitLabel } from "../lib/watchlistLimits"
+import {
+  isValidTicker,
+  normalizeTicker,
+} from "../lib/validation"
 
 type Watchlist = {
   id: string
@@ -31,14 +35,6 @@ type Profile = PremiumProfile & {
   id: string
   email?: string | null
   username?: string | null
-}
-
-function normalizeTicker(value: string) {
-  return value.trim().toUpperCase()
-}
-
-function isValidTicker(value: string) {
-  return /^[A-Z]{1,10}$/.test(value)
 }
 
 async function getAuthHeader() {
@@ -95,11 +91,7 @@ export default function WatchlistPage() {
     currentWatchlistCount: watchlists.length,
   })
 
-  useEffect(() => {
-    loadPage()
-  }, [])
-
-  async function loadPage() {
+  const loadPage = useCallback(async () => {
     setIsLoading(true)
     setError("")
     setMessage("")
@@ -177,7 +169,8 @@ export default function WatchlistPage() {
       setItems(loadedItems)
 
       const defaultList =
-        loadedWatchlists.find((watchlist) => watchlist.is_default) || loadedWatchlists[0]
+        loadedWatchlists.find((watchlist) => watchlist.is_default) ||
+        loadedWatchlists[0]
 
       setSelectedWatchlistId(defaultList?.id || null)
     } catch (err) {
@@ -185,7 +178,17 @@ export default function WatchlistPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      loadPage()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [loadPage])
 
   async function handleCreateWatchlist(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -376,7 +379,7 @@ export default function WatchlistPage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
           <div className="absolute inset-0 bg-black/20" />
 
-          <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="relative z-10 w-full">
             <NavBar showSearch />
 
             <div className="mt-20 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
@@ -466,11 +469,10 @@ export default function WatchlistPage() {
 
             {(message || error) && (
               <div
-                className={`mt-6 rounded-2xl border px-5 py-4 text-sm ${
-                  error
-                    ? "border-red-400/30 bg-red-500/10 text-red-200"
-                    : "border-emerald-400/30 bg-emerald-500/10 text-emerald-200"
-                }`}
+                className={`mt-6 rounded-2xl border px-5 py-4 text-sm ${error
+                  ? "border-red-400/30 bg-red-500/10 text-red-200"
+                  : "border-emerald-400/30 bg-emerald-500/10 text-emerald-200"
+                  }`}
               >
                 {error || message}
               </div>
@@ -499,11 +501,10 @@ export default function WatchlistPage() {
                     <button
                       key={watchlist.id}
                       onClick={() => setSelectedWatchlistId(watchlist.id)}
-                      className={`w-full rounded-2xl border p-4 text-left transition ${
-                        selectedWatchlistId === watchlist.id
-                          ? "border-[#7C9DFF]/60 bg-[#7C9DFF]/15"
-                          : "border-white/10 bg-black/20 hover:bg-white/10"
-                      }`}
+                      className={`w-full rounded-2xl border p-4 text-left transition ${selectedWatchlistId === watchlist.id
+                        ? "border-[#7C9DFF]/60 bg-[#7C9DFF]/15"
+                        : "border-white/10 bg-black/20 hover:bg-white/10"
+                        }`}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <p className="font-bold text-white">{watchlist.name}</p>

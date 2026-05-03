@@ -18,7 +18,7 @@ export default function WhatChangedToday({
   changes: DashboardChange[]
 }) {
   return (
-    <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+    <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
@@ -35,7 +35,7 @@ export default function WhatChangedToday({
         </button>
       </div>
 
-      <div className="mt-5 space-y-3">
+      <div className="stokr-scrollbar mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-2">
         {changes.map((change) => (
           <div
             key={`${change.ticker}-${change.title}`}

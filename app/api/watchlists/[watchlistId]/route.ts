@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server"
 import { supabaseAdmin } from "@/app/lib/supabaseAdmin"
 import { getApiUser } from "@/app/lib/apiAuth"
+import {
+  cleanOptionalText,
+  cleanRequiredText,
+  isValidUuid,
+} from "@/app/lib/validation"
 
 export async function PATCH(
   req: Request,
@@ -17,11 +22,17 @@ export async function PATCH(
     }
 
     const { watchlistId } = await params
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
     const body = await req.json().catch(() => null)
 
-    const name = typeof body?.name === "string" ? body.name.trim() : ""
-    const description =
-      typeof body?.description === "string" ? body.description.trim() : null
+    const name = cleanRequiredText(body?.name, 60)
+    const description = cleanOptionalText(body?.description, 300)
+    typeof body?.description === "string" ? body.description.trim() : null
 
     if (!name) {
       return NextResponse.json(
@@ -74,6 +85,12 @@ export async function DELETE(
     }
 
     const { watchlistId } = await params
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
 
     const { data: watchlist, error: watchlistError } = await supabaseAdmin
       .from("watchlists")

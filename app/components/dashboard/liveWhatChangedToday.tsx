@@ -2,16 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "@/app/lib/supabase"
-import WatchlistOverview from "./watchlistOverview"
-import { WatchlistStock } from "@/app/lib/dashboardTypes"
+import WhatChangedToday from "./whatChangedToday"
+import { DashboardChange } from "@/app/lib/dashboardTypes"
 
-type WatchlistOverviewResponse = {
-  stocks: WatchlistStock[]
-  message?: string
-  watchlist?: {
-    id: string
-    name: string
-  }
+type ChangesResponse = {
+  changes: DashboardChange[]
 }
 
 async function getAuthHeader() {
@@ -43,25 +38,23 @@ async function readApiError(res: Response) {
     : `Request failed with status ${res.status}`
 }
 
-export default function LiveDashboardWatchlist() {
-  const [stocks, setStocks] = useState<WatchlistStock[]>([])
+export default function LiveWhatChangedToday() {
+  const [changes, setChanges] = useState<DashboardChange[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
-  const [emptyMessage, setEmptyMessage] = useState("")
 
   useEffect(() => {
-    loadDashboardWatchlist()
+    loadChanges()
   }, [])
 
-  async function loadDashboardWatchlist() {
+  async function loadChanges() {
     setIsLoading(true)
     setError("")
-    setEmptyMessage("")
 
     try {
       const authHeader = await getAuthHeader()
 
-      const res = await fetch("/api/dashboard/watchlist-overview", {
+      const res = await fetch("/api/dashboard/changes", {
         method: "GET",
         headers: authHeader,
       })
@@ -70,15 +63,12 @@ export default function LiveDashboardWatchlist() {
         throw new Error(await readApiError(res))
       }
 
-      const data = (await res.json()) as WatchlistOverviewResponse
+      const data = (await res.json()) as ChangesResponse
 
-      setStocks(data.stocks || [])
-      setEmptyMessage(data.message || "")
+      setChanges(data.changes || [])
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to load dashboard watchlist."
+        err instanceof Error ? err.message : "Failed to load dashboard changes."
       )
     } finally {
       setIsLoading(false)
@@ -87,19 +77,19 @@ export default function LiveDashboardWatchlist() {
 
   if (isLoading) {
     return (
-      <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+      <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-          Watchlist
+          Updates
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Loading Watchlist Overview
+          Loading What Changed Today
         </h2>
 
         <div className="mt-6 grid gap-3">
-          <div className="h-12 animate-pulse rounded-xl bg-white/10" />
-          <div className="h-12 animate-pulse rounded-xl bg-white/10" />
-          <div className="h-12 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-16 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-16 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-16 animate-pulse rounded-xl bg-white/10" />
         </div>
       </section>
     )
@@ -107,19 +97,19 @@ export default function LiveDashboardWatchlist() {
 
   if (error) {
     return (
-      <section className="rounded-[26px] border border-red-400/30 bg-red-500/10 p-5 shadow-[0_0_20px_rgba(248,113,113,0.10)] backdrop-blur-xl">
+      <section className="min-w-0 rounded-[26px] border border-red-400/30 bg-red-500/10 p-5 shadow-[0_0_20px_rgba(248,113,113,0.10)] backdrop-blur-xl">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
-          Watchlist Error
+          Updates Error
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Could not load watchlist
+          Could not load changes
         </h2>
 
         <p className="mt-3 text-sm text-red-100">{error}</p>
 
         <button
-          onClick={loadDashboardWatchlist}
+          onClick={loadChanges}
           className="mt-5 rounded-xl border border-red-300/30 bg-red-500/15 px-4 py-2 text-sm font-semibold text-red-100 hover:bg-red-500/25"
         >
           Retry
@@ -128,36 +118,29 @@ export default function LiveDashboardWatchlist() {
     )
   }
 
-  if (stocks.length === 0) {
+  if (changes.length === 0) {
     return (
-      <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+      <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-          Watchlist
+          Updates
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Watchlist Overview
+          What Changed Today
         </h2>
 
         <div className="mt-6 rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-8 text-center">
           <p className="text-lg font-bold text-white">
-            No watchlist stocks yet
+            No changes yet
           </p>
 
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            {emptyMessage || "Add stocks to your watchlist to see them here."}
+            Add stocks, generate reports, or create alerts to see updates here.
           </p>
-
-          <a
-            href="/watchlist"
-            className="mt-5 inline-flex rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#0F172A] hover:bg-blue-100"
-          >
-            Open Watchlist
-          </a>
         </div>
       </section>
     )
   }
 
-  return <WatchlistOverview stocks={stocks} />
+  return <WhatChangedToday changes={changes} />
 }

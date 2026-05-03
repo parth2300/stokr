@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server"
 import { supabaseAdmin } from "@/app/lib/supabaseAdmin"
 import { getApiUser } from "@/app/lib/apiAuth"
-
-function normalizeTicker(value: unknown) {
-  if (typeof value !== "string") return ""
-
-  return value.trim().toUpperCase()
-}
-
-function isValidTicker(ticker: string) {
-  return /^[A-Z]{1,10}$/.test(ticker)
-}
+import {
+  cleanOptionalText,
+  isValidTicker,
+  isValidUuid,
+  normalizeTicker,
+} from "@/app/lib/validation"
 
 async function verifyWatchlistOwner(watchlistId: string, userId: string) {
   const { data, error } = await supabaseAdmin
@@ -42,6 +38,12 @@ export async function GET(
     }
 
     const { watchlistId } = await params
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
 
     const ownsWatchlist = await verifyWatchlistOwner(watchlistId, user.id)
 
@@ -92,12 +94,17 @@ export async function POST(
     }
 
     const { watchlistId } = await params
+    if (!isValidUuid(watchlistId)) {
+      return NextResponse.json(
+        { error: "Invalid watchlist id" },
+        { status: 400 }
+      )
+    }
     const body = await req.json().catch(() => null)
 
     const ticker = normalizeTicker(body?.ticker)
-    const companyName =
-      typeof body?.companyName === "string" ? body.companyName.trim() : null
-    const notes = typeof body?.notes === "string" ? body.notes.trim() : null
+    const companyName = cleanOptionalText(body?.companyName, 120)
+    const notes = cleanOptionalText(body?.notes, 500)
 
     if (!isValidTicker(ticker)) {
       return NextResponse.json(

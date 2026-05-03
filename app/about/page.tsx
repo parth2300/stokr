@@ -7,7 +7,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.32),transparent_38%),radial-gradient(circle_at_82%_70%,rgba(124,157,255,0.34),transparent_48%),radial-gradient(circle_at_32%_48%,rgba(124,157,255,0.12),transparent_45%)]" />
         <div className="absolute inset-0 bg-black/10" />
 
-        <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="relative z-10 w-full">
           <NavBar showSearch />
 
           <div className="grid min-h-[calc(100vh-88px)] grid-cols-1 items-center gap-14 py-16 lg:grid-cols-[1fr_0.9fr]">
