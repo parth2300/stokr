@@ -1,0 +1,224 @@
+"use client"
+
+import Link from "next/link"
+import { useState } from "react"
+import { supabase } from "@/app/lib/supabase"
+
+type Watchlist = {
+  id: string
+  name: string
+  is_default: boolean | null
+}
+
+type WatchlistItem = {
+  id: string
+  watchlist_id: string
+  ticker: string
+}
+
+type AddToWatchlistButtonProps = {
+  ticker: string
+  companyName?: string | null
+}
+
+async function getAuthHeader() {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session?.access_token) {
+    return null
+  }
+
+  return {
+    Authorization: `Bearer ${session.access_token}`,
+  }
+}
+
+async function readApiError(res: Response) {
+  const data = await res.json().catch(() => null)
+  return data?.error || "Request failed"
+}
+
+export default function AddToWatchlistButton({
+  ticker,
+  companyName,
+}: AddToWatchlistButtonProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
+  const [requiresLogin, setRequiresLogin] = useState(false)
+
+  async function handleAddToWatchlist() {
+    setIsSaving(true)
+    setMessage("")
+    setError("")
+    setRequiresLogin(false)
+
+    try {
+      const authHeader = await getAuthHeader()
+
+      if (!authHeader) {
+        setRequiresLogin(true)
+        setIsOpen(true)
+        return
+      }
+
+      const watchlistsRes = await fetch("/api/watchlists", {
+        method: "GET",
+        headers: authHeader,
+      })
+
+      if (!watchlistsRes.ok) {
+        throw new Error(await readApiError(watchlistsRes))
+      }
+
+      const watchlistsData = await watchlistsRes.json()
+
+      let watchlists = (watchlistsData.watchlists || []) as Watchlist[]
+      const items = (watchlistsData.items || []) as WatchlistItem[]
+
+      if (watchlists.length === 0) {
+        const createRes = await fetch("/api/watchlists", {
+          method: "POST",
+          headers: {
+            ...authHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: "My Watchlist",
+            description: "Default watchlist",
+            isDefault: true,
+          }),
+        })
+
+        if (!createRes.ok) {
+          throw new Error(await readApiError(createRes))
+        }
+
+        const createData = await createRes.json()
+        watchlists = [createData.watchlist as Watchlist]
+      }
+
+      const targetWatchlist =
+        watchlists.find((watchlist) => watchlist.is_default) || watchlists[0]
+
+      if (!targetWatchlist) {
+        throw new Error("No watchlist found.")
+      }
+
+      const normalizedTicker = ticker.trim().toUpperCase()
+
+      const alreadyExists = items.some(
+        (item) =>
+          item.watchlist_id === targetWatchlist.id &&
+          item.ticker.toUpperCase() === normalizedTicker
+      )
+
+      if (alreadyExists) {
+        setMessage(`${normalizedTicker} is already in your watchlist.`)
+        setIsOpen(true)
+        return
+      }
+
+      let resolvedCompanyName = companyName || null
+
+      if (!resolvedCompanyName) {
+        const overviewRes = await fetch(
+          `/api/stock-overview?ticker=${encodeURIComponent(normalizedTicker)}`
+        )
+
+        if (overviewRes.ok) {
+          const overview = await overviewRes.json().catch(() => null)
+          resolvedCompanyName = overview?.companyName || null
+        }
+      }
+
+      const addRes = await fetch(`/api/watchlists/${targetWatchlist.id}/items`, {
+        method: "POST",
+        headers: {
+          ...authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticker: normalizedTicker,
+          companyName: resolvedCompanyName,
+        }),
+      })
+
+      if (!addRes.ok) {
+        throw new Error(await readApiError(addRes))
+      }
+
+      setMessage(`${normalizedTicker} added to ${targetWatchlist.name}.`)
+      setIsOpen(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add stock.")
+      setIsOpen(true)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  return (
+    <div className="relative">
+      <button
+        onClick={handleAddToWatchlist}
+        disabled={isSaving}
+        className="inline-flex h-11 items-center gap-2 rounded-2xl border border-[#7C9DFF]/40 bg-[#7C9DFF]/15 px-5 text-sm font-bold text-blue-100 transition hover:bg-[#7C9DFF]/25 disabled:cursor-not-allowed disabled:opacity-50"
+        title="Add to watchlist"
+      >
+        <span className="text-xl leading-none">+</span>
+        <span>{isSaving ? "Adding..." : "Watchlist"}</span>
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 z-50 mt-3 w-72 rounded-2xl border border-white/10 bg-[#0F172A] p-4 text-sm shadow-2xl">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-bold text-white">
+                {requiresLogin ? "Login Required" : error ? "Watchlist Error" : "Watchlist"}
+              </p>
+
+              <p
+                className={`mt-2 leading-relaxed ${
+                  error || requiresLogin ? "text-red-200" : "text-emerald-200"
+                }`}
+              >
+                {requiresLogin
+                  ? "Create or log in to an account to save stocks to your watchlist."
+                  : error || message}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setIsOpen(false)}
+              className="rounded-lg px-2 py-1 text-slate-400 hover:bg-white/10 hover:text-white"
+            >
+              ×
+            </button>
+          </div>
+
+          {requiresLogin && (
+            <Link
+              href="/login"
+              className="mt-4 inline-flex rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0F172A] hover:bg-blue-100"
+            >
+              Login
+            </Link>
+          )}
+
+          {!requiresLogin && !error && (
+            <Link
+              href="/watchlist"
+              className="mt-4 inline-flex rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0F172A] hover:bg-blue-100"
+            >
+              Open Watchlist
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}

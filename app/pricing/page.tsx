@@ -5,6 +5,46 @@ import { useEffect, useState } from "react"
 import NavBar from "../components/navBar"
 import { supabase } from "../lib/supabase"
 
+
+async function getAuthHeader() {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session?.access_token) {
+    return null
+  }
+
+  return {
+    Authorization: `Bearer ${session.access_token}`,
+  }
+}
+
+async function handleUpgrade() {
+  const authHeader = await getAuthHeader()
+
+  if (!authHeader) {
+    window.location.href = "/login"
+    return
+  }
+
+  const res = await fetch("/api/stripe/create-checkout-session", {
+    method: "POST",
+    headers: authHeader,
+  })
+
+  const data = await res.json().catch(() => null)
+
+  if (!res.ok) {
+    alert(data?.error || "Failed to start checkout.")
+    return
+  }
+
+  if (data?.url) {
+    window.location.href = data.url
+  }
+}
+
 export default function PricingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
@@ -34,18 +74,21 @@ export default function PricingPage() {
             </p>
 
             <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              Start free. Upgrade when you need deeper insight.
+              Start free. Upgrade when you need unlimited research.
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
-              Free users get useful summaries. Premium users unlock the full intelligence layer.
+              Free users can test stokr with weekly AI reports and a watchlist. Premium unlocks unlimited reports, deeper research, and the full dashboard.
             </p>
           </div>
 
           <div className="grid gap-8 pb-20 lg:grid-cols-2">
             <div className="rounded-[32px] border border-white/10 bg-white/[0.04] p-8 shadow-[0_0_18px_rgba(255,255,255,0.06)] backdrop-blur-xl">
               <h2 className="text-2xl font-bold">Free</h2>
-              <p className="mt-2 text-slate-400">For quick stock checks and basic summaries.</p>
+
+              <p className="mt-2 text-slate-400">
+                For casual stock checks before upgrading.
+              </p>
 
               <div className="mt-8">
                 <span className="text-5xl font-extrabold">$0</span>
@@ -53,14 +96,17 @@ export default function PricingPage() {
               </div>
 
               <ul className="mt-8 space-y-4 text-slate-300">
-                <li>✓ 2–3 stock analyses per day</li>
+                <li>✓ 3 AI stock reports per week</li>
                 <li>✓ Basic company summary</li>
-                <li>✓ Limited risk highlights</li>
-                <li>✓ Delayed or cached stock data</li>
+                <li>✓ Basic stock price and daily change data</li>
+                <li>✓ 1 watchlist</li>
+                <li>✓ Unlimited stocks inside your watchlist</li>
+                <li>✓ Cached stock data</li>
                 <li>✓ Basic filing overview</li>
-                <li className="text-slate-500">✕ No full risk breakdown</li>
-                <li className="text-slate-500">✕ No “what changed” filing comparison</li>
-                <li className="text-slate-500">✕ No saved stock history</li>
+                <li className="text-slate-500">✕ No unlimited report access</li>
+                <li className="text-slate-500">✕ No premium dashboard</li>
+                <li className="text-slate-500">✕ No advanced saved research history</li>
+                <li className="text-slate-500">✕ No priority processing</li>
               </ul>
 
               <Link
@@ -77,30 +123,36 @@ export default function PricingPage() {
               </div>
 
               <h2 className="text-2xl font-bold text-blue-100">Premium</h2>
-              <p className="mt-2 text-slate-300">For users who want deeper, faster research.</p>
+
+              <p className="mt-2 text-slate-300">
+                For users who want deeper, faster stock research.
+              </p>
 
               <div className="mt-8">
-                <span className="text-5xl font-extrabold">$7.99</span>
+                <span className="text-5xl font-extrabold">$9.99</span>
                 <span className="text-slate-400"> / month</span>
               </div>
 
               <ul className="mt-8 space-y-4 text-slate-200">
-                <li>✓ Unlimited stock analyses</li>
+                <li>✓ Unlimited AI stock reports</li>
                 <li>✓ Full 10-K and 10-Q breakdowns</li>
                 <li>✓ Complete risk factor analysis</li>
-                <li>✓ “What changed” between filings</li>
+                <li>✓ “What changed” filing comparison</li>
                 <li>✓ Financial health insights</li>
                 <li>✓ Bull vs bear case summaries</li>
-                <li>✓ Saved stock history</li>
+                <li>✓ Premium dashboard access</li>
+                <li>✓ Unlimited watchlists</li>
+                <li>✓ Unlimited stocks inside watchlists</li>
+                <li>✓ Saved stock research history</li>
                 <li>✓ Faster / priority processing</li>
               </ul>
 
-              <Link
-                href={premiumLink}
-                className="mt-8 block rounded-xl bg-[#7C9DFF] px-5 py-3 text-center font-semibold text-white hover:bg-[#93B4FF]"
+              <button
+                onClick={handleUpgrade}
+                className="mt-8 block w-full rounded-xl bg-[#7C9DFF] px-5 py-3 text-center font-semibold text-white hover:bg-[#93B4FF]"
               >
                 Upgrade to Premium
-              </Link>
+              </button>
 
               {!isLoggedIn && (
                 <p className="mt-3 text-center text-sm text-slate-400">
@@ -112,8 +164,8 @@ export default function PricingPage() {
 
           <div className="mx-auto mb-20 max-w-3xl rounded-2xl border border-white/10 bg-black/20 p-5 text-center">
             <p className="text-sm leading-relaxed text-slate-300">
-              <span className="font-semibold text-white">Disclaimer:</span> Stokr provides informational
-              analysis only. It does not provide financial, investment, or trading advice.
+              <span className="font-semibold text-white">Disclaimer:</span>{" "}
+              Stokr provides informational analysis only. It does not provide financial, investment, or trading advice.
             </p>
           </div>
         </div>

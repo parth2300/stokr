@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { supabase } from "../lib/supabase"
 import StockSearchBar from "./stockSearchBar"
 import { isUserPremium, PremiumProfile } from "../lib/premium"
+import AccountSettingsModal from "./account/AccountSettingsModal"
 
 type Profile = PremiumProfile & {
   id: string
@@ -14,9 +15,11 @@ type Profile = PremiumProfile & {
 
 export default function NavBar({ showSearch = false }: { showSearch?: boolean }) {
   const [username, setUsername] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -26,13 +29,15 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
       if (!user) {
         setUsername(null)
+        setEmail(null)
         setIsSignedIn(false)
         setIsPremium(false)
         return
       }
 
       setIsSignedIn(true)
-      setUsername(user.user_metadata?.username || user.email || "Account")
+      setUsername(user.user_metadata?.username || null)
+      setEmail(user.email || null)
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -43,6 +48,14 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         .maybeSingle()
 
       const profile = profileData as Profile | null
+
+      if (profile?.username) {
+        setUsername(profile.username)
+      }
+
+      if (profile?.email) {
+        setEmail(profile.email)
+      }
 
       setIsPremium(isUserPremium(profile))
     }
@@ -75,83 +88,120 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
   async function handleLogout() {
     await supabase.auth.signOut()
     setUsername(null)
+    setEmail(null)
     setIsSignedIn(false)
     setIsPremium(false)
     setMenuOpen(false)
+    setSettingsOpen(false)
     window.location.href = "/"
   }
 
   return (
-    <nav className="flex w-full items-center justify-between">
-      <Link href="/" className="flex items-center gap-2">
-        <div className="h-8 w-12">
-          <svg viewBox="0 0 64 40" className="h-full w-full" fill="none">
-            <path d="M2 32 L20 12 L34 28 L54 4" stroke="#22C55E" strokeWidth="2" />
-            <path d="M47 4 H54 V11" stroke="#22C55E" strokeWidth="2" />
-            <path d="M20 12 L34 28" stroke="#EF4444" strokeWidth="2" />
-          </svg>
-        </div>
-        <span className="text-2xl font-bold tracking-tight text-white">stokr</span>
-      </Link>
+    <>
+      <nav className="flex w-full items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="h-8 w-12">
+            <svg viewBox="0 0 64 40" className="h-full w-full" fill="none">
+              <path d="M2 32 L20 12 L34 28 L54 4" stroke="#22C55E" strokeWidth="2" />
+              <path d="M47 4 H54 V11" stroke="#22C55E" strokeWidth="2" />
+              <path d="M20 12 L34 28" stroke="#EF4444" strokeWidth="2" />
+            </svg>
+          </div>
 
-      <div className="hidden items-center gap-8 rounded-2xl bg-white/85 px-4 py-1.5 text-sm text-black shadow-lg md:flex">
-        {isSignedIn && isPremium && (
-          <Link href="/dashboard" className="rounded-xl px-4 py-2 hover:bg-black/5">
-            Dashboard
-          </Link>
-        )}
-
-        {isSignedIn && (
-          <Link href="/watchlist" className="rounded-xl px-4 py-2 hover:bg-black/5">
-            Watchlist
-          </Link>
-        )}
-
-        {!isPremium && (
-          <Link href="/pricing" className="rounded-xl px-4 py-2 hover:bg-black/5">
-            Pricing
-          </Link>
-        )}
-
-        <a href="#" className="rounded-xl px-4 py-2 hover:bg-black/5">
-          News
-        </a>
-
-        <Link href="/about" className="rounded-xl px-4 py-2 hover:bg-black/5">
-          About
+          <span className="text-2xl font-bold tracking-tight text-white">
+            stokr
+          </span>
         </Link>
 
-        {showSearch && <StockSearchBar variant="nav" />}
+        <div className="hidden items-center gap-8 rounded-2xl bg-white/85 px-4 py-1.5 text-sm text-black shadow-lg md:flex">
+          {isSignedIn && isPremium && (
+            <Link href="/dashboard" className="rounded-xl px-4 py-2 hover:bg-black/5">
+              Dashboard
+            </Link>
+          )}
 
-        {username ? (
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
+          {isSignedIn && (
+            <Link href="/watchlist" className="rounded-xl px-4 py-2 hover:bg-black/5">
+              Watchlist
+            </Link>
+          )}
+
+          {!isPremium && (
+            <Link href="/pricing" className="rounded-xl px-4 py-2 hover:bg-black/5">
+              Pricing
+            </Link>
+          )}
+
+          <a href="#" className="rounded-xl px-4 py-2 hover:bg-black/5">
+            News
+          </a>
+
+          <Link href="/about" className="rounded-xl px-4 py-2 hover:bg-black/5">
+            About
+          </Link>
+
+          {showSearch && <StockSearchBar variant="nav" />}
+
+          {isSignedIn ? (
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="rounded-2xl bg-black/70 px-6 py-2 text-white hover:bg-black/80"
+              >
+                {username || email || "Account"}
+              </button>
+
+              {menuOpen && (
+                <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl bg-white p-2 text-black shadow-xl">
+                  <button
+                    onClick={() => {
+                      setSettingsOpen(true)
+                      setMenuOpen(false)
+                    }}
+                    className="w-full rounded-lg px-4 py-2 text-left hover:bg-slate-100"
+                  >
+                    Settings
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSettingsOpen(true)
+                      setMenuOpen(false)
+                    }}
+                    className="w-full rounded-lg px-4 py-2 text-left hover:bg-slate-100"
+                  >
+                    Manage Subscription
+                  </button>
+
+                  <div className="my-2 h-px bg-slate-200" />
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full rounded-lg px-4 py-2 text-left text-red-600 hover:bg-red-50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
               className="rounded-2xl bg-black/70 px-6 py-2 text-white hover:bg-black/80"
             >
-              {username}
-            </button>
+              Login
+            </Link>
+          )}
+        </div>
+      </nav>
 
-            {menuOpen && (
-              <div className="absolute right-0 z-50 mt-2 w-36 rounded-xl bg-white p-2 text-black shadow-xl">
-                <button
-                  onClick={handleLogout}
-                  className="w-full rounded-lg px-4 py-2 text-left hover:bg-slate-100"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <Link
-            href="/login"
-            className="rounded-2xl bg-black/70 px-6 py-2 text-white hover:bg-black/80"
-          >
-            Login
-          </Link>
-        )}
-      </div>
-    </nav>
+      <AccountSettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        username={username}
+        email={email}
+        isPremium={isPremium}
+      />
+    </>
   )
 }

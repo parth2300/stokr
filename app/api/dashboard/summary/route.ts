@@ -45,38 +45,52 @@ export async function GET(req: Request) {
     const profile = profileData as Profile | null
     const premium = isUserPremium(profile)
 
-    const { count: watchlistCount, error: watchlistCountError } =
-      await supabaseAdmin
+    const [
+      watchlistCountResult,
+      savedStockCountResult,
+      watchlistItemsResult,
+      activeAlertsResult,
+    ] = await Promise.all([
+      supabaseAdmin
         .from("watchlists")
         .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("user_id", user.id),
 
-    if (watchlistCountError) {
-      throw new Error(watchlistCountError.message)
-    }
-
-    const { count: savedStockCount, error: savedStockCountError } =
-      await supabaseAdmin
+      supabaseAdmin
         .from("watchlist_items")
         .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("user_id", user.id),
 
-    if (savedStockCountError) {
-      throw new Error(savedStockCountError.message)
-    }
-
-    const { data: watchlistItems, error: watchlistItemsError } =
-      await supabaseAdmin
+      supabaseAdmin
         .from("watchlist_items")
         .select("ticker")
-        .eq("user_id", user.id)
+        .eq("user_id", user.id),
 
-    if (watchlistItemsError) {
-      throw new Error(watchlistItemsError.message)
+      supabaseAdmin
+        .from("user_alerts")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("is_read", false),
+    ])
+
+    if (watchlistCountResult.error) {
+      throw new Error(watchlistCountResult.error.message)
+    }
+
+    if (savedStockCountResult.error) {
+      throw new Error(savedStockCountResult.error.message)
+    }
+
+    if (watchlistItemsResult.error) {
+      throw new Error(watchlistItemsResult.error.message)
+    }
+
+    if (activeAlertsResult.error) {
+      throw new Error(activeAlertsResult.error.message)
     }
 
     const tickers = Array.from(
-      new Set((watchlistItems || []).map((item) => item.ticker))
+      new Set((watchlistItemsResult.data || []).map((item) => item.ticker))
     )
 
     let savedReportCount = 0
@@ -94,33 +108,18 @@ export async function GET(req: Request) {
       savedReportCount = count || 0
     }
 
-    const monthlyReportLimit = premium ? 50 : 3
-
-    const { count: activeAlertsCount, error: activeAlertsError } =
-      await supabaseAdmin
-        .from("user_alerts")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("is_read", false)
-
-    if (activeAlertsError) {
-      throw new Error(activeAlertsError.message)
-    }
-
-    const activeAlerts = activeAlertsCount || 0
+    const activeAlerts = activeAlertsResult.count || 0
 
     return NextResponse.json({
       planStatus: formatPlan(profile),
       isPremium: premium,
       reportsUsed: savedReportCount,
-      monthlyReportLimit,
-      watchlistCount: watchlistCount || 0,
-      savedStockCount: savedStockCount || 0,
+      monthlyReportLimit: premium ? null : 3,
+      watchlistCount: watchlistCountResult.count || 0,
+      savedStockCount: savedStockCountResult.count || 0,
       activeAlerts,
       activeAlertDetail:
-        activeAlerts > 0
-          ? `${activeAlerts} unread alerts`
-          : "No unread alerts",
+        activeAlerts > 0 ? `${activeAlerts} unread alerts` : "No unread alerts",
     })
   } catch (err) {
     return NextResponse.json(

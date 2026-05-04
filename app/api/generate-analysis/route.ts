@@ -9,10 +9,11 @@ import {
   getFilingDocumentText,
 } from "../../lib/secEdgar"
 import { prepareFilingTextForAnalysis } from "../../lib/filingText"
-
-function isValidTicker(ticker: string) {
-  return /^[A-Z]{1,10}$/.test(ticker)
-}
+import {
+  checkReportAccess,
+  isValidReportTicker,
+  recordReportUse,
+} from "../../lib/reportAccess"
 
 export async function GET(req: Request) {
   try {
@@ -23,7 +24,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Missing ticker" }, { status: 400 })
     }
 
-    if (!isValidTicker(ticker)) {
+    if (!isValidReportTicker(ticker)) {
       return NextResponse.json({ error: "Invalid ticker" }, { status: 400 })
     }
 
@@ -36,6 +37,20 @@ export async function GET(req: Request) {
       )
     }
 
+    const access = await checkReportAccess(req, ticker)
+
+    if (!access.allowed || !access.owner) {
+      return NextResponse.json(
+        {
+          error: access.error || "Report access denied.",
+          used: access.used,
+          remaining: access.remaining,
+          limit: access.limit,
+        },
+        { status: access.status || 403 }
+      )
+    }
+
     const cached = await getCachedAnalysisForFiling({
       ticker,
       formType: annualReport.filing.form,
@@ -43,9 +58,21 @@ export async function GET(req: Request) {
     })
 
     if (cached) {
+      if (!access.premium) {
+        await recordReportUse(access.owner, ticker)
+      }
+
       return NextResponse.json({
         source: "cache",
         data: cached,
+        access: {
+          premium: access.premium,
+          used: access.used,
+          remaining: access.premium
+            ? "unlimited"
+            : Math.max(access.remaining - 1, 0),
+          limit: access.premium ? "unlimited" : access.limit,
+        },
       })
     }
 
@@ -73,9 +100,21 @@ export async function GET(req: Request) {
       analysisJson: analysis,
     })
 
+    if (!access.premium) {
+      await recordReportUse(access.owner, ticker)
+    }
+
     return NextResponse.json({
       source: "openai",
       data: saved,
+      access: {
+        premium: access.premium,
+        used: access.used,
+        remaining: access.premium
+          ? "unlimited"
+          : Math.max(access.remaining - 1, 0),
+        limit: access.premium ? "unlimited" : access.limit,
+      },
     })
   } catch (err) {
     return NextResponse.json(
