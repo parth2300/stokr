@@ -1,8 +1,6 @@
-const CACHE_NAME = "stokr-pwa-v1"
+const CACHE_NAME = "stokr-pwa-v2"
 
 const STATIC_ASSETS = [
-  "/",
-  "/offline",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/maskable-icon-512.png",
@@ -21,7 +19,11 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE_NAME)
+            .map((key) => caches.delete(key))
+        )
       )
   )
 
@@ -32,34 +34,27 @@ self.addEventListener("fetch", (event) => {
   const request = event.request
   const url = new URL(request.url)
 
-  if (request.method !== "GET") {
-    return
-  }
+  if (request.method !== "GET") return
 
-  if (url.pathname.startsWith("/api/")) {
-    return
-  }
+  if (url.origin !== self.location.origin) return
 
   if (
-    url.pathname.startsWith("/login") ||
+    url.pathname.startsWith("/api/") ||
     url.pathname.startsWith("/dashboard") ||
-    url.pathname.startsWith("/watchlist") ||
+    url.pathname.startsWith("/login") ||
     url.pathname.startsWith("/pricing") ||
-    url.pathname.startsWith("/stocks/")
+    url.pathname.startsWith("/watchlist") ||
+    url.pathname.startsWith("/stocks/") ||
+    url.pathname.startsWith("/offline")
   ) {
-    event.respondWith(
-      fetch(request).catch(() => caches.match("/offline"))
-    )
     return
   }
 
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse
-      }
-
-      return fetch(request).catch(() => caches.match("/offline"))
-    })
-  )
+  if (url.pathname.startsWith("/icons/")) {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        return cachedResponse || fetch(request)
+      })
+    )
+  }
 })

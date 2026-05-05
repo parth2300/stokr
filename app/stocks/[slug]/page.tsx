@@ -265,8 +265,22 @@ export default function StockAnalysisPage({
     }, [ticker])
 
     useEffect(() => {
-        loadCachedReport()
-    }, [loadCachedReport])
+    let isMounted = true
+
+    async function runLoadCachedReport() {
+        await Promise.resolve()
+
+        if (!isMounted) return
+
+        await loadCachedReport()
+    }
+
+    void runLoadCachedReport()
+
+    return () => {
+        isMounted = false
+    }
+}, [loadCachedReport])
 
     useEffect(() => {
         if (!ticker) return

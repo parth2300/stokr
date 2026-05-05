@@ -493,18 +493,18 @@ export default function WatchlistPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-[#0F172A] text-white">
-        <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
+        <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
           <div className="absolute inset-0 bg-black/20" />
 
           <div className="relative z-10 w-full">
             <NavBar showSearch />
 
-            <div className="mt-20 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
+            <div className="mt-20 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
                 Loading
               </p>
-              <h1 className="mt-3 text-3xl font-bold text-white">
+              <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
                 Preparing your watchlist
               </h1>
             </div>
@@ -517,19 +517,19 @@ export default function WatchlistPage() {
   if (!userId) {
     return (
       <main className="min-h-screen bg-[#0F172A] text-white">
-        <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
+        <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
           <div className="absolute inset-0 bg-black/20" />
 
           <div className="relative z-10 mx-auto max-w-7xl">
             <NavBar />
 
-            <div className="mt-20 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
+            <div className="mt-20 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
                 Watchlist
               </p>
 
-              <h1 className="mt-3 text-4xl font-extrabold text-white">
+              <h1 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
                 Sign in to create a watchlist
               </h1>
 
@@ -552,30 +552,30 @@ export default function WatchlistPage() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#0F172A] text-white">
-      <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
+      <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
         <div className="absolute inset-0 bg-black/20" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
           <NavBar showSearch />
 
-          <section className="py-12">
-            <div className="flex flex-wrap items-end justify-between gap-6">
+          <section className="py-10 sm:py-12">
+            <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C9DFF]">
                   Watchlist
                 </p>
 
-                <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+                <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
                   Your Watchlist
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-300">
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
                   Track saved stocks, price movement, and open full AI analysis from one page.
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#7C9DFF]/30 bg-[#7C9DFF]/10 px-5 py-3">
+              <div className="w-full rounded-2xl border border-[#7C9DFF]/30 bg-[#7C9DFF]/10 px-5 py-3 sm:w-auto">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9DB6FF]">
                   Access
                 </p>
@@ -597,9 +597,9 @@ export default function WatchlistPage() {
               </div>
             )}
 
-            <div className="mt-8 grid gap-8 xl:grid-cols-[380px_minmax(0,1fr)]">
+            <div className="mt-8 grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)] xl:gap-8">
               <aside className="space-y-6">
-                <section className="rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
+                <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-5">
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -628,10 +628,10 @@ export default function WatchlistPage() {
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <p className="font-bold text-white">{watchlist.name}</p>
+                          <p className="min-w-0 truncate font-bold text-white">{watchlist.name}</p>
 
                           {watchlist.is_default && (
-                            <span className="rounded-full bg-white/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
+                            <span className="shrink-0 rounded-full bg-white/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
                               Default
                             </span>
                           )}
@@ -680,7 +680,7 @@ export default function WatchlistPage() {
                   </form>
                 </section>
 
-                <section className="rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
+                <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -753,14 +753,14 @@ export default function WatchlistPage() {
                 </section>
               </aside>
 
-              <section className="rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
-                <div className="flex flex-wrap items-start justify-between gap-5">
+              <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-6">
+                <div className="flex flex-col items-start justify-between gap-5 sm:flex-row">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
                       Market Window
                     </p>
 
-                    <h2 className="mt-2 text-3xl font-bold text-white">
+                    <h2 className="mt-2 break-words text-2xl font-bold text-white sm:text-3xl">
                       {selectedWatchlist?.name || "Watchlist"}
                     </h2>
 
@@ -769,7 +769,7 @@ export default function WatchlistPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-right">
+                  <div className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-left sm:w-auto sm:text-right">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                       Stocks
                     </p>
@@ -798,9 +798,9 @@ export default function WatchlistPage() {
                   </div>
                 </div>
 
-                <div className="mt-8 overflow-x-auto">
+                <div className="mt-8">
                   {selectedItems.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-10 text-center">
+                    <div className="rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-6 text-center sm:p-10">
                       <p className="text-lg font-bold text-white">
                         No stocks saved yet
                       </p>
@@ -810,77 +810,170 @@ export default function WatchlistPage() {
                       </p>
                     </div>
                   ) : (
-                    <table className="w-full min-w-[760px] text-left text-sm">
-                      <thead>
-                        <tr className="border-b border-white/10 text-xs uppercase tracking-[0.18em] text-slate-400">
-                          <th className="pb-4">Ticker</th>
-                          <th className="pb-4">Company</th>
-                          <th className="pb-4">Price</th>
-                          <th className="pb-4">Daily Change</th>
-                          <th className="pb-4">Market Cap</th>
-                          <th className="pb-4">Updated</th>
-                          <th className="pb-4 text-right">Actions</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
+                    <>
+                      <div className="grid gap-4 lg:hidden">
                         {selectedItems.map((item) => {
                           const overview = stockOverviewByTicker[item.ticker]
 
                           return (
-                            <tr key={item.id} className="border-b border-white/6 last:border-b-0">
-                              <td className="py-4">
-                                <Link
-                                  href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                  className="text-lg font-bold text-white hover:text-[#9DB6FF]"
-                                >
-                                  {item.ticker}
-                                </Link>
-                              </td>
-
-                              <td className="max-w-[220px] truncate py-4 text-slate-300">
-                                {overview?.companyName || item.company_name || "Company name pending"}
-                              </td>
-
-                              <td className="py-4 font-semibold text-white">
-                                {formatPrice(overview?.price)}
-                              </td>
-
-                              <td className={`py-4 font-semibold ${getChangeClass(overview?.change)}`}>
-                                {formatChange(overview?.change, overview?.changePercent)}
-                              </td>
-
-                              <td className="py-4 text-slate-300">
-                                {overview?.marketCap || "Pending"}
-                              </td>
-
-                              <td className="py-4 text-slate-400">
-                                {formatUpdatedAt(overview?.updatedAt)}
-                              </td>
-
-                              <td className="py-4 text-right">
-                                <div className="flex justify-end gap-3">
+                            <article
+                              key={item.id}
+                              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
                                   <Link
                                     href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                    className="rounded-xl border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-2 text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                                    className="block truncate text-xl font-extrabold text-white hover:text-[#9DB6FF]"
                                   >
-                                    Analyze
+                                    {item.ticker}
                                   </Link>
 
-                                  <button
-                                    onClick={() => handleRemoveTicker(item.id, item.ticker)}
-                                    disabled={isSaving}
-                                    className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-500/20 disabled:opacity-50"
-                                  >
-                                    Remove
-                                  </button>
+                                  <p className="mt-1 line-clamp-2 text-sm text-slate-300">
+                                    {overview?.companyName || item.company_name || "Company name pending"}
+                                  </p>
                                 </div>
-                              </td>
-                            </tr>
+
+                                <p className={`shrink-0 text-right text-xs font-bold ${getChangeClass(overview?.change)}`}>
+                                  {formatChange(overview?.change, overview?.changePercent)}
+                                </p>
+                              </div>
+
+                              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                                <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                                    Price
+                                  </p>
+                                  <p className="mt-1 font-bold text-white">
+                                    {formatPrice(overview?.price)}
+                                  </p>
+                                </div>
+
+                                <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                                    Market Cap
+                                  </p>
+                                  <p className="mt-1 truncate font-bold text-white">
+                                    {overview?.marketCap || "Pending"}
+                                  </p>
+                                </div>
+
+                                <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                                    Updated
+                                  </p>
+                                  <p className="mt-1 font-bold text-white">
+                                    {formatUpdatedAt(overview?.updatedAt)}
+                                  </p>
+                                </div>
+
+                                <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                                    Status
+                                  </p>
+                                  <p className="mt-1 font-bold text-white">
+                                    {overview ? "Loaded" : "Pending"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="mt-4 grid grid-cols-2 gap-3">
+                                <Link
+                                  href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
+                                  className="rounded-xl border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-2 text-center text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                                >
+                                  Analyze
+                                </Link>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveTicker(item.id, item.ticker)}
+                                  disabled={isSaving}
+                                  className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-500/20 disabled:opacity-50"
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </article>
                           )
                         })}
-                      </tbody>
-                    </table>
+                      </div>
+
+                      <div className="hidden overflow-x-auto lg:block">
+                        <table className="w-full min-w-[760px] text-left text-sm">
+                          <thead>
+                            <tr className="border-b border-white/10 text-xs uppercase tracking-[0.18em] text-slate-400">
+                              <th className="pb-4">Ticker</th>
+                              <th className="pb-4">Company</th>
+                              <th className="pb-4">Price</th>
+                              <th className="pb-4">Daily Change</th>
+                              <th className="pb-4">Market Cap</th>
+                              <th className="pb-4">Updated</th>
+                              <th className="pb-4 text-right">Actions</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {selectedItems.map((item) => {
+                              const overview = stockOverviewByTicker[item.ticker]
+
+                              return (
+                                <tr key={item.id} className="border-b border-white/6 last:border-b-0">
+                                  <td className="py-4">
+                                    <Link
+                                      href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
+                                      className="text-lg font-bold text-white hover:text-[#9DB6FF]"
+                                    >
+                                      {item.ticker}
+                                    </Link>
+                                  </td>
+
+                                  <td className="max-w-[220px] truncate py-4 text-slate-300">
+                                    {overview?.companyName || item.company_name || "Company name pending"}
+                                  </td>
+
+                                  <td className="py-4 font-semibold text-white">
+                                    {formatPrice(overview?.price)}
+                                  </td>
+
+                                  <td className={`py-4 font-semibold ${getChangeClass(overview?.change)}`}>
+                                    {formatChange(overview?.change, overview?.changePercent)}
+                                  </td>
+
+                                  <td className="py-4 text-slate-300">
+                                    {overview?.marketCap || "Pending"}
+                                  </td>
+
+                                  <td className="py-4 text-slate-400">
+                                    {formatUpdatedAt(overview?.updatedAt)}
+                                  </td>
+
+                                  <td className="py-4 text-right">
+                                    <div className="flex justify-end gap-3">
+                                      <Link
+                                        href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
+                                        className="rounded-xl border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-2 text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                                      >
+                                        Analyze
+                                      </Link>
+
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveTicker(item.id, item.ticker)}
+                                        disabled={isSaving}
+                                        className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-500/20 disabled:opacity-50"
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </div>
               </section>
