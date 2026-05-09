@@ -1,4 +1,14 @@
 import NavBar from "../components/navBar"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About stokr | AI Stock Research",
+  description:
+    "Learn how stokr helps investors research public companies faster with AI-powered SEC filing analysis, financial metrics, risk factors, and transparent summaries.",
+  alternates: {
+    canonical: "https://stokr.live/about",
+  },
+}
 
 export default function AboutPage() {
   return (

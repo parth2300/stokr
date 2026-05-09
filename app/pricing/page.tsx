@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import NavBar from "../components/navBar"
 import { supabase } from "../lib/supabase"
 
-
 async function getAuthHeader() {
   const {
     data: { session },
@@ -57,8 +56,6 @@ export default function PricingPage() {
     checkUser()
   }, [])
 
-  const premiumLink = isLoggedIn ? "/premium" : "/login"
-
   return (
     <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
       <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
@@ -78,7 +75,9 @@ export default function PricingPage() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
-              Free users can test stokr with weekly AI reports and a watchlist. Premium unlocks unlimited reports, deeper research, and the full dashboard.
+              Free users can test stokr with weekly AI reports and a watchlist.
+              Premium unlocks unlimited reports, deeper research, and the full
+              dashboard.
             </p>
           </div>
 
@@ -105,7 +104,9 @@ export default function PricingPage() {
                 <li>✓ Basic filing overview</li>
                 <li className="text-slate-500">✕ No unlimited report access</li>
                 <li className="text-slate-500">✕ No premium dashboard</li>
-                <li className="text-slate-500">✕ No advanced saved research history</li>
+                <li className="text-slate-500">
+                  ✕ No advanced saved research history
+                </li>
                 <li className="text-slate-500">✕ No priority processing</li>
               </ul>
 
@@ -165,7 +166,8 @@ export default function PricingPage() {
           <div className="mx-auto mb-20 max-w-3xl rounded-2xl border border-white/10 bg-black/20 p-5 text-center">
             <p className="text-sm leading-relaxed text-slate-300">
               <span className="font-semibold text-white">Disclaimer:</span>{" "}
-              Stokr provides informational analysis only. It does not provide financial, investment, or trading advice.
+              stokr provides informational analysis only. It does not provide
+              financial, investment, or trading advice.
             </p>
           </div>
         </div>
