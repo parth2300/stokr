@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import InfoTooltip from "@/app/components/ui/InfoTooltip"
 
 type ChartRange = "1D" | "7D" | "1M" | "3M" | "1Y"
 
@@ -49,8 +50,6 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
         const res = await fetch(
           `/api/stock-chart?ticker=${encodeURIComponent(ticker)}&range=${selectedRange}`
         )
-        console.log("Request URL:", `/api/stock-chart?ticker=${ticker}&range=${selectedRange}`);
-        console.log("Response status:", res.status);
         const data = await res.json()
 
         if (!res.ok) {
@@ -74,12 +73,19 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
   }, [chartResponse])
 
   return (
-    <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-5 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
+    <div className="stokr-card p-4 sm:p-5">
       <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-            Price Action
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+              Price Action
+            </p>
+            <InfoTooltip label="Explain price chart">
+              Shows how the stock price has moved over the selected time range.
+              Charts show price movement, but they do not predict future
+              performance.
+            </InfoTooltip>
+          </div>
           <h2 className="mt-2 text-2xl font-bold text-white">
             {ticker} Stock Performance
           </h2>
@@ -88,7 +94,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
           {ranges.map((range) => {
             const isActive = selectedRange === range
 
@@ -97,8 +103,8 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
                 key={range}
                 onClick={() => setSelectedRange(range)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive
-                  ? "bg-[#7C9DFF] text-white shadow-[0_0_18px_rgba(124,157,255,0.28)]"
-                  : "bg-white/5 text-slate-300 hover:bg-white/10"
+                  ? "bg-[#7C8CFF] text-white"
+                  : "border border-white/[0.08] bg-[#151923] text-[#A3AAB8] hover:bg-[#191E29] hover:text-white"
                   }`}
               >
                 {range}
@@ -129,27 +135,46 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
             <div>
               <p className="text-3xl font-bold text-white">
                 {chartResponse.isFallback
-                  ? "Demo chart"
-                  : `$${chartResponse.price.toFixed(2)}`}
+                  ? "Unavailable"
+                  : typeof chartResponse.price === "number" &&
+                    Number.isFinite(chartResponse.price)
+                  ? `$${chartResponse.price.toFixed(2)}`
+                  : "Pending"}
               </p>
               <p
                 className={`mt-1 text-sm font-semibold ${chartResponse.isPositive ? "text-emerald-400" : "text-red-400"
                   }`}
               >
                 {chartResponse.isFallback
-                  ? `Fallback data shown • ${selectedRange}`
-                  : `${chartResponse.isPositive ? "+" : ""}${chartResponse.changeAmount.toFixed(2)} (${chartResponse.isPositive ? "+" : ""}${chartResponse.changePercent.toFixed(2)}%) • ${selectedRange}`}
+                  ? `Live chart unavailable - ${selectedRange}`
+                  : `${chartResponse.isPositive ? "+" : ""}${
+                      Number.isFinite(chartResponse.changeAmount)
+                        ? chartResponse.changeAmount.toFixed(2)
+                        : "0.00"
+                    } (${chartResponse.isPositive ? "+" : ""}${
+                      Number.isFinite(chartResponse.changePercent)
+                        ? chartResponse.changePercent.toFixed(2)
+                        : "0.00"
+                    }%) - ${selectedRange}`}
               </p>
             </div>
           </div>
 
+          {chartResponse.isFallback ? (
+            <div className="flex h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-black/20 p-6 text-center">
+              <p className="max-w-md text-sm leading-relaxed text-slate-400">
+                Live chart data is not available for this range right now.
+                Price trend visuals will appear when verified market data returns.
+              </p>
+            </div>
+          ) : (
           <div className="h-[320px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7C9DFF" stopOpacity={0.45} />
-                    <stop offset="95%" stopColor="#7C9DFF" stopOpacity={0.03} />
+                    <stop offset="5%" stopColor="#7C8CFF" stopOpacity={0.45} />
+                    <stop offset="95%" stopColor="#7C8CFF" stopOpacity={0.03} />
                   </linearGradient>
                 </defs>
 
@@ -181,23 +206,27 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
                     const price =
                       typeof value === "number" ? value : Number(value)
 
-                    return [`$${price.toFixed(2)}`, "Price"]
+                    return [
+                      Number.isFinite(price) ? `$${price.toFixed(2)}` : "Pending",
+                      "Price",
+                    ]
                   }}
                 />
                 <Area
                   type="monotone"
                   dataKey="price"
-                  stroke="#7C9DFF"
+                  stroke="#7C8CFF"
                   strokeWidth={3}
                   fill="url(#priceFill)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          )}
 
           <p className="mt-3 text-xs leading-relaxed text-slate-500">
             {chartResponse.isFallback
-              ? "Demo chart shown because live market data is temporarily unavailable or rate-limited."
+              ? "Live market data is temporarily unavailable or rate-limited, so stokr is not implying a trend."
               : "Chart data is cached based on range. Intraday prices may be delayed and should not be treated as real-time trading data."}
           </p>
         </>
@@ -205,3 +234,4 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
     </div>
   )
 }
+

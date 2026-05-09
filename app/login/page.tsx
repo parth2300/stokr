@@ -162,20 +162,23 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
-            <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.34),transparent_38%),radial-gradient(circle_at_82%_70%,rgba(124,157,255,0.34),transparent_48%),radial-gradient(circle_at_32%_48%,rgba(124,157,255,0.12),transparent_45%)]" />
-                <div className="absolute inset-0 bg-black/10" />
+        <main className="stokr-page">
+            <section className="stokr-shell">
+                <div className="stokr-bg" />
 
-                <div className="relative z-10 mx-auto max-w-7xl">
+                <div className="stokr-container">
                     <NavBar />
 
-                    <div className="grid min-h-[calc(100vh-88px)] grid-cols-1 items-center gap-16 lg:grid-cols-2">
+                    <div className="grid min-h-[calc(100vh-96px)] grid-cols-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
                         <form
                             onSubmit={handleSubmit}
-                            className="mx-auto w-full max-w-sm rounded-[28px] border border-[#7C9DFF]/70 bg-white px-8 py-8 text-black shadow-[0_0_18px_rgba(124,157,255,0.18)]"
+                            className="stokr-card mx-auto w-full max-w-md p-6 text-white sm:p-8"
                         >
-                            <h1 className="mb-6 text-center text-xl font-semibold">
+                            <p className="mb-2 text-center text-xs font-medium uppercase tracking-[0.18em] text-[#7C8CFF]">
+                                Account
+                            </p>
+
+                            <h1 className="mb-6 text-center text-2xl font-semibold">
                                 {mode === "signup" ? "Sign Up" : "Login"}
                             </h1>
 
@@ -186,7 +189,7 @@ export default function LoginPage() {
                                         value={username}
                                         onChange={(event) => setUsername(event.target.value)}
                                         required
-                                        className="mb-4 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-[#7C9DFF]"
+                                        className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
                                     />
 
                                     <input
@@ -195,7 +198,7 @@ export default function LoginPage() {
                                         value={email}
                                         onChange={(event) => setEmail(event.target.value)}
                                         required
-                                        className="mb-4 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-[#7C9DFF]"
+                                        className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
                                     />
                                 </>
                             ) : (
@@ -204,7 +207,7 @@ export default function LoginPage() {
                                     value={identifier}
                                     onChange={(event) => setIdentifier(event.target.value)}
                                     required
-                                    className="mb-4 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-[#7C9DFF]"
+                                    className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
                                 />
                             )}
 
@@ -214,11 +217,11 @@ export default function LoginPage() {
                                 value={password}
                                 onChange={(event) => setPassword(event.target.value)}
                                 required
-                                className="mb-4 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-[#7C9DFF]"
+                                className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
                             />
 
                             {mode === "signup" && (
-                                <label className="mb-4 flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                                <label className="mb-4 flex items-start gap-3 rounded-lg border border-white/[0.10] bg-[#0D1017] p-4 text-sm text-[#A3AAB8]">
                                     <input
                                         type="checkbox"
                                         checked={acceptedTerms}
@@ -233,7 +236,7 @@ export default function LoginPage() {
                                         <Link
                                             href="/terms"
                                             target="_blank"
-                                            className="font-semibold text-[#4F73FF] hover:text-[#2447D8]"
+                                            className="font-semibold text-[#9AA6FF] hover:text-white"
                                         >
                                             Terms of Service
                                         </Link>
@@ -255,7 +258,7 @@ export default function LoginPage() {
                                 disabled={
                                     isLoading || (mode === "signup" && !acceptedTerms)
                                 }
-                                className="w-full rounded-xl bg-[#0F172A] px-4 py-3 font-semibold text-white hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-50"
+                                className="stokr-button-primary w-full"
                             >
                                 {isLoading
                                     ? mode === "signup"
@@ -269,7 +272,7 @@ export default function LoginPage() {
                             <button
                                 type="button"
                                 onClick={switchMode}
-                                className="mt-4 w-full text-sm text-slate-600 hover:text-black"
+                                className="mt-4 w-full text-sm text-[#A3AAB8] hover:text-white"
                             >
                                 {mode === "signup"
                                     ? "Already have an account? Login"
@@ -278,9 +281,9 @@ export default function LoginPage() {
                         </form>
 
                         <div className="text-center lg:text-left">
-                            <h2 className="max-w-xl text-center text-5xl font-light leading-tight tracking-wide sm:text-3xl lg:text-5xl">
-                                Get instant, clear answers from complex filings—no digging, no guesswork.
-                                See what actually changed, spot the risks faster, and make smarter decisions in seconds.
+                            <p className="stokr-kicker">Research workspace</p>
+                            <h2 className="mx-auto mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:mx-0">
+                                Clear stock research without digging through every filing.
                             </h2>
                         </div>
                     </div>

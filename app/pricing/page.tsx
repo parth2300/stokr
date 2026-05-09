@@ -57,114 +57,105 @@ export default function PricingPage() {
   }, [])
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
-      <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.32),transparent_38%),radial-gradient(circle_at_82%_70%,rgba(124,157,255,0.34),transparent_48%),radial-gradient(circle_at_32%_48%,rgba(124,157,255,0.12),transparent_45%)]" />
-        <div className="absolute inset-0 bg-black/10" />
+    <main className="stokr-page">
+      <section className="stokr-shell">
+        <div className="stokr-bg" />
 
-        <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="stokr-container">
           <NavBar showSearch />
 
-          <div className="py-16 text-center">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-[#7C9DFF]">
-              Pricing
-            </p>
+          <div className="py-12 text-center sm:py-16">
+            <p className="stokr-kicker">Pricing</p>
 
-            <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
               Start free. Upgrade when you need unlimited research.
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#A3AAB8]">
               Free users can test stokr with weekly AI reports and a watchlist.
               Premium unlocks unlimited reports, deeper research, and the full
               dashboard.
             </p>
           </div>
 
-          <div className="grid gap-8 pb-20 lg:grid-cols-2">
-            <div className="rounded-[32px] border border-white/10 bg-white/[0.04] p-8 shadow-[0_0_18px_rgba(255,255,255,0.06)] backdrop-blur-xl">
+          <div className="grid gap-6 pb-14 lg:grid-cols-2">
+            <div className="stokr-card p-6 sm:p-8">
               <h2 className="text-2xl font-bold">Free</h2>
 
-              <p className="mt-2 text-slate-400">
+              <p className="mt-2 text-[#A3AAB8]">
                 For casual stock checks before upgrading.
               </p>
 
               <div className="mt-8">
                 <span className="text-5xl font-extrabold">$0</span>
-                <span className="text-slate-400"> / month</span>
+                <span className="text-[#6F7685]"> / month</span>
               </div>
 
-              <ul className="mt-8 space-y-4 text-slate-300">
-                <li>✓ 3 AI stock reports per week</li>
-                <li>✓ Basic company summary</li>
-                <li>✓ Basic stock price and daily change data</li>
-                <li>✓ 1 watchlist</li>
-                <li>✓ Unlimited stocks inside your watchlist</li>
-                <li>✓ Cached stock data</li>
-                <li>✓ Basic filing overview</li>
-                <li className="text-slate-500">✕ No unlimited report access</li>
-                <li className="text-slate-500">✕ No premium dashboard</li>
-                <li className="text-slate-500">
-                  ✕ No advanced saved research history
+              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
+                <li>Included: 3 AI stock reports per week</li>
+                <li>Included: Basic company summary</li>
+                <li>Included: Basic stock price and daily change data</li>
+                <li>Included: 1 watchlist</li>
+                <li>Included: Unlimited stocks inside your watchlist</li>
+                <li>Included: Cached stock data</li>
+                <li>Included: Basic filing overview</li>
+                <li className="text-[#6F7685]">Not included: unlimited report access</li>
+                <li className="text-[#6F7685]">Not included: premium dashboard</li>
+                <li className="text-[#6F7685]">
+                  Not included: advanced saved research history
                 </li>
-                <li className="text-slate-500">✕ No priority processing</li>
+                <li className="text-[#6F7685]">Not included: priority processing</li>
               </ul>
 
-              <Link
-                href="/login"
-                className="mt-8 block rounded-xl border border-white/20 px-5 py-3 text-center font-semibold text-white hover:bg-white/10"
-              >
+              <Link href="/login" className="stokr-button-secondary mt-8 w-full">
                 Get Started
               </Link>
             </div>
 
-            <div className="relative rounded-[32px] border border-[#7C9DFF]/70 bg-white/[0.06] p-8 shadow-[0_0_24px_rgba(124,157,255,0.18)] backdrop-blur-xl">
-              <div className="absolute right-6 top-6 rounded-full bg-[#7C9DFF] px-4 py-1 text-sm font-semibold text-white">
+            <div className="stokr-card relative border-white/[0.14] bg-[#151923] p-6 sm:p-8">
+              <div className="mb-6 inline-flex rounded-full border border-white/[0.10] bg-[#191E29] px-3 py-1 text-xs font-medium text-[#A3AAB8] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
                 Best Value
               </div>
 
-              <h2 className="text-2xl font-bold text-blue-100">Premium</h2>
+              <h2 className="text-2xl font-bold text-[#F4F6FA]">Premium</h2>
 
-              <p className="mt-2 text-slate-300">
+              <p className="mt-2 text-[#A3AAB8]">
                 For users who want deeper, faster stock research.
               </p>
 
               <div className="mt-8">
                 <span className="text-5xl font-extrabold">$9.99</span>
-                <span className="text-slate-400"> / month</span>
+                <span className="text-[#6F7685]"> / month</span>
               </div>
 
-              <ul className="mt-8 space-y-4 text-slate-200">
-                <li>✓ Unlimited AI stock reports</li>
-                <li>✓ Full 10-K and 10-Q breakdowns</li>
-                <li>✓ Complete risk factor analysis</li>
-                <li>✓ “What changed” filing comparison</li>
-                <li>✓ Financial health insights</li>
-                <li>✓ Bull vs bear case summaries</li>
-                <li>✓ Premium dashboard access</li>
-                <li>✓ Unlimited watchlists</li>
-                <li>✓ Unlimited stocks inside watchlists</li>
-                <li>✓ Saved stock research history</li>
-                <li>✓ Faster / priority processing</li>
+              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
+                <li>Included: Unlimited AI stock reports</li>
+                <li>Included: Full 10-K and 10-Q breakdowns</li>
+                <li>Included: Complete risk factor analysis</li>
+                <li>Included: What changed filing comparison</li>
+                <li>Included: Financial health insights</li>
+                <li>Included: Bull vs bear case summaries</li>
+                <li>Included: Premium dashboard access</li>
+                <li>Included: Unlimited watchlists</li>
+                <li>Included: Unlimited stocks inside watchlists</li>
+                <li>Included: Saved stock research history</li>
+                <li>Included: Priority processing</li>
               </ul>
 
-              <button
-                onClick={handleUpgrade}
-                className="mt-8 block w-full rounded-xl bg-[#7C9DFF] px-5 py-3 text-center font-semibold text-white hover:bg-[#93B4FF]"
-              >
+              <button onClick={handleUpgrade} className="stokr-button-primary mt-8 w-full">
                 Upgrade to Premium
               </button>
 
               {!isLoggedIn && (
-                <p className="mt-3 text-center text-sm text-slate-400">
-                  You’ll need an account before upgrading.
+                <p className="mt-3 text-center text-sm text-[#6F7685]">
+                  You will need an account before upgrading.
                 </p>
               )}
             </div>
           </div>
 
-          <div className="mx-auto mb-20 max-w-3xl rounded-2xl border border-white/10 bg-black/20 p-5 text-center">
-            <p className="text-sm leading-relaxed text-slate-300">
+          <div className="stokr-card-muted mx-auto mb-16 max-w-3xl p-5 text-center">
+            <p className="text-sm leading-relaxed text-[#A3AAB8]">
               <span className="font-semibold text-white">Disclaimer:</span>{" "}
               stokr provides informational analysis only. It does not provide
               financial, investment, or trading advice.

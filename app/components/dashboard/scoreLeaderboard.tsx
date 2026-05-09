@@ -6,10 +6,10 @@ export default function ScoreLeaderboard({
     items: LeaderboardItem[]
 }) {
     return (
-        <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
             <div className="flex items-center justify-between gap-2">
                 <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                         Leaderboard
                     </p>
 
@@ -46,3 +46,4 @@ export default function ScoreLeaderboard({
         </section>
     )
 }
+

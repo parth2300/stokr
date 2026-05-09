@@ -9,16 +9,15 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
+    <main className="stokr-page">
       <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.24),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.08),transparent_48%)]" />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="stokr-bg" />
 
         <div className="relative z-10 mx-auto max-w-5xl">
           <NavBar />
 
-          <article className="my-12 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-md md:p-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C9DFF]">
+          <article className="stokr-card my-12 p-6 md:p-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C8CFF]">
               Legal
             </p>
 

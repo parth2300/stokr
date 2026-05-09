@@ -2,12 +2,14 @@
 
 import dynamic from "next/dynamic"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import type { ReactNode } from "react"
 import Link from "next/link"
 import NavBar from "@/app/components/navBar"
 import StockOverviewCards from "@/app/components/analytics/stockOverviewCards"
 import AnalysisReportLoading from "@/app/components/analytics/analysisReportLoading"
 import AddToWatchlistButton from "@/app/components/watchlist/AddToWatchlistButton"
 import LazyFilingComparisonSection from "@/app/components/analytics/LazyFilingComparisonSection"
+import InfoTooltip from "@/app/components/ui/InfoTooltip"
 import { supabase } from "@/app/lib/supabase"
 
 const StockPriceChart = dynamic(
@@ -15,7 +17,7 @@ const StockPriceChart = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="h-[420px] animate-pulse rounded-[30px] border border-[#7C9DFF]/30 bg-white/[0.04]" />
+            <div className="h-[420px] animate-pulse rounded-xl border border-white/[0.08] bg-[#11141C]" />
         ),
     }
 )
@@ -25,7 +27,7 @@ const FinancialMetricCards = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="mt-8 h-40 animate-pulse rounded-[30px] border border-[#7C9DFF]/30 bg-white/[0.04]" />
+            <div className="mt-8 h-40 animate-pulse rounded-xl border border-white/[0.08] bg-[#11141C]" />
         ),
     }
 )
@@ -351,16 +353,15 @@ export default function StockAnalysisClient({
 
     if (!ticker || isLoadingCache) {
         return (
-            <main className="min-h-screen bg-[#0F172A] text-white">
-                <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.28),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.26),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.10),transparent_48%)]" />
-                    <div className="absolute inset-0 bg-black/20" />
+            <main className="stokr-page">
+                <section className="stokr-shell">
+                    <div className="stokr-bg" />
 
                     <div className="relative z-10 mx-auto max-w-7xl">
                         <NavBar showSearch />
 
-                        <div className="mt-20 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-md">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                        <div className="stokr-card mt-20 p-8 text-center">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                                 Loading Report
                             </p>
                             <h1 className="mt-3 text-3xl font-bold text-white">
@@ -384,16 +385,15 @@ export default function StockAnalysisClient({
 
     if (error || limitReached || !cachedAnalysis || !aiAnalysis) {
         return (
-            <main className="min-h-screen bg-[#0F172A] text-white">
-                <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.28),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.26),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.10),transparent_48%)]" />
-                    <div className="absolute inset-0 bg-black/20" />
+            <main className="stokr-page">
+                <section className="stokr-shell">
+                    <div className="stokr-bg" />
 
                     <div className="relative z-10 mx-auto max-w-7xl">
                         <NavBar showSearch />
 
-                        <div className="mt-20 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-md">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                        <div className="stokr-card mt-20 p-8 text-center">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                                 {limitReached ? "Limit Reached" : "Report Unavailable"}
                             </p>
 
@@ -562,20 +562,19 @@ export default function StockAnalysisClient({
     }
 
     return (
-        <main className="min-h-screen overflow-x-hidden bg-[#0F172A] text-white">
-            <section className="relative min-h-screen px-6 py-5 md:px-10 lg:px-20">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.28),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.26),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.10),transparent_48%)]" />
-                <div className="absolute inset-0 bg-black/20" />
+        <main className="stokr-page">
+            <section className="stokr-shell">
+                <div className="stokr-bg" />
 
                 <div className="relative z-10 w-full">
                     <NavBar showSearch />
 
                     <div className="mx-auto max-w-7xl">
-                        <section className="grid gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                        <section className="grid gap-6 py-10 sm:py-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
                             <div>
                                 <div className="flex flex-wrap items-center justify-between gap-4">
                                     <div className="flex flex-wrap items-center gap-3">
-                                        <span className="rounded-full border border-[#7C9DFF]/40 bg-[#7C9DFF]/12 px-4 py-1.5 text-sm font-semibold text-blue-100">
+                                        <span className="rounded-full border border-white/[0.10] bg-[#151923] px-4 py-1.5 text-sm font-semibold text-[#DDE2FF]">
                                             {pageData.ticker}
                                         </span>
 
@@ -588,21 +587,27 @@ export default function StockAnalysisClient({
                                         </span>
                                     </div>
 
-                                    <AddToWatchlistButton
-                                        ticker={pageData.ticker}
-                                        companyName={pageData.companyName}
-                                    />
+                                    <div className="flex items-center gap-2">
+                                        <AddToWatchlistButton
+                                            ticker={pageData.ticker}
+                                            companyName={pageData.companyName}
+                                        />
+                                        <InfoTooltip label="Explain watchlist">
+                                            Adds the stock to your saved list so you can
+                                            find it again later.
+                                        </InfoTooltip>
+                                    </div>
                                 </div>
 
-                                <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                                <h1 className="mt-5 max-w-3xl text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
                                     {pageData.companyName}
                                 </h1>
 
-                                <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-300">
+                                <p className="mt-5 max-w-3xl text-base leading-7 text-[#A3AAB8]">
                                     {pageData.summary}
                                 </p>
 
-                                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
+                                <p className="mt-4 max-w-2xl text-sm leading-6 text-[#6F7685]">
                                     {pageData.note}
                                 </p>
 
@@ -613,10 +618,15 @@ export default function StockAnalysisClient({
                                 />
                             </div>
 
-                            <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-lg backdrop-blur-md">
-                                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                    Executive Snapshot
-                                </p>
+                            <div className="stokr-card p-5 sm:p-6">
+                                <HelpedKicker
+                                    label="Executive Snapshot"
+                                    tooltipLabel="Explain AI summary"
+                                >
+                                    Summarizes the main research points from available
+                                    data, filings, and metrics. Use it as a starting
+                                    point, not as financial advice.
+                                </HelpedKicker>
                                 <h2 className="mt-3 text-2xl font-bold text-white">
                                     Top Signals
                                 </h2>
@@ -646,16 +656,22 @@ export default function StockAnalysisClient({
                             </div>
                         </section>
 
-                        <section className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+                        <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
                             <StockPriceChart ticker={pageData.ticker} />
 
-                            <div className="rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-5 shadow-lg backdrop-blur-md">
-                                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                    Financial Health
-                                </p>
+                            <div className="stokr-card p-5">
+                                <HelpedKicker
+                                    label="Financial Health"
+                                    tooltipLabel="Explain financial health"
+                                >
+                                    Combines available analysis and metrics into a
+                                    simple view of financial condition. It is
+                                    informational and should be checked against the
+                                    underlying data.
+                                </HelpedKicker>
 
-                                <div className="mt-5 flex items-center gap-5">
-                                    <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-8 border-[#7C9DFF]/30 bg-[#7C9DFF]/10 text-3xl font-bold text-white">
+                                <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
+                                    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-white/[0.12] bg-[#151923] text-3xl font-semibold text-white">
                                         {pageData.healthScore}
                                     </div>
 
@@ -677,14 +693,14 @@ export default function StockAnalysisClient({
                                                 <p className="text-sm font-semibold text-white">
                                                     {item.label}
                                                 </p>
-                                                <p className="text-sm font-semibold text-blue-100">
+                                                <p className="text-sm font-semibold text-[#DDE2FF]">
                                                     {item.score > 0 ? `${item.score}/100` : "Pending"}
                                                 </p>
                                             </div>
 
-                                            <div className="mt-2 h-2.5 rounded-full bg-white/8">
+                                            <div className="mt-2 h-2.5 rounded-full bg-white/10">
                                                 <div
-                                                    className="h-2.5 rounded-full bg-[#7C9DFF]"
+                                                    className="h-2.5 rounded-full bg-[#7C8CFF]"
                                                     style={{ width: `${Math.max(item.score, 0)}%` }}
                                                 />
                                             </div>
@@ -702,11 +718,16 @@ export default function StockAnalysisClient({
 
                         <LazyFilingComparisonSection ticker={pageData.ticker} />
 
-                        <section className="mt-8 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-                            <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                    Top Risks
-                                </p>
+                        <section className="mt-8 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+                            <div className="stokr-card p-5 sm:p-6">
+                                <HelpedKicker
+                                    label="Top Risks"
+                                    tooltipLabel="Explain risk factors"
+                                >
+                                    Highlights risks mentioned in company filings or
+                                    analysis. These are things that could negatively
+                                    affect the business or stock.
+                                </HelpedKicker>
 
                                 <h2 className="mt-3 text-2xl font-bold text-white">
                                     Ranked Risk Factors
@@ -741,8 +762,8 @@ export default function StockAnalysisClient({
                             </div>
 
                             {showLowerReportSections ? (
-                                <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                                <div className="stokr-card p-5 sm:p-6">
+                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                                         MD&amp;A Summary
                                     </p>
 
@@ -777,16 +798,23 @@ export default function StockAnalysisClient({
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-96 rounded-[30px] border border-white/10 bg-white/[0.04]" />
+                                <div className="h-96 rounded-xl border border-white/[0.08] bg-[#11141C]" />
                             )}
                         </section>
 
                         {showLowerReportSections && (
                             <>
-                                <section className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                        Decision Framing
-                                    </p>
+                                <section className="stokr-card mt-8 p-5 sm:p-6">
+                                    <HelpedKicker
+                                        label="Decision Framing"
+                                        tooltipLabel="Explain bull and bear case"
+                                    >
+                                        The bull case explains reasons someone might be
+                                        optimistic about the company. The bear case
+                                        explains reasons someone might be cautious or
+                                        negative. These are research perspectives, not
+                                        predictions.
+                                    </HelpedKicker>
 
                                     <h2 className="mt-3 text-2xl font-bold text-white">
                                         Bull vs Bear Case
@@ -819,11 +847,16 @@ export default function StockAnalysisClient({
                                     </div>
                                 </section>
 
-                                <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr]">
-                                    <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                            Revenue Mix
-                                        </p>
+                                <section className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.85fr]">
+                                    <div className="stokr-card p-5 sm:p-6">
+                                        <HelpedKicker
+                                            label="Revenue Mix"
+                                            tooltipLabel="Explain segment contribution"
+                                        >
+                                            Breaks down how different business segments,
+                                            products, or divisions contribute to the
+                                            company when that information is available.
+                                        </HelpedKicker>
 
                                         <h2 className="mt-3 text-2xl font-bold text-white">
                                             Segment Contribution
@@ -868,8 +901,8 @@ export default function StockAnalysisClient({
                                         </div>
                                     </div>
 
-                                    <div className="rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                                    <div className="stokr-card p-5 sm:p-6">
+                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                                             Alert Layer
                                         </p>
 
@@ -890,10 +923,15 @@ export default function StockAnalysisClient({
                                     </div>
                                 </section>
 
-                                <section className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.05] p-6 shadow-lg">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                                        Source Transparency
-                                    </p>
+                                <section className="stokr-card mt-8 p-5 sm:p-6">
+                                    <HelpedKicker
+                                        label="Source Transparency"
+                                        tooltipLabel="Explain source transparency"
+                                    >
+                                        Shows where the analysis came from, such as
+                                        filings, market data, or generated summaries, so
+                                        users can understand the basis of the research.
+                                    </HelpedKicker>
 
                                     <h2 className="mt-3 text-2xl font-bold text-white">
                                         Filing Coverage
@@ -929,7 +967,7 @@ export default function StockAnalysisClient({
                                     </div>
                                 </section>
 
-                                <section className="mt-8 mb-16 rounded-[28px] border border-white/10 bg-black/20 p-6">
+                                <section className="stokr-card-muted mt-8 mb-16 p-6">
                                     <p className="text-sm leading-relaxed text-slate-300">
                                         <span className="font-semibold text-white">Disclaimer:</span>{" "}
                                         This analytics page is for informational analysis only and should not be treated as financial,
@@ -945,3 +983,23 @@ export default function StockAnalysisClient({
         </main>
     )
 }
+
+function HelpedKicker({
+    label,
+    tooltipLabel,
+    children,
+}: {
+    label: string
+    tooltipLabel: string
+    children: ReactNode
+}) {
+    return (
+        <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                {label}
+            </p>
+            <InfoTooltip label={tooltipLabel}>{children}</InfoTooltip>
+        </div>
+    )
+}
+

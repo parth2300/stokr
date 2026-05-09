@@ -64,8 +64,8 @@ export default function LiveSavedReports() {
 
   if (isLoading) {
     return (
-      <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
           Reports
         </p>
 
@@ -84,7 +84,7 @@ export default function LiveSavedReports() {
 
   if (error) {
     return (
-      <section className="min-w-0 rounded-[26px] border border-red-400/30 bg-red-500/10 p-5 shadow-[0_0_20px_rgba(248,113,113,0.10)] backdrop-blur-xl">
+      <section className="min-w-0 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
           Reports Error
         </p>
@@ -107,8 +107,8 @@ export default function LiveSavedReports() {
 
   if (reports.length === 0) {
     return (
-      <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
           Reports
         </p>
 
@@ -116,7 +116,7 @@ export default function LiveSavedReports() {
           Saved AI Reports
         </h2>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-8 text-center">
+        <div className="mt-6 rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-8 text-center">
           <p className="text-lg font-bold text-white">
             No saved reports yet
           </p>
@@ -138,3 +138,4 @@ export default function LiveSavedReports() {
 
   return <SavedReportsTable reports={reports} />
 }
+

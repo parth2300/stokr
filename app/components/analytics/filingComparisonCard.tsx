@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import InfoTooltip from "@/app/components/ui/InfoTooltip"
 
 type FilingChange = {
     type: string
@@ -78,12 +79,19 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
     }
 
     return (
-        <section className="mt-8 rounded-[30px] border border-[#7C9DFF]/60 bg-white/[0.05] p-6 shadow-[0_0_22px_rgba(124,157,255,0.14)] backdrop-blur-xl">
+        <section className="stokr-card mt-8 p-5 sm:p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                        Filing Comparison
-                    </p>
+                    <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                            Filing Comparison
+                        </p>
+                        <InfoTooltip label="Explain filing comparison">
+                            Compares newer filings against older filings to show notable
+                            changes in language, risks, business updates, or financial
+                            discussion.
+                        </InfoTooltip>
+                    </div>
                     <h2 className="mt-3 text-2xl font-bold text-white">What Changed</h2>
                     <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
                         Compares the latest 10-K against the previous 10-K to identify changes in risk,
@@ -95,7 +103,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                     type="button"
                     onClick={loadComparison}
                     disabled={loading}
-                    className="rounded-xl bg-[#7C9DFF] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#93B4FF] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-xl bg-[#7C8CFF] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#93B4FF] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {loading ? "Loading..." : comparison ? "Reload Cached Comparison" : "Load Filing Comparison"}
                 </button>
@@ -146,7 +154,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                                 className="rounded-2xl border border-white/10 bg-black/15 p-5"
                             >
                                 <div className="flex flex-wrap items-center justify-between gap-3">
-                                    <span className="rounded-full border border-[#7C9DFF]/30 bg-[#7C9DFF]/10 px-3 py-1 text-xs font-semibold text-blue-100">
+                                    <span className="rounded-full border border-[#7C8CFF]/30 bg-[#7C8CFF]/10 px-3 py-1 text-xs font-semibold text-[#DDE2FF]">
                                         {change.type}
                                     </span>
 
@@ -192,3 +200,4 @@ function ChangeList({ title, items }: { title: string; items: string[] }) {
         </div>
     )
 }
+

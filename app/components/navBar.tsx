@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { supabase } from "../lib/supabase"
 import StockSearchBar from "./stockSearchBar"
 import { isUserPremium, PremiumProfile } from "../lib/premium"
+import AccountSettingsModal from "./account/AccountSettingsModal"
 
 type Profile = PremiumProfile & {
   id: string
@@ -14,9 +15,11 @@ type Profile = PremiumProfile & {
 
 export default function NavBar({ showSearch = false }: { showSearch?: boolean }) {
   const [username, setUsername] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
+  const [accountSettingsOpen, setAccountSettingsOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const accountMenuRef = useRef<HTMLDivElement | null>(null)
@@ -29,6 +32,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
       if (!user) {
         setUsername(null)
+        setEmail(null)
         setIsSignedIn(false)
         setIsPremium(false)
         return
@@ -36,6 +40,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
       setIsSignedIn(true)
       setUsername(user.user_metadata?.username || user.email || "Account")
+      setEmail(user.email || null)
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -48,6 +53,8 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
       const profile = profileData as Profile | null
 
       setIsPremium(isUserPremium(profile))
+      setUsername(profile?.username || user.user_metadata?.username || user.email || "Account")
+      setEmail(profile?.email || user.email || null)
     }
 
     loadUser()
@@ -81,12 +88,29 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
     }
   }, [])
 
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setAccountMenuOpen(false)
+        setMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape)
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape)
+    }
+  }, [])
+
   async function handleLogout() {
     await supabase.auth.signOut()
     setUsername(null)
+    setEmail(null)
     setIsSignedIn(false)
     setIsPremium(false)
     setAccountMenuOpen(false)
+    setAccountSettingsOpen(false)
     setMobileMenuOpen(false)
     window.location.href = "/"
   }
@@ -96,9 +120,10 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
   }
 
   return (
-    <nav className="relative flex w-full items-center justify-between">
-      <Link href="/" className="flex items-center gap-2">
-        <div className="h-8 w-12">
+    <>
+    <nav className="relative flex w-full items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-[#08090D]/92 px-4 py-3.5 sm:px-5">
+      <Link href="/" className="flex shrink-0 items-center gap-2">
+        <div className="h-8 w-11">
           <svg viewBox="0 0 64 40" className="h-full w-full" fill="none">
             <path d="M2 32 L20 12 L34 28 L54 4" stroke="#22C55E" strokeWidth="2" />
             <path d="M47 4 H54 V11" stroke="#22C55E" strokeWidth="2" />
@@ -109,30 +134,26 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
       </Link>
 
       {/* Desktop nav */}
-      <div className="hidden items-center gap-8 rounded-2xl bg-white/85 px-4 py-1.5 text-sm text-black shadow-lg md:flex">
+      <div className="hidden min-w-0 items-center gap-1 text-sm text-[#A3AAB8] lg:flex">
         {isSignedIn && isPremium && (
-          <Link href="/dashboard" className="rounded-xl px-4 py-2 hover:bg-black/5">
+          <Link href="/dashboard" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
             Dashboard
           </Link>
         )}
 
         {isSignedIn && (
-          <Link href="/watchlist" className="rounded-xl px-4 py-2 hover:bg-black/5">
+          <Link href="/watchlist" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
             Watchlist
           </Link>
         )}
 
         {!isPremium && (
-          <Link href="/pricing" className="rounded-xl px-4 py-2 hover:bg-black/5">
+          <Link href="/pricing" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
             Pricing
           </Link>
         )}
 
-        <a href="#" className="rounded-xl px-4 py-2 hover:bg-black/5">
-          News
-        </a>
-
-        <Link href="/about" className="rounded-xl px-4 py-2 hover:bg-black/5">
+        <Link href="/about" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
           About
         </Link>
 
@@ -142,16 +163,37 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
           <div className="relative" ref={accountMenuRef}>
             <button
               onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-              className="rounded-2xl bg-black/70 px-6 py-2 text-white hover:bg-black/80"
+              className="max-w-[180px] truncate rounded-md border border-white/[0.12] bg-[#151923] px-3 py-2 font-medium text-white hover:bg-[#191E29]"
             >
               {username}
             </button>
 
             {accountMenuOpen && (
-              <div className="absolute right-0 z-50 mt-2 w-36 rounded-xl bg-white p-2 text-black shadow-xl">
+              <div className="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-white/[0.10] bg-[#11141C] p-2 text-white shadow-xl">
+                <div className="border-b border-white/[0.08] px-3 py-2">
+                  <p className="truncate text-sm font-medium text-white">
+                    {username || "Account"}
+                  </p>
+                  {email && (
+                    <p className="mt-0.5 truncate text-xs text-[#6F7685]">
+                      {email}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => {
+                    setAccountMenuOpen(false)
+                    setAccountSettingsOpen(true)
+                  }}
+                  className="mt-1 w-full rounded-md px-3 py-2.5 text-left text-sm text-[#A3AAB8] hover:bg-white/[0.06] hover:text-white"
+                >
+                  Manage account
+                </button>
+
                 <button
                   onClick={handleLogout}
-                  className="w-full rounded-lg px-4 py-2 text-left hover:bg-slate-100"
+                  className="w-full rounded-md px-3 py-2.5 text-left text-sm text-[#A3AAB8] hover:bg-white/[0.06] hover:text-white"
                 >
                   Logout
                 </button>
@@ -161,7 +203,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         ) : (
           <Link
             href="/login"
-            className="rounded-2xl bg-black/70 px-6 py-2 text-white hover:bg-black/80"
+            className="rounded-md bg-white px-4 py-2 font-medium text-[#08090D] hover:bg-[#E9ECF5]"
           >
             Login
           </Link>
@@ -169,13 +211,13 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
       </div>
 
       {/* Mobile nav */}
-      <div className="md:hidden" ref={mobileMenuRef}>
+      <div className="lg:hidden" ref={mobileMenuRef}>
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle navigation menu"
           aria-expanded={mobileMenuOpen}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white shadow-lg backdrop-blur hover:bg-white/15"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.12] bg-[#151923] text-white hover:bg-[#191E29]"
         >
           <span className="sr-only">Open navigation menu</span>
 
@@ -199,7 +241,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         </button>
 
         {mobileMenuOpen && (
-          <div className="absolute right-0 top-14 z-50 w-72 rounded-3xl border border-white/10 bg-black/95 p-4 text-white shadow-2xl backdrop-blur">
+          <div className="absolute right-0 top-14 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#0B0D12] p-3 text-white shadow-2xl">
             <div className="flex flex-col gap-2">
               {showSearch && (
                 <div className="mb-2">
@@ -237,14 +279,6 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                 </Link>
               )}
 
-              <a
-                href="#"
-                onClick={closeMobileMenu}
-                className="rounded-2xl px-4 py-3 text-sm hover:bg-white/10"
-              >
-                News
-              </a>
-
               <Link
                 href="/about"
                 onClick={closeMobileMenu}
@@ -256,13 +290,28 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
               <div className="mt-2 border-t border-white/10 pt-3">
                 {username ? (
                   <>
-                    <div className="mb-2 rounded-2xl bg-white/10 px-4 py-3 text-sm text-white/80">
-                      {username}
+                    <div className="mb-2 rounded-lg border border-white/[0.08] bg-[#151923] px-4 py-3 text-sm text-white/80">
+                      <p className="truncate font-medium text-white">{username}</p>
+                      {email && (
+                        <p className="mt-1 truncate text-xs text-[#6F7685]">
+                          {email}
+                        </p>
+                      )}
                     </div>
 
                     <button
+                      onClick={() => {
+                        setMobileMenuOpen(false)
+                        setAccountSettingsOpen(true)
+                      }}
+                      className="mb-2 w-full rounded-lg border border-white/[0.10] bg-[#151923] px-4 py-3 text-left text-sm font-medium text-white hover:bg-[#191E29]"
+                    >
+                      Manage account
+                    </button>
+
+                    <button
                       onClick={handleLogout}
-                      className="w-full rounded-2xl bg-white px-4 py-3 text-left text-sm font-semibold text-black hover:bg-white/90"
+                      className="w-full rounded-lg bg-white px-4 py-3 text-left text-sm font-semibold text-black hover:bg-white/90"
                     >
                       Logout
                     </button>
@@ -282,5 +331,14 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         )}
       </div>
     </nav>
+    <AccountSettingsModal
+      isOpen={accountSettingsOpen}
+      onClose={() => setAccountSettingsOpen(false)}
+      username={username}
+      email={email}
+      isPremium={isPremium}
+    />
+    </>
   )
 }
+

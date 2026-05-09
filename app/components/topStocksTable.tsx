@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 
 type TopStock = {
@@ -14,6 +15,22 @@ export default function TopStocksTable() {
     const [stocks, setStocks] = useState<TopStock[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
+
+    function formatPrice(price: number) {
+        return typeof price === "number" && Number.isFinite(price)
+            ? `$${price.toFixed(2)}`
+            : "Pending"
+    }
+
+    function getStockAnalysisHref(symbol: string) {
+        const cleanSymbol = symbol
+            .trim()
+            .toLowerCase()
+            .replace(/\./g, "-")
+            .replace(/[^a-z0-9-]/g, "")
+
+        return `/stocks/${cleanSymbol}-stock-analysis`
+    }
 
     useEffect(() => {
         async function loadTopStocks() {
@@ -39,13 +56,13 @@ export default function TopStocksTable() {
 
     return (
   <div className="w-full max-w-[460px]">
-    <div className="rounded-[28px] border border-[#7C9DFF]/70 bg-white/[0.03] p-3 shadow-[0_0_18px_rgba(124,157,255,0.16)] backdrop-blur-xl">
-      <div className="mb-3 px-3">
-        <h2 className="text-xl font-bold text-blue-100">Popular Stocks</h2>
-        <p className="text-xs text-slate-400">Commonly searched stocks</p>
+    <div className="stokr-card p-3">
+      <div className="mb-3 px-3 pt-1">
+        <h2 className="text-lg font-semibold text-[#F4F6FA]">Popular Stocks</h2>
+        <p className="text-xs text-[#6F7685]">Commonly searched stocks</p>
       </div>
 
-      <div className="grid grid-cols-[1fr_80px_90px] border-b border-[#7C9DFF]/55 px-3 pb-2 text-sm font-bold text-blue-100">
+      <div className="grid grid-cols-[minmax(0,1fr)_76px_82px] border-b border-white/[0.08] px-3 pb-2 text-xs font-medium uppercase tracking-[0.12em] text-[#6F7685] sm:text-sm sm:normal-case sm:tracking-normal">
         <div>Company</div>
         <div className="text-right">Price</div>
         <div className="text-right">Change</div>
@@ -75,36 +92,39 @@ export default function TopStocksTable() {
           const isPositive = stock.changeAmount >= 0
 
           return (
-            <div
+            <Link
               key={stock.ticker}
-              className="grid min-h-[46px] grid-cols-[1fr_80px_90px] items-center border-b border-[#7C9DFF]/30 px-3 text-sm last:border-b-0"
+              href={getStockAnalysisHref(stock.ticker)}
+              className="grid min-h-[52px] grid-cols-[minmax(0,1fr)_76px_82px] items-center border-b border-white/10 px-3 text-sm transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C8CFF]/60 last:border-b-0"
+              aria-label={`Open ${stock.ticker} stock analysis`}
             >
-              <div>
-                <p className="font-semibold text-white">{stock.ticker}</p>
-                <p className="text-xs text-slate-500">
+              <div className="min-w-0">
+                <p className="font-medium text-[#F4F6FA]">{stock.ticker}</p>
+                <p className="truncate text-xs text-[#6F7685]">
                   Vol {stock.volume ? stock.volume.toLocaleString() : "N/A"}
                 </p>
               </div>
 
-              <div className="text-right text-slate-200">
-                ${stock.price.toFixed(2)}
+              <div className="text-right text-[#A3AAB8]">
+                {formatPrice(stock.price)}
               </div>
 
               <div
                 className={`text-right font-medium ${
-                  isPositive ? "text-emerald-400" : "text-red-400"
+                  isPositive ? "text-[#7BAE8C]" : "text-[#D26A6A]"
                 }`}
               >
                 {stock.changePercentage}
               </div>
-            </div>
+            </Link>
           )
         })}
     </div>
 
-    <p className="mt-3 px-2 text-center text-xs leading-relaxed text-slate-500">
+    <p className="mt-3 px-2 text-center text-xs leading-relaxed text-[#6F7685]">
       Market data is cached and refreshed approximately every 15 minutes. This list is curated and not ranked by trading volume.
     </p>
   </div>
 )
 }
+

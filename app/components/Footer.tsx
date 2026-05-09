@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#0F172A] px-6 py-6 text-sm text-slate-400 md:px-10 lg:px-20">
+    <footer className="border-t border-white/[0.08] bg-[#08090D] px-4 py-6 text-sm text-[#6F7685] sm:px-6 md:px-8 lg:px-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-2">
           <p>
@@ -16,7 +16,7 @@ export default function Footer() {
               href="https://safaraj.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#7C9DFF] hover:text-blue-200"
+              className="font-semibold text-[#7C8CFF] hover:text-blue-200"
             >
               safaraj.com
             </a>
@@ -40,3 +40,4 @@ export default function Footer() {
     </footer>
   )
 }
+

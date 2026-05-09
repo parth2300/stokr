@@ -9,7 +9,7 @@ function directionIcon(direction?: DashboardChange["direction"]) {
 function directionClass(direction?: DashboardChange["direction"]) {
   if (direction === "up") return "text-emerald-300"
   if (direction === "down") return "text-red-300"
-  return "text-[#7C9DFF]"
+  return "text-[#7C8CFF]"
 }
 
 export default function WhatChangedToday({
@@ -18,10 +18,10 @@ export default function WhatChangedToday({
   changes: DashboardChange[]
 }) {
   return (
-    <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+    <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
             Updates
           </p>
 
@@ -30,7 +30,7 @@ export default function WhatChangedToday({
           </h2>
         </div>
 
-        <button className="text-xs font-semibold text-[#9DB6FF] hover:text-white">
+        <button className="text-xs font-semibold text-[#9AA6FF] hover:text-white">
           View All
         </button>
       </div>
@@ -44,7 +44,7 @@ export default function WhatChangedToday({
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="rounded-md border border-[#7C9DFF]/25 bg-[#7C9DFF]/10 px-2 py-0.5 text-[10px] font-bold text-blue-100">
+                  <span className="rounded-md border border-[#7C8CFF]/25 bg-[#7C8CFF]/10 px-2 py-0.5 text-[10px] font-bold text-[#DDE2FF]">
                     {change.ticker}
                   </span>
 
@@ -72,3 +72,4 @@ export default function WhatChangedToday({
     </section>
   )
 }
+

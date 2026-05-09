@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import InfoTooltip from "@/app/components/ui/InfoTooltip"
 
 type StockOverview = {
   ticker: string
@@ -54,10 +55,26 @@ export default function StockOverviewCards({
   }, [ticker])
 
   const isPositive = overview ? overview.change >= 0 : false
+  const hasPrice =
+    typeof overview?.price === "number" && Number.isFinite(overview.price)
+  const hasChange =
+    typeof overview?.change === "number" && Number.isFinite(overview.change)
 
   return (
-    <div className="mt-8 flex flex-wrap gap-4">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur">
+    <section className="mt-8">
+      <div className="mb-3 flex items-center gap-2">
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#7C8CFF]">
+          Stock overview
+        </p>
+        <InfoTooltip label="Explain stock overview">
+          Shows the company&apos;s basic market snapshot, such as price, daily
+          move, market cap, and key identifying details. It helps you quickly
+          understand what stock you are viewing.
+        </InfoTooltip>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="stokr-card p-4">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Price
         </p>
@@ -65,7 +82,7 @@ export default function StockOverviewCards({
         <p className="mt-2 text-2xl font-bold text-white">
           {loading
             ? "Loading..."
-            : error || !overview || overview.price === undefined
+            : error || !overview || !hasPrice
             ? "Pending live data"
             : `$${overview.price.toFixed(2)}`}
         </p>
@@ -77,13 +94,13 @@ export default function StockOverviewCards({
         >
           {loading
             ? "Loading"
-            : error || !overview || overview.change === undefined
+            : error || !overview || !hasChange
             ? "Pending"
-            : `${isPositive ? "+" : ""}${(overview.change || 0).toFixed(2)} (${overview.changePercent})`}
+            : `${isPositive ? "+" : ""}${overview.change.toFixed(2)} (${overview.changePercent || "pending"})`}
         </p>
-      </div>
+        </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur">
+        <div className="stokr-card p-4">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
           Market Cap
         </p>
@@ -93,16 +110,16 @@ export default function StockOverviewCards({
             ? "Loading..."
             : error || !overview
             ? "Pending live data"
-            : overview.marketCap}
+            : overview.marketCap || "Pending live data"}
         </p>
 
         <p className="mt-1 text-sm text-slate-400">
           {error ? "Live market data pending" : "Cached market data"}
         </p>
-      </div>
+        </div>
 
-      <div className="rounded-2xl border border-[#7C9DFF]/40 bg-[#7C9DFF]/10 px-5 py-4 backdrop-blur">
-        <p className="text-xs uppercase tracking-[0.2em] text-blue-100/80">
+        <div className="stokr-card bg-[#151923] p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-[#DDE2FF]/80">
           Health Score
         </p>
 
@@ -110,8 +127,10 @@ export default function StockOverviewCards({
           {fallbackHealthScore}/100
         </p>
 
-        <p className="mt-1 text-sm text-blue-100">{fallbackRating}</p>
+        <p className="mt-1 text-sm text-[#DDE2FF]">{fallbackRating}</p>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
+

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import InfoTooltip from "@/app/components/ui/InfoTooltip"
 
 type CompanyMetric = {
   label: string
@@ -52,28 +53,31 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
 
   if (loading) {
     return (
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {["Revenue", "Net Income", "Free Cash Flow", "Debt"].map((label) => (
-          <div
-            key={label}
-            className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur"
-          >
-            <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
-              {label}
-            </p>
-            <p className="mt-3 text-2xl font-bold text-white">Loading...</p>
-            <p className="mt-2 text-sm text-slate-400">SEC data</p>
-          </div>
-        ))}
+      <section className="mt-8">
+        <FinancialMetricsHeader />
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {["Revenue", "Net Income", "Free Cash Flow", "Debt"].map((label) => (
+            <div key={label} className="stokr-card p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                {label}
+              </p>
+              <p className="mt-3 text-2xl font-bold text-white">Loading...</p>
+              <p className="mt-2 text-sm text-slate-400">SEC data</p>
+            </div>
+          ))}
+        </div>
       </section>
     )
   }
 
   if (error || !metrics) {
     return (
-      <section className="mt-8 rounded-[24px] border border-red-400/20 bg-red-500/10 p-5">
-        <p className="font-semibold text-red-300">SEC metrics unavailable</p>
-        <p className="mt-2 text-sm text-slate-300">{error}</p>
+      <section className="mt-8">
+        <FinancialMetricsHeader />
+        <div className="mt-3 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
+          <p className="font-semibold text-red-300">SEC metrics unavailable</p>
+          <p className="mt-2 text-sm text-slate-300">{error}</p>
+        </div>
       </section>
     )
   }
@@ -86,21 +90,36 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
   ]
 
   return (
-    <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((metric) => (
-        <div
-          key={metric.label}
-          className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur"
-        >
-          <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
-            {metric.label}
-          </p>
-          <p className="mt-3 text-2xl font-bold text-white">{metric.value}</p>
-          <p className="mt-2 text-sm text-emerald-400">
-            {metric.form || "SEC"} {metric.filed ? `• ${metric.filed}` : ""}
-          </p>
-        </div>
-      ))}
+    <section className="mt-8">
+      <FinancialMetricsHeader />
+      <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {cards.map((metric) => (
+          <div key={metric.label} className="stokr-card p-5">
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+              {metric.label}
+            </p>
+            <p className="mt-3 text-2xl font-bold text-white">{metric.value}</p>
+            <p className="mt-2 text-sm text-emerald-400">
+              {metric.form || "SEC"} {metric.filed ? `- ${metric.filed}` : ""}
+            </p>
+          </div>
+        ))}
+      </div>
     </section>
+  )
+}
+
+function FinancialMetricsHeader() {
+  return (
+    <div className="flex items-center gap-2">
+      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+        Financial Metrics
+      </p>
+      <InfoTooltip label="Explain financial metrics">
+        Shows numbers that help describe the company&apos;s financial condition,
+        such as revenue, profitability, valuation, debt, or cash flow when
+        available.
+      </InfoTooltip>
+    </div>
   )
 }

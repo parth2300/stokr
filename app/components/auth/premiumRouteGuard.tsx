@@ -63,13 +63,12 @@ export default function PremiumRouteGuard({
 
   if (status === "loading") {
     return (
-      <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
+      <main className="stokr-page">
         <section className="relative flex min-h-screen items-center justify-center px-6 py-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="stokr-bg" />
 
-          <div className="relative z-10 rounded-[30px] border border-[#7C9DFF]/40 bg-white/[0.045] p-8 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+          <div className="stokr-card relative z-10 p-8 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
               Checking Access
             </p>
 
@@ -92,3 +91,4 @@ export default function PremiumRouteGuard({
 
   return <>{children}</>
 }
+

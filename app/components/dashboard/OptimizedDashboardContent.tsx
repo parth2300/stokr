@@ -54,9 +54,9 @@ function DashboardPanelSkeleton({
 }) {
   return (
     <section
-      className={`${height} rounded-[26px] border border-[#7C9DFF]/25 bg-white/[0.04] p-5 shadow-lg`}
+      className={`${height} stokr-card p-5`}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
         {title}
       </p>
 
@@ -85,10 +85,9 @@ export default function OptimizedDashboardContent() {
   }, [])
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#0F172A] text-white">
-      <section className="relative min-h-screen px-4 py-4 md:px-6 lg:px-8 xl:px-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.18),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.22),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.08),transparent_48%)]" />
-        <div className="absolute inset-0 bg-black/20" />
+    <main className="stokr-page">
+      <section className="stokr-shell">
+        <div className="stokr-bg" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col">
           <NavBar showSearch />
@@ -96,22 +95,22 @@ export default function OptimizedDashboardContent() {
           <section className="mt-6 space-y-6 pb-10">
             <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-end">
               <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7C9DFF]">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7C8CFF]">
                   Premium
                 </p>
 
-                <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-white xl:text-5xl">
+                <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white xl:text-5xl">
                   Dashboard
                 </h1>
 
-                <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 xl:text-base">
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-[#A3AAB8] xl:text-base">
                   Monitor your watchlist, saved AI reports, valuation shifts, filing changes,
                   and risk alerts in one place.
                 </p>
               </div>
 
-              <div className="shrink-0 rounded-2xl border border-emerald-400/25 bg-emerald-500/10 px-5 py-3 shadow-lg">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-300">
+              <div className="w-full shrink-0 rounded-xl border border-white/[0.10] bg-[#11141C] px-5 py-3 sm:w-auto">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#7BAE8C]">
                   Access
                 </p>
                 <p className="mt-1 text-sm font-bold text-white">
@@ -165,3 +164,5 @@ export default function OptimizedDashboardContent() {
     </main>
   )
 }
+
+

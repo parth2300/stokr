@@ -172,18 +172,18 @@ export default function StockSearchBar({
 
     const wrapperClass =
         variant === "nav"
-            ? "relative w-full max-w-[280px]"
-            : "relative mt-24 w-full max-w-xl"
+            ? "relative w-full max-w-[260px]"
+            : "relative mt-8 w-full max-w-xl"
 
     const formClass =
         variant === "nav"
-            ? "rounded-full border border-slate-300/40 bg-white/90 px-4 py-2 shadow-md"
-            : "rounded-full border border-slate-300/50 bg-gradient-to-b from-white/90 to-slate-200/85 px-7 py-4 shadow-[0_8px_28px_rgba(0,0,0,0.35),inset_0_2px_8px_rgba(0,0,0,0.12)]"
+            ? "rounded-lg border border-white/[0.10] bg-[#11141C] px-3 py-2"
+            : "rounded-xl border border-white/[0.10] bg-[#11141C] px-4 py-3 sm:px-5"
 
     const inputClass =
         variant === "nav"
-            ? "w-full bg-transparent text-sm uppercase text-slate-900 outline-none placeholder:normal-case placeholder:text-slate-600"
-            : "w-full bg-transparent text-xl uppercase text-slate-900 outline-none placeholder:normal-case placeholder:text-slate-700"
+            ? "w-full bg-transparent text-sm uppercase text-[#F4F6FA] outline-none placeholder:normal-case placeholder:text-[#6F7685]"
+            : "w-full bg-transparent text-base uppercase text-[#F4F6FA] outline-none placeholder:normal-case placeholder:text-[#6F7685]"
 
     const iconSize = variant === "nav" ? 20 : 28
 
@@ -201,7 +201,7 @@ export default function StockSearchBar({
                     <button
                         type="submit"
                         aria-label="Search ticker"
-                        className="text-slate-700 transition hover:text-slate-950"
+                        className="text-[#A3AAB8] transition hover:text-white"
                     >
                         <SearchIcon size={iconSize} />
                     </button>
@@ -210,7 +210,7 @@ export default function StockSearchBar({
 
             {isOpen && (
                 <div className="search-dropdown-scroll absolute left-0 right-0 z-50 mt-3 max-h-[228px] overflow-y-auto overflow-x-hidden
-                 rounded-2xl border border-[#7C9DFF]/40 bg-[#0F172A]/95 shadow-[0_14px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+                 rounded-xl border border-white/[0.10] bg-[#11141C] shadow-xl">
                     {isLoading && (
                         <div className="px-5 py-4 text-sm text-slate-400">
                             Searching...
@@ -233,12 +233,12 @@ export default function StockSearchBar({
                                     type="button"
                                     onClick={() => goToStock(stock.ticker)}
                                     onMouseEnter={() => setActiveIndex(index)}
-                                    className={`flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition ${isActive ? "bg-[#7C9DFF]/18" : "hover:bg-white/7"
+                                    className={`flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition ${isActive ? "bg-[#7C8CFF]/20" : "hover:bg-white/10"
                                         }`}
                                 >
                                     <div>
                                         <p className="font-semibold text-white">{stock.ticker}</p>
-                                        <p className="max-w-[260px] truncate text-sm text-slate-400 sm:max-w-[360px]">
+                                        <p className="max-w-[260px] truncate text-sm text-[#A3AAB8] sm:max-w-[360px]">
                                             {stock.name}
                                         </p>
                                     </div>
@@ -254,3 +254,4 @@ export default function StockSearchBar({
         </div>
     )
 }
+

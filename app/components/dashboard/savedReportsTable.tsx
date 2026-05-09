@@ -7,10 +7,10 @@ export default function SavedReportsTable({
   reports: SavedReport[]
 }) {
   return (
-    <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+    <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
             Reports
           </p>
 
@@ -19,7 +19,7 @@ export default function SavedReportsTable({
           </h2>
         </div>
 
-        <button className="text-xs font-semibold text-[#9DB6FF] hover:text-white">
+        <button className="text-xs font-semibold text-[#9AA6FF] hover:text-white">
           View All Reports
         </button>
       </div>
@@ -57,7 +57,7 @@ export default function SavedReportsTable({
                 <td className="py-3 text-right">
                   <Link
                     href={report.href}
-                    className="rounded-lg border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-2.5 py-1.5 text-[10px] font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                    className="rounded-lg border border-white/[0.10] bg-[#151923] px-2.5 py-1.5 text-[10px] font-semibold text-[#DDE2FF] hover:bg-[#191E29]"
                   >
                     View Report
                   </Link>
@@ -70,3 +70,4 @@ export default function SavedReportsTable({
     </section>
   )
 }
+

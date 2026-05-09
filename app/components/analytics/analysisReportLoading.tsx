@@ -140,23 +140,22 @@ export default function AnalysisReportLoading({
     }, [router, ticker, onComplete])
 
     return (
-        <main className="min-h-screen overflow-hidden bg-[#0F172A] text-white">
+        <main className="stokr-page">
             <section className="relative flex min-h-screen items-center justify-center px-6 py-10">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,138,101,0.22),transparent_34%),radial-gradient(circle_at_80%_25%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_80%,rgba(124,157,255,0.10),transparent_45%)]" />
-                <div className="absolute inset-0 bg-black/25" />
+                <div className="stokr-bg" />
 
-                <div className="relative z-10 w-full max-w-3xl rounded-[34px] border border-[#7C9DFF]/50 bg-white/[0.055] p-8 shadow-[0_0_35px_rgba(124,157,255,0.18)] backdrop-blur-xl md:p-10">
+                <div className="stokr-card relative z-10 w-full max-w-3xl p-8 md:p-10">
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
-                            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C9DFF]">
+                            <p className="stokr-kicker">
                                 {limitReached ? "Report Limit Reached" : "Generating AI Report"}
                             </p>
 
-                            <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">
                                 {ticker} Analysis
                             </h1>
 
-                            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 md:text-base">
+                            <p className="mt-4 max-w-2xl text-sm leading-6 text-[#A3AAB8] md:text-base">
                                 {limitReached
                                     ? "Free users can access 3 reports. Upgrade to Premium for unlimited report access."
                                     : "The report is being generated from filing data, financial signals, risk factors, management commentary, and investor-facing decision points."}
@@ -174,7 +173,7 @@ export default function AnalysisReportLoading({
                     </div>
 
                     {!limitReached && (
-                        <div className="mt-10 rounded-[28px] border border-white/10 bg-black/25 p-5">
+                        <div className="stokr-card-muted mt-10 p-5">
                             <svg
                                 viewBox="0 0 440 120"
                                 className="h-48 w-full overflow-visible"
@@ -183,14 +182,14 @@ export default function AnalysisReportLoading({
                             >
                                 <defs>
                                     <linearGradient id="loadingLine" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stopColor="#7C9DFF" stopOpacity="0.35" />
+                                        <stop offset="0%" stopColor="#7C8CFF" stopOpacity="0.35" />
                                         <stop offset="50%" stopColor="#8FB3FF" stopOpacity="1" />
                                         <stop offset="100%" stopColor="#34D399" stopOpacity="1" />
                                     </linearGradient>
 
                                     <linearGradient id="loadingFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#7C9DFF" stopOpacity="0.32" />
-                                        <stop offset="100%" stopColor="#7C9DFF" stopOpacity="0.02" />
+                                        <stop offset="0%" stopColor="#7C8CFF" stopOpacity="0.32" />
+                                        <stop offset="100%" stopColor="#7C8CFF" stopOpacity="0.02" />
                                     </linearGradient>
                                 </defs>
 
@@ -252,16 +251,16 @@ export default function AnalysisReportLoading({
 
                             {!error && (
                                 <div className="flex gap-1">
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C9DFF]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C9DFF] [animation-delay:120ms]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C9DFF] [animation-delay:240ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF] [animation-delay:120ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF] [animation-delay:240ms]" />
                                 </div>
                             )}
                         </div>
 
                         {!limitReached && (
                             <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] rounded-full bg-[#7C9DFF]" />
+                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] rounded-full bg-[#7C8CFF]" />
                             </div>
                         )}
 
@@ -289,7 +288,7 @@ export default function AnalysisReportLoading({
                                 {!limitReached && (
                                     <button
                                         onClick={() => window.location.reload()}
-                                        className="rounded-full border border-[#7C9DFF]/40 bg-[#7C9DFF]/15 px-5 py-2 text-sm font-semibold text-blue-100 transition hover:bg-[#7C9DFF]/25"
+                                        className="rounded-full border border-white/[0.10] bg-[#151923] px-5 py-2 text-sm font-semibold text-[#DDE2FF] transition hover:bg-[#191E29]"
                                     >
                                         Retry generation
                                     </button>
@@ -316,3 +315,4 @@ export default function AnalysisReportLoading({
         </main>
     )
 }
+

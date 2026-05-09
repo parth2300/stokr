@@ -91,8 +91,8 @@ export default function LiveDashboardInsights() {
     if (isLoading) {
         return (
             <>
-                <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                         Leaderboard
                     </p>
                     <div className="mt-5 space-y-3">
@@ -102,8 +102,8 @@ export default function LiveDashboardInsights() {
                     </div>
                 </section>
 
-                <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                         Insights
                     </p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -119,7 +119,7 @@ export default function LiveDashboardInsights() {
 
     if (error) {
         return (
-            <section className="rounded-[26px] border border-red-400/30 bg-red-500/10 p-5 text-sm text-red-100 xl:col-span-2">
+            <section className="rounded-xl border border-red-400/20 bg-red-500/10 p-5 text-sm text-red-100 xl:col-span-2">
                 {error}
             </section>
         )
@@ -132,3 +132,4 @@ export default function LiveDashboardInsights() {
         </>
     )
 }
+

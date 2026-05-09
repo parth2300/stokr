@@ -34,7 +34,7 @@ export default function LazyFilingComparisonSection({ ticker }: { ticker: string
             {isVisible ? (
                 <FilingComparisonCard ticker={ticker} />
             ) : (
-                <div className="h-72 rounded-[30px] border border-[#7C9DFF]/30 bg-white/[0.04]" />
+                <div className="h-72 rounded-xl border border-white/[0.08] bg-[#11141C]" />
             )}
         </div>
     )

@@ -116,7 +116,7 @@ export default function LiveDashboardMetrics() {
         {[1, 2, 3, 4].map((item) => (
           <div
             key={item}
-            className="min-h-[105px] animate-pulse rounded-[22px] border border-[#7C9DFF]/25 bg-white/[0.045]"
+            className="min-h-[105px] animate-pulse rounded-[22px] border border-[#7C8CFF]/25 bg-white/[0.045]"
           />
         ))}
       </>
@@ -139,3 +139,4 @@ export default function LiveDashboardMetrics() {
     </>
   )
 }
+

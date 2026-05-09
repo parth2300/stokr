@@ -1,5 +1,10 @@
-// import { describe, expect, it, vi, beforeEach, afterEach } from "vitest"
+import { describe, it } from "vitest"
+// import { expect, vi, beforeEach, afterEach } from "vitest"
 // import { GET } from "../app/api/top-stocks/route"
+
+describe.skip("top-stocks API cache headers", () => {
+  it("needs route-level mocks before it can run in Vitest", () => {})
+})
 
 // describe("top-stocks API cache headers", () => {
 //   beforeEach(() => {

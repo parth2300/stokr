@@ -3,7 +3,7 @@ import { DashboardInsight } from "@/app/lib/dashboardTypes"
 function detailClass(direction: DashboardInsight["direction"]) {
     if (direction === "up") return "text-emerald-300"
     if (direction === "down") return "text-red-300"
-    return "text-[#9DB6FF]"
+    return "text-[#9AA6FF]"
 }
 
 export default function WatchlistInsights({
@@ -12,9 +12,9 @@ export default function WatchlistInsights({
     insights: DashboardInsight[]
 }) {
     return (
-        <section className="min-w-0 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
             <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                     Insights
                 </p>
 
@@ -46,3 +46,4 @@ export default function WatchlistInsights({
         </section>
     )
 }
+

@@ -166,7 +166,7 @@ export default function AddToWatchlistButton({
       <button
         onClick={handleAddToWatchlist}
         disabled={isSaving}
-        className="inline-flex h-11 items-center gap-2 rounded-2xl border border-[#7C9DFF]/40 bg-[#7C9DFF]/15 px-5 text-sm font-bold text-blue-100 transition hover:bg-[#7C9DFF]/25 disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-11 items-center gap-2 rounded-2xl border border-white/[0.10] bg-[#151923] px-5 text-sm font-bold text-[#DDE2FF] transition hover:bg-[#191E29] disabled:cursor-not-allowed disabled:opacity-50"
         title="Add to watchlist"
       >
         <span className="text-xl leading-none">+</span>
@@ -174,7 +174,7 @@ export default function AddToWatchlistButton({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-3 w-72 rounded-2xl border border-white/10 bg-[#0F172A] p-4 text-sm shadow-2xl">
+        <div className="absolute right-0 z-50 mt-3 w-72 rounded-xl border border-white/[0.10] bg-[#11141C] p-4 text-sm shadow-2xl">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-bold text-white">
@@ -222,3 +222,4 @@ export default function AddToWatchlistButton({
     </div>
   )
 }
+

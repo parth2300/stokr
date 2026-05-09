@@ -20,7 +20,7 @@ function ScorePill({ score }: { score: number }) {
 
       <div className="h-1.5 w-10 rounded-full bg-white/10">
         <div
-          className="h-1.5 rounded-full bg-[#7C9DFF]"
+          className="h-1.5 rounded-full bg-[#7C8CFF]"
           style={{ width: `${score}%` }}
         />
       </div>
@@ -34,10 +34,10 @@ export default function WatchlistOverview({
   stocks: WatchlistStock[]
 }) {
   return (
-   <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-5 shadow-[0_0_20px_rgba(124,157,255,0.10)] backdrop-blur-xl">
+   <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
             Watchlist
           </p>
 
@@ -48,7 +48,7 @@ export default function WatchlistOverview({
 
         <Link
           href="/watchlist"
-          className="rounded-lg border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-1.5 text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+          className="rounded-lg border border-white/[0.10] bg-[#151923] px-3 py-1.5 text-xs font-semibold text-[#DDE2FF] hover:bg-[#191E29]"
         >
           View Watchlist
         </Link>
@@ -74,7 +74,7 @@ export default function WatchlistOverview({
                 <td className="py-3">
                   <Link
                     href={`/stocks/${stock.ticker.toLowerCase()}-stock-analysis`}
-                    className="font-bold text-white hover:text-[#9DB6FF]"
+                    className="font-bold text-white hover:text-[#9AA6FF]"
                   >
                     {stock.ticker}
                   </Link>
@@ -116,3 +116,4 @@ export default function WatchlistOverview({
     </section>
   )
 }
+

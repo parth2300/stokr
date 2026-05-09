@@ -492,16 +492,15 @@ export default function WatchlistPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-[#0F172A] text-white">
-        <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
-          <div className="absolute inset-0 bg-black/20" />
+      <main className="stokr-page">
+        <section className="stokr-shell">
+          <div className="stokr-bg" />
 
           <div className="relative z-10 w-full">
             <NavBar showSearch />
 
-            <div className="mt-20 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+            <div className="stokr-card mt-20 p-6 text-center sm:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                 Loading
               </p>
               <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
@@ -516,16 +515,15 @@ export default function WatchlistPage() {
 
   if (!userId) {
     return (
-      <main className="min-h-screen bg-[#0F172A] text-white">
-        <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
-          <div className="absolute inset-0 bg-black/20" />
+      <main className="stokr-page">
+        <section className="stokr-shell">
+          <div className="stokr-bg" />
 
           <div className="relative z-10 mx-auto max-w-7xl">
             <NavBar />
 
-            <div className="mt-20 rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-6 text-center shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+            <div className="stokr-card mt-20 p-6 text-center sm:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                 Watchlist
               </p>
 
@@ -551,10 +549,9 @@ export default function WatchlistPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#0F172A] text-white">
-      <section className="relative min-h-screen px-4 py-5 sm:px-6 md:px-10 lg:px-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_18%,rgba(255,138,101,0.22),transparent_38%),radial-gradient(circle_at_82%_20%,rgba(124,157,255,0.28),transparent_42%),radial-gradient(circle_at_50%_70%,rgba(124,157,255,0.12),transparent_48%)]" />
-        <div className="absolute inset-0 bg-black/20" />
+    <main className="stokr-page">
+      <section className="stokr-shell">
+        <div className="stokr-bg" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
           <NavBar showSearch />
@@ -562,25 +559,25 @@ export default function WatchlistPage() {
           <section className="py-10 sm:py-12">
             <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C9DFF]">
+                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C8CFF]">
                   Watchlist
                 </p>
 
-                <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+                <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-5xl">
                   Your Watchlist
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-[#A3AAB8] sm:text-base">
                   Track saved stocks, price movement, and open full AI analysis from one page.
                 </p>
               </div>
 
-              <div className="w-full rounded-2xl border border-[#7C9DFF]/30 bg-[#7C9DFF]/10 px-5 py-3 sm:w-auto">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9DB6FF]">
+              <div className="w-full rounded-xl border border-white/[0.10] bg-[#11141C] px-5 py-3 sm:w-auto">
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#6F7685]">
                   Access
                 </p>
                 <p className="mt-1 text-sm font-bold text-white">
-                  {premium ? "Premium · Unlimited watchlists" : "Free · 1 watchlist"}
+                  {premium ? "Premium - Unlimited watchlists" : "Free - 1 watchlist"}
                 </p>
               </div>
             </div>
@@ -597,9 +594,9 @@ export default function WatchlistPage() {
               </div>
             )}
 
-            <div className="mt-8 grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)] xl:gap-8">
+            <div className="mt-8 grid gap-6 xl:grid-cols-[340px_minmax(0,1fr)] xl:gap-8">
               <aside className="space-y-6">
-                <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-5">
+                <section className="stokr-card p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -623,7 +620,7 @@ export default function WatchlistPage() {
                         onClick={() => setSelectedWatchlistId(watchlist.id)}
                         className={`w-full rounded-2xl border p-4 text-left transition ${
                           selectedWatchlistId === watchlist.id
-                            ? "border-[#7C9DFF]/60 bg-[#7C9DFF]/15"
+                            ? "border-[#7C8CFF]/60 bg-[#7C8CFF]/15"
                             : "border-white/10 bg-black/20 hover:bg-white/10"
                         }`}
                       >
@@ -658,7 +655,7 @@ export default function WatchlistPage() {
                           ? "Growth stocks"
                           : "Upgrade for more watchlists"
                       }
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-[#7C9DFF]/60 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-3 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-[#7C8CFF]/60 disabled:cursor-not-allowed disabled:opacity-50"
                     />
 
                     <button
@@ -680,7 +677,7 @@ export default function WatchlistPage() {
                   </form>
                 </section>
 
-                <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-5">
+                <section className="stokr-card p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -710,7 +707,7 @@ export default function WatchlistPage() {
                       value={tickerInput}
                       onChange={(event) => setTickerInput(event.target.value.toUpperCase())}
                       placeholder="Add ticker, example: MSFT"
-                      className="w-full rounded-2xl border border-white/10 bg-black/25 px-5 py-3 text-sm uppercase text-white outline-none placeholder:normal-case placeholder:text-slate-500 focus:border-[#7C9DFF]/60"
+                      className="w-full rounded-2xl border border-white/10 bg-black/25 px-5 py-3 text-sm uppercase text-white outline-none placeholder:normal-case placeholder:text-slate-500 focus:border-[#7C8CFF]/60"
                     />
 
                     <button
@@ -723,7 +720,7 @@ export default function WatchlistPage() {
 
                   <div className="mt-5 space-y-2">
                     {selectedItems.length === 0 ? (
-                      <div className="rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-5 text-sm leading-relaxed text-slate-400">
+                      <div className="rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-5 text-sm leading-relaxed text-slate-400">
                         Add your first ticker. Stocks inside a watchlist are unlimited for both free and premium users.
                       </div>
                     ) : (
@@ -753,10 +750,10 @@ export default function WatchlistPage() {
                 </section>
               </aside>
 
-              <section className="rounded-[26px] border border-[#7C9DFF]/40 bg-white/[0.045] p-4 shadow-[0_0_24px_rgba(124,157,255,0.12)] backdrop-blur-xl sm:rounded-[30px] sm:p-6">
+              <section className="stokr-card p-4 sm:p-6">
                 <div className="flex flex-col items-start justify-between gap-5 sm:flex-row">
                   <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
                       Market Window
                     </p>
 
@@ -800,7 +797,7 @@ export default function WatchlistPage() {
 
                 <div className="mt-8">
                   {selectedItems.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-[#7C9DFF]/35 bg-black/20 p-6 text-center sm:p-10">
+                    <div className="rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-6 text-center sm:p-10">
                       <p className="text-lg font-bold text-white">
                         No stocks saved yet
                       </p>
@@ -824,7 +821,7 @@ export default function WatchlistPage() {
                                 <div className="min-w-0">
                                   <Link
                                     href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                    className="block truncate text-xl font-extrabold text-white hover:text-[#9DB6FF]"
+                                    className="block truncate text-xl font-extrabold text-white hover:text-[#9AA6FF]"
                                   >
                                     {item.ticker}
                                   </Link>
@@ -880,7 +877,7 @@ export default function WatchlistPage() {
                               <div className="mt-4 grid grid-cols-2 gap-3">
                                 <Link
                                   href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                  className="rounded-xl border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-2 text-center text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                                  className="rounded-xl border border-white/[0.10] bg-[#151923] px-3 py-2 text-center text-xs font-semibold text-[#DDE2FF] hover:bg-[#191E29]"
                                 >
                                   Analyze
                                 </Link>
@@ -922,7 +919,7 @@ export default function WatchlistPage() {
                                   <td className="py-4">
                                     <Link
                                       href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                      className="text-lg font-bold text-white hover:text-[#9DB6FF]"
+                                      className="text-lg font-bold text-white hover:text-[#9AA6FF]"
                                     >
                                       {item.ticker}
                                     </Link>
@@ -952,7 +949,7 @@ export default function WatchlistPage() {
                                     <div className="flex justify-end gap-3">
                                       <Link
                                         href={`/stocks/${item.ticker.toLowerCase()}-stock-analysis`}
-                                        className="rounded-xl border border-[#7C9DFF]/35 bg-[#7C9DFF]/10 px-3 py-2 text-xs font-semibold text-blue-100 hover:bg-[#7C9DFF]/20"
+                                        className="rounded-xl border border-white/[0.10] bg-[#151923] px-3 py-2 text-xs font-semibold text-[#DDE2FF] hover:bg-[#191E29]"
                                       >
                                         Analyze
                                       </Link>
@@ -984,3 +981,4 @@ export default function WatchlistPage() {
     </main>
   )
 }
+

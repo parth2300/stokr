@@ -9,13 +9,13 @@ function accentClasses(accent: DashboardMetric["accent"]) {
     case "yellow":
       return "border-yellow-400/30 bg-yellow-500/10 text-yellow-300"
     default:
-      return "border-[#7C9DFF]/40 bg-[#7C9DFF]/12 text-[#9DB6FF]"
+      return "border-white/[0.10] bg-[#151923] text-[#9AA6FF]"
   }
 }
 
 export default function DashboardMetricCard({ metric }: { metric: DashboardMetric }) {
   return (
-    <div className="min-w-0 rounded-[22px] border border-[#7C9DFF]/35 bg-white/[0.045] p-3.5 shadow-[0_0_18px_rgba(124,157,255,0.08)] backdrop-blur-xl">
+    <div className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-3.5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -38,3 +38,5 @@ export default function DashboardMetricCard({ metric }: { metric: DashboardMetri
     </div>
   )
 }
+
+

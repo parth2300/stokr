@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { supabase } from "../../lib/supabase"
 
 type AccountSettingsModalProps = {
@@ -37,6 +37,23 @@ export default function AccountSettingsModal({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isManagingSubscription, setIsManagingSubscription] = useState(false)
   const [error, setError] = useState("")
+  const dialogRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onClose()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -112,14 +129,32 @@ export default function AccountSettingsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4">
-      <div className="w-full max-w-2xl rounded-[28px] border border-[#7C9DFF]/40 bg-[#0F172A] p-6 text-white shadow-[0_0_40px_rgba(124,157,255,0.2)]">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-settings-title"
+      onMouseDown={(event) => {
+        if (
+          dialogRef.current &&
+          !dialogRef.current.contains(event.target as Node)
+        ) {
+          onClose()
+        }
+      }}
+    >
+      <div
+        ref={dialogRef}
+        className="w-full max-w-2xl rounded-xl border border-white/[0.10] bg-[#11141C] p-6 text-white shadow-2xl"
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
               Account
             </p>
-            <h2 className="mt-2 text-2xl font-bold">Settings</h2>
+            <h2 id="account-settings-title" className="mt-2 text-2xl font-bold">
+              Settings
+            </h2>
             <p className="mt-2 text-sm text-slate-400">
               Manage your stokr account, subscription, and account deletion.
             </p>
@@ -257,8 +292,8 @@ export default function AccountSettingsModal({
             </div>
 
             {!isPremium && (
-              <div className="rounded-2xl border border-[#7C9DFF]/30 bg-[#7C9DFF]/10 p-5">
-                <p className="text-sm font-semibold text-blue-100">
+              <div className="rounded-2xl border border-[#7C8CFF]/30 bg-[#7C8CFF]/10 p-5">
+                <p className="text-sm font-semibold text-[#DDE2FF]">
                   You are currently on the free plan.
                 </p>
 
@@ -273,3 +308,4 @@ export default function AccountSettingsModal({
     </div>
   )
 }
+
