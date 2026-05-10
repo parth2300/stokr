@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
             customer: stripeCustomerId,
             line_items: [
                 {
-                    price: process.env.STRIPE_PREMIUM_PRICE_ID,
+                    price: process.env.STRIPE_PREMIUM_PRICE_ID!,
                     quantity: 1,
                 },
             ],
