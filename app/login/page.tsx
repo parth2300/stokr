@@ -21,7 +21,7 @@ export default function LoginPage() {
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
-    async function handleSubmit(event: React.FormEvent) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setError("")
         setIsLoading(true)
@@ -219,6 +219,17 @@ export default function LoginPage() {
                                 required
                                 className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
                             />
+
+                            {mode === "login" && (
+                                <div className="mb-4 text-right">
+                                    <Link
+                                        href="/forgot-password"
+                                        className="text-sm font-medium text-[#7C9DFF] hover:text-white"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                </div>
+                            )}
 
                             {mode === "signup" && (
                                 <label className="mb-4 flex items-start gap-3 rounded-lg border border-white/[0.10] bg-[#0D1017] p-4 text-sm text-[#A3AAB8]">
