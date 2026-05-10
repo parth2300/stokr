@@ -60,3 +60,23 @@ export function trackPremiumPreviewSeen(ticker?: string, source = "stock_report"
 export function trackPremiumPreviewClick(ticker?: string, source = "stock_report") {
   trackEvent("premium_preview_click", { ticker, source })
 }
+
+export function trackShareAnalysisOpen(ticker?: string, source = "stock_report") {
+  trackEvent("share_analysis_open", { ticker, source })
+}
+
+export function trackShareAnalysisTemplateSelected(ticker?: string, template?: string) {
+  trackEvent("share_analysis_template_selected", { ticker, template })
+}
+
+export function trackShareAnalysisDownload(ticker?: string, template?: string) {
+  trackEvent("share_analysis_download", { ticker, template })
+}
+
+export function trackShareAnalysisCopyLink(ticker?: string) {
+  trackEvent("share_analysis_copy_link", { ticker })
+}
+
+export function trackShareAnalysisNativeShare(ticker?: string, template?: string) {
+  trackEvent("share_analysis_native_share", { ticker, template })
+}

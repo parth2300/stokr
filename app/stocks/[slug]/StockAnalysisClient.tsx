@@ -8,6 +8,7 @@ import NavBar from "@/app/components/navBar"
 import StockOverviewCards from "@/app/components/analytics/stockOverviewCards"
 import AnalysisReportLoading from "@/app/components/analytics/analysisReportLoading"
 import AddToWatchlistButton from "@/app/components/watchlist/AddToWatchlistButton"
+import ShareAnalysisButton from "@/app/components/share/ShareAnalysisButton"
 import LazyFilingComparisonSection from "@/app/components/analytics/LazyFilingComparisonSection"
 import InfoTooltip from "@/app/components/ui/InfoTooltip"
 import PremiumPreview from "@/app/components/PremiumPreview"
@@ -45,6 +46,8 @@ type CachedAnalysis = {
     form_type: string | null
     filing_accession_number: string | null
     filing_date: string | null
+    created_at?: string | null
+    updated_at?: string | null
     analysis_json: AnalysisJson | string | null
 }
 
@@ -583,6 +586,26 @@ export default function StockAnalysisClient({
         ],
     }
 
+    const shareReport = {
+        ticker: pageData.ticker,
+        companyName: cachedAnalysis.company_name || pageData.ticker,
+        overallScore: pageData.healthScore,
+        summary: aiAnalysis.summary || null,
+        bullCase: aiAnalysis.bullCase || null,
+        bearCase: aiAnalysis.bearCase || null,
+        topRisks: aiAnalysis.risks || null,
+        financialHealth:
+            pageData.healthScore > 0
+                ? `Overall financial health context is ${pageData.healthScore}/100 based on available filing analysis and metrics.`
+                : null,
+        generatedAt:
+            cachedAnalysis.updated_at ||
+            cachedAnalysis.created_at ||
+            cachedAnalysis.filing_date ||
+            null,
+        reportUrl: typeof window !== "undefined" ? window.location.href : null,
+    }
+
     return (
         <main className="stokr-page">
             <section className="stokr-shell">
@@ -610,6 +633,10 @@ export default function StockAnalysisClient({
                                     </div>
 
                                     <div className="flex items-center gap-2">
+                                        <ShareAnalysisButton
+                                            report={shareReport}
+                                            ticker={pageData.ticker}
+                                        />
                                         <AddToWatchlistButton
                                             ticker={pageData.ticker}
                                             companyName={pageData.companyName}
@@ -1023,6 +1050,23 @@ export default function StockAnalysisClient({
                                 </section>
 
                                 <section className="stokr-card-muted mt-8 p-6">
+                                    <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-[#11141C] p-4">
+                                        <div>
+                                            <p className="text-sm font-bold text-white">
+                                                Share this analysis
+                                            </p>
+                                            <p className="mt-1 text-sm text-slate-400">
+                                                Create a branded image for social platforms without changing the report.
+                                            </p>
+                                        </div>
+
+                                        <ShareAnalysisButton
+                                            report={shareReport}
+                                            ticker={pageData.ticker}
+                                            className="stokr-button-secondary"
+                                        />
+                                    </div>
+
                                     <p className="text-sm leading-relaxed text-slate-300">
                                         <span className="font-semibold text-white">Disclaimer:</span>{" "}
                                         This analytics page is for informational analysis only and should not be treated as financial,

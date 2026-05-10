@@ -3,6 +3,7 @@ import PWARegister from "./components/PWARegister"
 import "./globals.css"
 import Footer from "./components/Footer"
 import { GoogleAnalytics } from "@next/third-parties/google"
+import Script from "next/script"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stokr.live"),
@@ -46,14 +47,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID
+
   return (
     <html lang="en">
       <body>
+        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+
         <PWARegister />
         {children}
         <Footer />
       </body>
-      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   )
 }
