@@ -355,7 +355,7 @@ export default function TermsPage() {
                   For questions about these Terms, contact:
                 </p>
                 <p className="mt-3 rounded-2xl border border-white/10 bg-black/20 p-4 font-semibold text-white">
-                  support@stokr.live
+                  stokrsupport@stokr.live
                 </p>
               </section>
             </div>
