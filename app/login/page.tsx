@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import NavBar from "../components/navBar"
 import { supabase } from "../lib/supabase"
 import { validateSignup } from "../lib/validateSignup"
+import { trackLogin, trackSignUp } from "../lib/analytics"
 
 const TERMS_VERSION = "2026-05-04"
 
@@ -105,6 +106,7 @@ export default function LoginPage() {
                     return
                 }
 
+                trackSignUp("email")
                 router.push("/")
                 return
             }
@@ -146,6 +148,7 @@ export default function LoginPage() {
                 return
             }
 
+            trackLogin("email")
             router.push("/")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Something went wrong")

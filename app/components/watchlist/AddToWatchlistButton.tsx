@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { supabase } from "@/app/lib/supabase"
+import { trackAddToWatchlist } from "@/app/lib/analytics"
 
 type Watchlist = {
   id: string
@@ -151,6 +152,7 @@ export default function AddToWatchlistButton({
         throw new Error(await readApiError(addRes))
       }
 
+      trackAddToWatchlist(normalizedTicker)
       setMessage(`${normalizedTicker} added to ${targetWatchlist.name}.`)
       setIsOpen(true)
     } catch (err) {

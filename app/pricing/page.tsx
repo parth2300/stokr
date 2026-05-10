@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import NavBar from "../components/navBar"
 import { supabase } from "../lib/supabase"
+import { trackBeginCheckout, trackClickUpgrade } from "../lib/analytics"
 
 async function getAuthHeader() {
   const {
@@ -20,6 +21,8 @@ async function getAuthHeader() {
 }
 
 async function handleUpgrade() {
+  trackClickUpgrade("pricing")
+
   const authHeader = await getAuthHeader()
 
   if (!authHeader) {
@@ -40,6 +43,7 @@ async function handleUpgrade() {
   }
 
   if (data?.url) {
+    trackBeginCheckout("premium")
     window.location.href = data.url
   }
 }
@@ -155,6 +159,28 @@ export default function PricingPage() {
           </div>
 
           <div className="stokr-card-muted mx-auto mb-16 max-w-3xl p-5 text-center">
+            <div className="mb-5 border-b border-white/[0.08] pb-5">
+              <p className="text-sm font-semibold text-white">
+                New to stock research?
+              </p>
+
+              <div className="mt-3 flex flex-wrap justify-center gap-3 text-sm">
+                <Link
+                  href="/blog/how-to-read-a-stock-analysis"
+                  className="font-medium text-[#9AA6FF] hover:text-white"
+                >
+                  How to read a stock analysis
+                </Link>
+
+                <Link
+                  href="/blog/what-is-a-10-k"
+                  className="font-medium text-[#9AA6FF] hover:text-white"
+                >
+                  What is a 10-K?
+                </Link>
+              </div>
+            </div>
+
             <p className="text-sm leading-relaxed text-[#A3AAB8]">
               <span className="font-semibold text-white">Disclaimer:</span>{" "}
               stokr provides informational analysis only. It does not provide

@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { ReactNode } from "react"
 import Link from "next/link"
 import NavBar from "@/app/components/navBar"
@@ -10,6 +10,13 @@ import AnalysisReportLoading from "@/app/components/analytics/analysisReportLoad
 import AddToWatchlistButton from "@/app/components/watchlist/AddToWatchlistButton"
 import LazyFilingComparisonSection from "@/app/components/analytics/LazyFilingComparisonSection"
 import InfoTooltip from "@/app/components/ui/InfoTooltip"
+import PremiumPreview from "@/app/components/PremiumPreview"
+import RelatedStocks from "@/app/components/RelatedStocks"
+import ReportLimitUpgradePrompt from "@/app/components/ReportLimitUpgradePrompt"
+import {
+    trackReportLimitReached,
+    trackViewStockReport,
+} from "@/app/lib/analytics"
 import { supabase } from "@/app/lib/supabase"
 
 const StockPriceChart = dynamic(
@@ -201,6 +208,10 @@ export default function StockAnalysisClient({
     const [error, setError] = useState("")
     const [limitReached, setLimitReached] = useState(false)
     const [showLowerReportSections, setShowLowerReportSections] = useState(false)
+    const [accessPremium, setAccessPremium] = useState<boolean | null>(null)
+
+    const viewedTickersRef = useRef<Set<string>>(new Set())
+    const limitTrackedTickersRef = useRef<Set<string>>(new Set())
 
     useEffect(() => {
         let cancelled = false
@@ -227,6 +238,7 @@ export default function StockAnalysisClient({
         setShouldGenerate(false)
         setError("")
         setLimitReached(false)
+        setAccessPremium(null)
 
         try {
             const headers = await getReportHeaders()
@@ -249,6 +261,13 @@ export default function StockAnalysisClient({
 
             if (res.status === 402) {
                 setLimitReached(true)
+                setAccessPremium(false)
+
+                if (!limitTrackedTickersRef.current.has(ticker)) {
+                    limitTrackedTickersRef.current.add(ticker)
+                    trackReportLimitReached(ticker)
+                }
+
                 throw new Error(
                     data?.error ||
                     "Free report limit reached. Free users get 3 AI stock reports per week."
@@ -260,11 +279,19 @@ export default function StockAnalysisClient({
             }
 
             setCachedAnalysis(data.data as CachedAnalysis)
+            setAccessPremium(Boolean(data?.access?.premium))
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to load report.")
         } finally {
             setIsLoadingCache(false)
         }
+    }, [ticker])
+
+    useEffect(() => {
+        if (!ticker || viewedTickersRef.current.has(ticker)) return
+
+        viewedTickersRef.current.add(ticker)
+        trackViewStockReport(ticker)
     }, [ticker])
 
     useEffect(() => {
@@ -405,23 +432,18 @@ export default function StockAnalysisClient({
                                 {error || "This report could not be loaded."}
                             </p>
 
-                            <div className="mt-6 flex justify-center gap-3">
-                                <Link
-                                    href="/"
-                                    className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
-                                >
-                                    Back Home
-                                </Link>
-
-                                {limitReached && (
+                            {limitReached ? (
+                                <ReportLimitUpgradePrompt />
+                            ) : (
+                                <div className="mt-6 flex justify-center gap-3">
                                     <Link
-                                        href="/pricing"
-                                        className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#0F172A] hover:bg-blue-100"
+                                        href="/"
+                                        className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
                                     >
-                                        View Premium
+                                        Back Home
                                     </Link>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -733,6 +755,17 @@ export default function StockAnalysisClient({
                                     Ranked Risk Factors
                                 </h2>
 
+                                <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                                    New to company risk disclosures? Read stokr&apos;s{" "}
+                                    <Link
+                                        href="/blog/how-to-use-risk-factors"
+                                        className="font-semibold text-[#9AA6FF] hover:text-white"
+                                    >
+                                        guide to using risk factors
+                                    </Link>
+                                    .
+                                </p>
+
                                 <div className="mt-6 space-y-4">
                                     {pageData.risks.map((risk) => (
                                         <div
@@ -819,6 +852,17 @@ export default function StockAnalysisClient({
                                     <h2 className="mt-3 text-2xl font-bold text-white">
                                         Bull vs Bear Case
                                     </h2>
+
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                                        Learn how to compare both sides in{" "}
+                                        <Link
+                                            href="/blog/bull-case-vs-bear-case"
+                                            className="font-semibold text-[#9AA6FF] hover:text-white"
+                                        >
+                                            stokr&apos;s bull case vs bear case explainer
+                                        </Link>
+                                        .
+                                    </p>
 
                                     <div className="mt-6 grid gap-5 md:grid-cols-2">
                                         <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5">
@@ -937,6 +981,17 @@ export default function StockAnalysisClient({
                                         Filing Coverage
                                     </h2>
 
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                                        If the filing terminology is new, start with{" "}
+                                        <Link
+                                            href="/blog/what-is-a-10-k"
+                                            className="font-semibold text-[#9AA6FF] hover:text-white"
+                                        >
+                                            what a 10-K is and why it matters
+                                        </Link>
+                                        .
+                                    </p>
+
                                     <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                         {pageData.filings.map((filing) => (
                                             <div
@@ -967,7 +1022,7 @@ export default function StockAnalysisClient({
                                     </div>
                                 </section>
 
-                                <section className="stokr-card-muted mt-8 mb-16 p-6">
+                                <section className="stokr-card-muted mt-8 p-6">
                                     <p className="text-sm leading-relaxed text-slate-300">
                                         <span className="font-semibold text-white">Disclaimer:</span>{" "}
                                         This analytics page is for informational analysis only and should not be treated as financial,
@@ -975,6 +1030,16 @@ export default function StockAnalysisClient({
                                         live market data, SEC metrics, and filing comparison tools are fully connected.
                                     </p>
                                 </section>
+
+                                {accessPremium === false && (
+                                    <PremiumPreview
+                                        ticker={pageData.ticker}
+                                        source="stock_report"
+                                        showCoupon
+                                    />
+                                )}
+
+                                <RelatedStocks ticker={pageData.ticker} />
                             </>
                         )}
                     </div>

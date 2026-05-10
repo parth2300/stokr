@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { blogPosts } from "./lib/blogPosts"
 import { sp500Tickers } from "./lib/sp500Tickers"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stokr.live"
@@ -66,6 +67,29 @@ const learnPages = [
   "/learn/what-is-return-on-equity",
 ]
 
+const linkedStockTickers = [
+  "AAPL",
+  "AMD",
+  "AMZN",
+  "AVGO",
+  "F",
+  "GM",
+  "GOOGL",
+  "INTC",
+  "META",
+  "MSFT",
+  "NIO",
+  "NVDA",
+  "PINS",
+  "QCOM",
+  "RIVN",
+  "SHOP",
+  "SNAP",
+  "TSLA",
+  "TSM",
+  "WMT",
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
 
@@ -76,7 +100,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: page.priority,
   }))
 
-  const stockUrls = sp500Tickers.map((ticker) => ({
+  const stockTickers = Array.from(
+    new Set([...sp500Tickers, ...linkedStockTickers])
+  )
+
+  const stockUrls = stockTickers.map((ticker) => ({
     url: `${siteUrl}/stocks/${encodeURIComponent(ticker.toLowerCase())}`,
     lastModified: now,
     changeFrequency: "daily" as const,
@@ -104,11 +132,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
+  const blogUrls = [
+    {
+      url: `${siteUrl}/blog`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    ...blogPosts.map((post) => ({
+      url: `${siteUrl}/blog/${post.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ]
+
   return [
     ...coreUrls,
     ...stockUrls,
     ...brokerUrls,
     ...compareUrls,
     ...learnUrls,
+    ...blogUrls,
   ]
 }

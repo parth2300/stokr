@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import NavBar from "@/app/components/navBar"
 import LiveDashboardMetrics from "./liveDashboardMetrics"
+import { trackPurchase } from "@/app/lib/analytics"
 
 const LiveDashboardWatchlist = dynamic(
   () => import("./liveDashboardWatchlist"),
@@ -71,6 +72,19 @@ function DashboardPanelSkeleton({
 
 export default function OptimizedDashboardContent() {
   const [stage, setStage] = useState(0)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get("checkout") !== "success") return
+
+    const purchaseKey = "stokr_purchase_premium_success"
+
+    if (window.sessionStorage.getItem(purchaseKey)) return
+
+    window.sessionStorage.setItem(purchaseKey, "1")
+    trackPurchase("premium", 9.99, "USD")
+  }, [])
 
   useEffect(() => {
     const timers = [

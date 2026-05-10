@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { trackSearchStock } from "../lib/analytics"
 
 type StockSearchResult = {
     ticker: string
@@ -122,6 +123,7 @@ export default function StockSearchBar({
 
         if (!cleanedTicker) return
 
+        trackSearchStock(cleanedTicker.toUpperCase())
         router.push(`/stocks/${cleanedTicker}-stock-analysis`)
     }
 

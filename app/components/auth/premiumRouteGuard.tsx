@@ -1,7 +1,10 @@
 "use client"
 
+import Link from "next/link"
 import { ReactNode, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import NavBar from "@/app/components/navBar"
+import { trackClickUpgrade } from "@/app/lib/analytics"
 import { supabase } from "@/app/lib/supabase"
 import { isUserPremium, PremiumProfile } from "@/app/lib/premium"
 
@@ -42,7 +45,6 @@ export default function PremiumRouteGuard({
 
       if (profileError || !profileData) {
         setStatus("blocked")
-        router.replace("/pricing")
         return
       }
 
@@ -51,7 +53,6 @@ export default function PremiumRouteGuard({
 
       if (!premium) {
         setStatus("blocked")
-        router.replace("/pricing")
         return
       }
 
@@ -86,7 +87,46 @@ export default function PremiumRouteGuard({
   }
 
   if (status === "blocked") {
-    return null
+    return (
+      <main className="stokr-page">
+        <section className="stokr-shell">
+          <div className="stokr-bg" />
+
+          <div className="stokr-container">
+            <NavBar showSearch />
+
+            <div className="mx-auto mt-20 max-w-2xl">
+              <section className="stokr-card border-[#7C9DFF]/30 bg-[#111827]/90 p-6 text-center sm:p-8">
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+                  Premium Feature
+                </p>
+
+                <h1 className="mt-3 text-3xl font-bold text-white">
+                  Unlock the premium dashboard
+                </h1>
+
+                <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-[#A3AAB8]">
+                  Premium unlocks saved research history, watchlist insights,
+                  risk alerts, filing changes, and unlimited AI stock reports.
+                </p>
+
+                <Link
+                  href="/pricing"
+                  onClick={() => trackClickUpgrade("premium_dashboard")}
+                  className="stokr-button-primary mt-6 inline-flex"
+                >
+                  Upgrade to Premium
+                </Link>
+
+                <p className="mt-4 text-sm text-[#A3AAB8]">
+                  Use code 1MFREE for your first month free.
+                </p>
+              </section>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
   }
 
   return <>{children}</>

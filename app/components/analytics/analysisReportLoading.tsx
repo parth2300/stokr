@@ -2,8 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { supabase } from "@/app/lib/supabase"
+import ReportLimitUpgradePrompt from "@/app/components/ReportLimitUpgradePrompt"
+import {
+    trackGenerateReport,
+    trackReportLimitReached,
+} from "@/app/lib/analytics"
 
 type AnalysisReportLoadingProps = {
     ticker: string
@@ -101,6 +105,7 @@ export default function AnalysisReportLoading({
                 if (!res.ok) {
                     if (res.status === 402) {
                         setLimitReached(true)
+                        trackReportLimitReached(ticker)
                     }
 
                     throw new Error(
@@ -109,6 +114,7 @@ export default function AnalysisReportLoading({
                 }
 
                 if (cancelled) return
+                trackGenerateReport(ticker)
                 setStatus("Saving report to analysis cache...")
 
                 await new Promise((resolve) => setTimeout(resolve, 700))
@@ -265,35 +271,30 @@ export default function AnalysisReportLoading({
                         )}
 
                         {error && (
-                            <div className="mt-6 flex flex-wrap items-center gap-3">
-                                {limitReached && (
-                                    <Link
-                                        href="/pricing"
-                                        className="rounded-full bg-white px-5 py-2 text-sm font-bold text-[#0F172A] transition hover:bg-blue-100"
-                                    >
-                                        View Premium
-                                    </Link>
-                                )}
+                            <>
+                                {limitReached && <ReportLimitUpgradePrompt />}
 
-                                {isMissingTenKError && (
-                                    <button
-                                        onClick={() => router.push("/")}
-                                        className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/15"
-                                    >
-                                        <span aria-hidden="true">←</span>
-                                        Back to main page
-                                    </button>
-                                )}
+                                <div className="mt-6 flex flex-wrap items-center gap-3">
+                                    {isMissingTenKError && (
+                                        <button
+                                            onClick={() => router.push("/")}
+                                            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/15"
+                                        >
+                                            <span aria-hidden="true">←</span>
+                                            Back to main page
+                                        </button>
+                                    )}
 
-                                {!limitReached && (
-                                    <button
-                                        onClick={() => window.location.reload()}
-                                        className="rounded-full border border-white/[0.10] bg-[#151923] px-5 py-2 text-sm font-semibold text-[#DDE2FF] transition hover:bg-[#191E29]"
-                                    >
-                                        Retry generation
-                                    </button>
-                                )}
-                            </div>
+                                    {!limitReached && (
+                                        <button
+                                            onClick={() => window.location.reload()}
+                                            className="rounded-full border border-white/[0.10] bg-[#151923] px-5 py-2 text-sm font-semibold text-[#DDE2FF] transition hover:bg-[#191E29]"
+                                        >
+                                            Retry generation
+                                        </button>
+                                    )}
+                                </div>
+                            </>
                         )}
                     </div>
 
