@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { blogPosts } from "./lib/blogPosts"
+import { resources } from "./lib/resources"
 import { sp500Tickers } from "./lib/sp500Tickers"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stokr.live"
@@ -19,6 +20,21 @@ const corePages = [
     path: "/pricing",
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  },
+  {
+    path: "/compare",
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  },
+  {
+    path: "/resources",
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  },
+  {
+    path: "/glossary",
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   },
   {
     path: "/terms",
@@ -147,6 +163,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ]
 
+  const resourceUrls = resources.map((resource) => ({
+    url: `${siteUrl}/resources/${resource.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+
   return [
     ...coreUrls,
     ...stockUrls,
@@ -154,5 +177,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...compareUrls,
     ...learnUrls,
     ...blogUrls,
+    ...resourceUrls,
   ]
 }

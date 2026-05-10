@@ -161,6 +161,10 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
           Blog
         </Link>
 
+        <Link href="/compare" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
+          Compare
+        </Link>
+
         {showSearch && <StockSearchBar variant="nav" />}
 
         {username ? (
@@ -297,6 +301,14 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                 className="rounded-2xl px-4 py-3 text-sm hover:bg-white/10"
               >
                 Blog
+              </Link>
+
+              <Link
+                href="/compare"
+                onClick={closeMobileMenu}
+                className="rounded-2xl px-4 py-3 text-sm hover:bg-white/10"
+              >
+                Compare
               </Link>
 
               <div className="mt-2 border-t border-white/10 pt-3">

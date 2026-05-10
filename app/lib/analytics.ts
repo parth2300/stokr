@@ -80,3 +80,40 @@ export function trackShareAnalysisCopyLink(ticker?: string) {
 export function trackShareAnalysisNativeShare(ticker?: string, template?: string) {
   trackEvent("share_analysis_native_share", { ticker, template })
 }
+
+export function trackComparePageView() {
+  trackEvent("compare_page_view", { source: "compare" })
+}
+
+export function trackCompareStocksSubmit(
+  tickerA: string,
+  tickerB: string,
+  accessTier = "unknown"
+) {
+  trackEvent("compare_stocks_submit", {
+    ticker_a: tickerA,
+    ticker_b: tickerB,
+    access_tier: accessTier,
+    source: "compare",
+  })
+}
+
+export function trackCompareLimitReached(tickerA: string, tickerB: string) {
+  trackEvent("compare_limit_reached", {
+    ticker_a: tickerA,
+    ticker_b: tickerB,
+    source: "compare",
+  })
+}
+
+export function trackCompareUpgradeClick() {
+  trackEvent("compare_upgrade_click", { source: "compare" })
+}
+
+export function trackGlossarySearch(query: string) {
+  trackEvent("glossary_search", { query })
+}
+
+export function trackResourceView(slug: string) {
+  trackEvent("resource_view", { slug })
+}
