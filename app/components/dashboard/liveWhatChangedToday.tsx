@@ -68,7 +68,7 @@ export default function LiveWhatChangedToday() {
       setChanges(data.changes || [])
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load dashboard changes."
+        err instanceof Error ? err.message : "Failed to load research activity."
       )
     } finally {
       setIsLoading(false)
@@ -77,13 +77,13 @@ export default function LiveWhatChangedToday() {
 
   if (isLoading) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Updates
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Research Activity
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Loading What Changed Today
+          Loading activity
         </h2>
 
         <div className="mt-6 grid gap-3">
@@ -99,11 +99,11 @@ export default function LiveWhatChangedToday() {
     return (
       <section className="min-w-0 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
-          Updates Error
+          Research Activity Error
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Could not load changes
+          Could not load research activity
         </h2>
 
         <p className="mt-3 text-sm text-red-100">{error}</p>
@@ -120,22 +120,22 @@ export default function LiveWhatChangedToday() {
 
   if (changes.length === 0) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Updates
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Research Activity
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          What Changed Today
+          Recent Context
         </h2>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-8 text-center">
+        <div className="mt-6 rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-8 text-center">
           <p className="text-lg font-bold text-white">
-            No changes yet
+            Research activity will appear here
           </p>
 
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            Add stocks, generate reports, or create alerts to see updates here.
+            Activity will appear as you generate briefs and save companies.
           </p>
         </div>
       </section>

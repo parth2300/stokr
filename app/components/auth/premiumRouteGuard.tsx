@@ -66,15 +66,15 @@ export default function PremiumRouteGuard({
     return (
       <main className="stokr-page">
         <section className="relative flex min-h-screen items-center justify-center px-6 py-10">
-          <div className="stokr-bg" />
+          <div className="stokr-bg stokr-grid-bg" />
 
           <div className="stokr-card relative z-10 p-8 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+            <p className="stokr-kicker">
               Checking Access
             </p>
 
             <h1 className="mt-3 text-3xl font-bold text-white">
-              Loading dashboard
+              Loading Research Desk
             </h1>
 
             <p className="mt-3 text-sm text-slate-400">
@@ -90,24 +90,24 @@ export default function PremiumRouteGuard({
     return (
       <main className="stokr-page">
         <section className="stokr-shell">
-          <div className="stokr-bg" />
+          <div className="stokr-bg stokr-grid-bg" />
 
           <div className="stokr-container">
             <NavBar showSearch />
 
             <div className="mx-auto mt-20 max-w-2xl">
-              <section className="stokr-card border-[#7C9DFF]/30 bg-[#111827]/90 p-6 text-center sm:p-8">
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-                  Premium Feature
+              <section className="stokr-card p-6 text-center sm:p-8">
+                <p className="stokr-kicker">
+                  Full Research Desk
                 </p>
 
                 <h1 className="mt-3 text-3xl font-bold text-white">
-                  Unlock the premium dashboard
+                  Upgrade to Full Research Desk
                 </h1>
 
                 <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-[#A3AAB8]">
-                  Premium unlocks saved research history, watchlist insights,
-                  risk alerts, filing changes, and unlimited AI stock reports.
+                  Upgrade for saved research history, Research Tracker insights,
+                  risk context, Filing Delta, and unlimited source-backed briefs.
                 </p>
 
                 <Link
@@ -115,7 +115,7 @@ export default function PremiumRouteGuard({
                   onClick={() => trackClickUpgrade("premium_dashboard")}
                   className="stokr-button-primary mt-6 inline-flex"
                 >
-                  Upgrade to Premium
+                  View research plans
                 </Link>
 
                 <p className="mt-4 text-sm text-[#A3AAB8]">

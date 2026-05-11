@@ -16,12 +16,13 @@ type PremiumPreviewProps = {
 
 const premiumFeatures = [
   "Full 10-K and 10-Q breakdowns",
-  "Complete risk factor analysis",
-  "What changed from prior filings",
-  "Bull vs bear case summaries",
-  "Financial health insights",
+  "Filing Delta / what changed",
+  "Complete disclosed risk analysis",
+  "Financial health deep dive",
+  "Valuation context",
+  "Full Source Trail / research receipts",
   "Saved research history",
-  "Unlimited AI reports",
+  "Unlimited reports",
 ]
 
 export default function PremiumPreview({
@@ -44,26 +45,27 @@ export default function PremiumPreview({
   }
 
   return (
-    <section className="stokr-card mt-8 border-[#7C9DFF]/30 bg-[#111827]/90 p-5 shadow-[0_18px_80px_rgba(124,157,255,0.12)] sm:p-6">
+    <section className="stokr-card mt-8 border-white/[0.12] bg-[#111722] p-5 sm:p-6">
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
-            Premium
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+            Full Research Desk
           </p>
 
           <h2 className="mt-3 text-2xl font-bold text-white">
-            Want the deeper version?
+            Unlock the full filing-backed breakdown
           </h2>
 
           <p className="mt-4 text-sm leading-6 text-[#A3AAB8]">
-            Premium unlocks full filing breakdowns, risk factor analysis, what
-            changed from prior filings, financial health insights, saved
-            research history, and unlimited reports.
+            Starter Research helps you understand a company at a glance. Full
+            Research Desk helps you inspect the evidence behind the company:
+            filing context, Filing Delta, risk analysis, source trails,
+            financial depth, and saved research history.
           </p>
 
           {showCoupon && (
-            <p className="mt-4 rounded-xl border border-[#7C9DFF]/25 bg-[#7C9DFF]/10 px-4 py-3 text-sm font-medium text-[#DDE2FF]">
-              Early users can try Premium with code 1MFREE.
+            <p className="mt-4 rounded-xl border border-[#19C37D]/25 bg-[#19C37D]/10 px-4 py-3 text-sm font-medium text-[#DDE2FF]">
+              Early users can try Full Research Desk with code 1MFREE.
             </p>
           )}
 
@@ -72,7 +74,7 @@ export default function PremiumPreview({
             onClick={handleClick}
             className="stokr-button-primary mt-6 inline-flex"
           >
-            Unlock Premium
+            Unlock Full Research Desk
           </Link>
         </div>
 

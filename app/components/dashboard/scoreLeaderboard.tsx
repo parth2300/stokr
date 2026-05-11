@@ -6,25 +6,27 @@ export default function ScoreLeaderboard({
     items: LeaderboardItem[]
 }) {
     return (
-        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#0D1118] p-5">
             <div className="flex items-center justify-between gap-2">
                 <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-                        Leaderboard
+                    <p className="stokr-kicker">
+                        Company Context
                     </p>
 
                     <h2 className="mt-1 text-lg font-bold text-white">
-                        Score Leaders
+                        Available research scores
                     </h2>
                 </div>
 
-                <span className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[10px] text-slate-300">
-                    Financial
-                </span>
+                <p className="text-xs text-[#7B8494]">Context only</p>
             </div>
 
             <div className="mt-5 space-y-3">
-                {items.map((item) => (
+                {items.length === 0 ? (
+                    <p className="rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-5 text-sm leading-6 text-slate-400">
+                        Research scores will appear here after briefs are generated.
+                    </p>
+                ) : items.map((item) => (
                     <div key={item.ticker} className="grid grid-cols-[18px_44px_1fr_28px] items-center gap-2">
                         <p className="text-[10px] font-bold text-slate-400">{item.rank}</p>
 

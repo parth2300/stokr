@@ -145,11 +145,11 @@ export default function AccountSettingsModal({
     >
       <div
         ref={dialogRef}
-        className="w-full max-w-2xl rounded-xl border border-white/[0.10] bg-[#11141C] p-6 text-white shadow-2xl"
+        className="w-full max-w-2xl rounded-xl border border-white/[0.10] bg-[#0B0F16] p-6 text-white shadow-2xl"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+            <p className="stokr-kicker">
               Account
             </p>
             <h2 id="account-settings-title" className="mt-2 text-2xl font-bold">
@@ -173,7 +173,7 @@ export default function AccountSettingsModal({
             onClick={() => setActiveTab("settings")}
             className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold ${
               activeTab === "settings"
-                ? "bg-white text-[#0F172A]"
+                ? "bg-white text-[#05070A]"
                 : "text-slate-300 hover:bg-white/10"
             }`}
           >
@@ -184,7 +184,7 @@ export default function AccountSettingsModal({
             onClick={() => setActiveTab("subscription")}
             className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold ${
               activeTab === "subscription"
-                ? "bg-white text-[#0F172A]"
+                ? "bg-white text-[#05070A]"
                 : "text-slate-300 hover:bg-white/10"
             }`}
           >
@@ -232,7 +232,7 @@ export default function AccountSettingsModal({
               </p>
 
               <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                Free users can use the core watchlist. Premium users unlock advanced dashboard features and expanded account limits.
+                Free users can use the core Research Tracker. Premium users unlock the Full Research Desk and expanded account limits.
               </p>
             </div>
 
@@ -285,15 +285,15 @@ export default function AccountSettingsModal({
               <button
                 onClick={handleManageSubscription}
                 disabled={isManagingSubscription}
-                className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#0F172A] hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#05070A] hover:bg-[#E9ECF5] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isManagingSubscription ? "Opening..." : "Manage Subscription"}
               </button>
             </div>
 
             {!isPremium && (
-              <div className="rounded-2xl border border-[#7C8CFF]/30 bg-[#7C8CFF]/10 p-5">
-                <p className="text-sm font-semibold text-[#DDE2FF]">
+              <div className="rounded-2xl border border-[#19C37D]/25 bg-[#19C37D]/10 p-5">
+                <p className="text-sm font-semibold text-emerald-100">
                   You are currently on the free plan.
                 </p>
 

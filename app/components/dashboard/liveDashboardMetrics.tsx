@@ -36,34 +36,38 @@ async function readApiError(res: Response) {
 }
 
 function buildMetrics(summary: DashboardSummaryResponse): DashboardMetric[] {
+  const reportsRemaining = summary.isPremium
+    ? "Unlimited"
+    : String(Math.max((summary.monthlyReportLimit || 3) - summary.reportsUsed, 0))
+
   return [
     {
       label: "Plan Status",
       value: summary.planStatus,
       detail: summary.isPremium
-        ? "Premium dashboard access enabled"
+        ? "Full Research Desk access enabled"
         : "Free account",
-      accent: summary.isPremium ? "green" : "blue",
+      accent: "green",
     },
     {
-      label: "AI Reports Generated",
+      label: "Reports Generated",
       value: String(summary.reportsUsed),
       detail: summary.isPremium
-        ? "Premium includes unlimited report access"
+        ? "Unlimited report access"
         : `${summary.monthlyReportLimit || 3} weekly free reports available`,
-      accent: "blue",
+      accent: "green",
     },
     {
-      label: "Watchlists",
-      value: String(summary.watchlistCount),
-      detail: `${summary.savedStockCount} saved stocks`,
-      accent: "blue",
+      label: "Saved Companies",
+      value: String(summary.savedStockCount),
+      detail: `${summary.watchlistCount} Research Tracker${summary.watchlistCount === 1 ? "" : "s"}`,
+      accent: "green",
     },
     {
-      label: "Active Alerts",
-      value: String(summary.activeAlerts),
-      detail: summary.activeAlertDetail,
-      accent: summary.activeAlerts > 0 ? "red" : "green",
+      label: "Reports Remaining",
+      value: reportsRemaining,
+      detail: summary.isPremium ? "Full Research Desk access" : "Starter Research limit",
+      accent: "green",
     },
   ]
 }
@@ -93,7 +97,7 @@ export default function LiveDashboardMetrics() {
       setMetrics(buildMetrics(data))
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load dashboard summary."
+        err instanceof Error ? err.message : "Failed to load Research Desk summary."
       )
     } finally {
       setIsLoading(false)
@@ -116,7 +120,7 @@ export default function LiveDashboardMetrics() {
         {[1, 2, 3, 4].map((item) => (
           <div
             key={item}
-            className="min-h-[105px] animate-pulse rounded-[22px] border border-[#7C8CFF]/25 bg-white/[0.045]"
+            className="min-h-[82px] animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.045]"
           />
         ))}
       </>

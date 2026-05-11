@@ -32,6 +32,8 @@ export type SavedReport = {
   filingDate: string
   generatedAt: string
   href: string
+  formType?: string
+  accessionNumber?: string
 }
 
 export type RiskAlert = {

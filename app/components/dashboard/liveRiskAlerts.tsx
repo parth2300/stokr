@@ -68,7 +68,7 @@ export default function LiveRiskAlerts() {
       setAlerts(data.alerts || [])
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load dashboard alerts."
+        err instanceof Error ? err.message : "Failed to load risk context."
       )
     } finally {
       setIsLoading(false)
@@ -77,13 +77,13 @@ export default function LiveRiskAlerts() {
 
   if (isLoading) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Alerts
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Risk Context
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Loading Risk Alerts
+          Loading risk context
         </h2>
 
         <div className="mt-6 grid gap-3">
@@ -99,11 +99,11 @@ export default function LiveRiskAlerts() {
     return (
       <section className="min-w-0 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
-          Alerts Error
+          Risk Context Error
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Could not load risk alerts
+          Could not load risk context
         </h2>
 
         <p className="mt-3 text-sm text-red-100">{error}</p>
@@ -120,22 +120,22 @@ export default function LiveRiskAlerts() {
 
   if (alerts.length === 0) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Alerts
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Risk Context
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Risk Alerts
+          Risk Signals
         </h2>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-8 text-center">
+        <div className="mt-6 rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-8 text-center">
           <p className="text-lg font-bold text-white">
-            No active alerts
+            No risk activity yet
           </p>
 
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            Alerts will appear here when watchlist stocks show valuation, financial, or AI risk changes.
+            Risk context will appear here as real tracked signals become available.
           </p>
         </div>
       </section>

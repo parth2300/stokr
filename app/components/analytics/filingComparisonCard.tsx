@@ -83,16 +83,16 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                     <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-                            Filing Comparison
+                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+                            Filing Delta
                         </p>
-                        <InfoTooltip label="Explain filing comparison">
-                            Compares newer filings against older filings to show notable
-                            changes in language, risks, business updates, or financial
-                            discussion.
-                        </InfoTooltip>
+                        <InfoTooltip
+                            label="Explain Filing Delta"
+                            title="Filing Delta"
+                            body="Filing Delta highlights meaningful wording, risk, financial, or operating changes between company filings when enough filing data is available."
+                        />
                     </div>
-                    <h2 className="mt-3 text-2xl font-bold text-white">What Changed</h2>
+                    <h2 className="mt-3 text-2xl font-bold text-white">What Changed Between Filings</h2>
                     <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
                         Compares the latest 10-K against the previous 10-K to identify changes in risk,
                         business discussion, and management commentary.
@@ -103,17 +103,17 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                     type="button"
                     onClick={loadComparison}
                     disabled={loading}
-                    className="rounded-xl bg-[#7C8CFF] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#93B4FF] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-xl bg-[#19C37D] px-5 py-3 text-sm font-semibold text-[#05070A] transition hover:bg-[#3DDC97] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                    {loading ? "Loading..." : comparison ? "Reload Cached Comparison" : "Load Filing Comparison"}
+                    {loading ? "Loading..." : comparison ? "Reload Cached Filing Delta" : "Load Filing Delta"}
                 </button>
             </div>
 
             {!hasRequested && !comparison && (
                 <div className="mt-7 rounded-2xl border border-white/10 bg-black/15 p-5">
                     <p className="text-sm leading-relaxed text-slate-300">
-                        Load the latest cached filing comparison when available.
-                        If no cached comparison exists for these filings,
+                        Load the latest cached Filing Delta when available.
+                        If no cached Filing Delta exists for these filings,
                         the server will generate it once and save it for future users.
                     </p>
                 </div>
@@ -121,7 +121,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
 
             {error && (
                 <div className="mt-7 rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
-                    <p className="font-semibold text-red-300">Comparison unavailable</p>
+                    <p className="font-semibold text-red-300">Filing Delta unavailable</p>
                     <p className="mt-2 text-sm text-slate-300">{error}</p>
                 </div>
             )}
@@ -141,7 +141,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                     </div>
 
                     <div className="rounded-2xl border border-white/10 bg-black/15 p-5">
-                        <h3 className="text-lg font-bold text-white">Comparison Summary</h3>
+                        <h3 className="text-lg font-bold text-white">Filing Delta Summary</h3>
                         <p className="mt-3 text-sm leading-relaxed text-slate-300">
                             {comparison.comparison.summary}
                         </p>
@@ -154,7 +154,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                                 className="rounded-2xl border border-white/10 bg-black/15 p-5"
                             >
                                 <div className="flex flex-wrap items-center justify-between gap-3">
-                                    <span className="rounded-full border border-[#7C8CFF]/30 bg-[#7C8CFF]/10 px-3 py-1 text-xs font-semibold text-[#DDE2FF]">
+                                    <span className="rounded-md border border-white/[0.10] bg-white/[0.04] px-3 py-1 text-xs font-semibold text-[#DDE2FF]">
                                         {change.type}
                                     </span>
 

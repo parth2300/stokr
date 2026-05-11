@@ -92,6 +92,67 @@ type StockOverviewApiResponse = {
     marketCap?: string
 }
 
+const premiumTeaserSections = [
+    {
+        title: "Filing Delta is a Premium section",
+        body: "See what changed between the latest filing and prior company filings.",
+        unlocks: [
+            "new or intensified risk language",
+            "management commentary changes",
+            "liquidity and debt changes",
+            "operating or segment changes",
+            "source-backed evidence",
+        ],
+    },
+    {
+        title: "Complete Disclosed Risk Analysis is a Premium section",
+        body: "Inspect the full set of risk themes organized from company disclosures.",
+        unlocks: [
+            "complete risk factor breakdowns",
+            "plain-English risk themes",
+            "severity context when available",
+            "filing-backed risk evidence",
+        ],
+    },
+    {
+        title: "Financial Health Deep Dive is a Premium section",
+        body: "Go beyond the snapshot with deeper financial signal context.",
+        unlocks: [
+            "revenue, margin, liquidity, debt, and cash flow context",
+            "company strength signal breakdowns",
+            "SEC companyfacts metrics where available",
+            "source-backed financial evidence",
+        ],
+    },
+    {
+        title: "Valuation Context is a Premium section",
+        body: "Review valuation signals as research context, not a buy or sell call.",
+        unlocks: [
+            "market valuation signal context",
+            "available market cap and financial metric comparisons",
+            "research framing without price predictions",
+        ],
+    },
+    {
+        title: "Full Source Trail is a Premium section",
+        body: "Trace major takeaways back to filing context, metrics, or company disclosures.",
+        unlocks: [
+            "research receipts for key insights",
+            "filing and metric source context",
+            "clear separation between source-backed context and AI interpretation",
+        ],
+    },
+    {
+        title: "Saved Research History is a Premium section",
+        body: "Keep a deeper record of reports you have generated and companies you revisit.",
+        unlocks: [
+            "saved research history",
+            "faster return path to prior briefs",
+            "Research Desk continuity",
+        ],
+    },
+]
+
 function getTickerFromSlug(slug: string) {
     return slug.replace("-stock-analysis", "").toUpperCase()
 }
@@ -273,7 +334,7 @@ export default function StockAnalysisClient({
 
                 throw new Error(
                     data?.error ||
-                    "Free report limit reached. Free users get 3 AI stock reports per week."
+                    "Starter Research report limit reached. Starter users get 3 AI stock reports per week."
                 )
             }
 
@@ -391,7 +452,7 @@ export default function StockAnalysisClient({
                         <NavBar showSearch />
 
                         <div className="stokr-card mt-20 p-8 text-center">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
                                 Loading Report
                             </p>
                             <h1 className="mt-3 text-3xl font-bold text-white">
@@ -423,7 +484,7 @@ export default function StockAnalysisClient({
                         <NavBar showSearch />
 
                         <div className="stokr-card mt-20 p-8 text-center">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
                                 {limitReached ? "Limit Reached" : "Report Unavailable"}
                             </p>
 
@@ -470,7 +531,7 @@ export default function StockAnalysisClient({
     const pageData = {
         ticker,
         companyName: cachedAnalysis.company_name || `${ticker} Stock Analysis`,
-        badge: "AI Analysis",
+        badge: "Source-backed AI brief",
         cacheStatus: "Cached analysis loaded",
 
         summary:
@@ -480,7 +541,7 @@ export default function StockAnalysisClient({
         healthScore,
         rating,
 
-        note: "This report is protected by your report access limit. Free users get 3 AI stock reports per week.",
+        note: "stokr provides informational research tools only and does not provide financial advice. This report is protected by your report access limit. Starter users get 3 AI stock reports per week.",
 
         topSignals:
             aiAnalysis.topSignals || [
@@ -614,25 +675,25 @@ export default function StockAnalysisClient({
                 <div className="relative z-10 w-full">
                     <NavBar showSearch />
 
-                    <div className="mx-auto max-w-7xl">
+                    <div className="mx-auto w-full max-w-7xl min-w-0">
                         <section className="grid gap-6 py-10 sm:py-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-                            <div>
-                                <div className="flex flex-wrap items-center justify-between gap-4">
-                                    <div className="flex flex-wrap items-center gap-3">
-                                        <span className="rounded-full border border-white/[0.10] bg-[#151923] px-4 py-1.5 text-sm font-semibold text-[#DDE2FF]">
+                            <div className="min-w-0">
+                                <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                                    <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+                                        <span className="max-w-full break-words rounded-full border border-white/[0.10] bg-[#151923] px-3 py-1.5 font-mono text-xs font-semibold text-[#DDE2FF] sm:px-4 sm:text-sm">
                                             {pageData.ticker}
                                         </span>
 
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-slate-300">
+                                        <span className="max-w-full break-words rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 sm:px-4 sm:text-sm">
                                             {pageData.badge}
                                         </span>
 
-                                        <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-sm font-semibold text-emerald-300">
+                                        <span className="max-w-full break-words rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 sm:px-4 sm:text-sm">
                                             {pageData.cacheStatus}
                                         </span>
                                     </div>
 
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                                         <ShareAnalysisButton
                                             report={shareReport}
                                             ticker={pageData.ticker}
@@ -641,14 +702,15 @@ export default function StockAnalysisClient({
                                             ticker={pageData.ticker}
                                             companyName={pageData.companyName}
                                         />
-                                        <InfoTooltip label="Explain watchlist">
-                                            Adds the stock to your saved list so you can
-                                            find it again later.
-                                        </InfoTooltip>
+                                        <InfoTooltip
+                                            label="Explain Research Tracker"
+                                            title="Research Tracker"
+                                            body="The Research Tracker helps users save companies they want to revisit. Future versions can highlight new filings, updated reports, or changed risk context."
+                                        />
                                     </div>
                                 </div>
 
-                                <h1 className="mt-5 max-w-3xl text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                                <h1 className="mt-5 max-w-3xl break-words text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
                                     {pageData.companyName}
                                 </h1>
 
@@ -669,15 +731,17 @@ export default function StockAnalysisClient({
 
                             <div className="stokr-card p-5 sm:p-6">
                                 <HelpedKicker
-                                    label="Executive Snapshot"
+                                    label="Research Brief"
                                     tooltipLabel="Explain AI summary"
+                                    tooltipTitle="Source Trail"
+                                    tooltipBody="Source Trail shows where an insight came from, such as a filing type, section, financial metric, or company disclosure. It helps separate source-backed context from AI interpretation."
                                 >
                                     Summarizes the main research points from available
                                     data, filings, and metrics. Use it as a starting
                                     point, not as financial advice.
                                 </HelpedKicker>
                                 <h2 className="mt-3 text-2xl font-bold text-white">
-                                    Top Signals
+                                    Source-Backed Brief
                                 </h2>
 
                                 <div className="mt-6 space-y-4">
@@ -698,8 +762,8 @@ export default function StockAnalysisClient({
 
                                 <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
                                     <p className="text-sm leading-relaxed text-slate-300">
-                                        Investors usually care most about whether the business is getting stronger or weaker,
-                                        where the risk is concentrated, and what changed since the prior filing.
+                                        Research context is most useful when it shows whether the business is getting stronger or weaker,
+                                        where disclosed risk is concentrated, and what changed since the prior filing.
                                     </p>
                                 </div>
                             </div>
@@ -710,8 +774,10 @@ export default function StockAnalysisClient({
 
                             <div className="stokr-card p-5">
                                 <HelpedKicker
-                                    label="Financial Health"
+                                    label="Company Strength Snapshot"
                                     tooltipLabel="Explain financial health"
+                                    tooltipTitle="Company strength snapshot"
+                                    tooltipBody="This section groups key financial signals such as revenue, margins, liquidity, debt, and cash flow into a readable company overview."
                                 >
                                     Combines available analysis and metrics into a
                                     simple view of financial condition. It is
@@ -749,7 +815,7 @@ export default function StockAnalysisClient({
 
                                             <div className="mt-2 h-2.5 rounded-full bg-white/10">
                                                 <div
-                                                    className="h-2.5 rounded-full bg-[#7C8CFF]"
+                                                    className="h-2.5 rounded-full bg-[#19C37D]"
                                                     style={{ width: `${Math.max(item.score, 0)}%` }}
                                                 />
                                             </div>
@@ -770,8 +836,10 @@ export default function StockAnalysisClient({
                         <section className="mt-8 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
                             <div className="stokr-card p-5 sm:p-6">
                                 <HelpedKicker
-                                    label="Top Risks"
+                                    label="Disclosed Risk Signals"
                                     tooltipLabel="Explain risk factors"
+                                    tooltipTitle="Disclosed risk signals"
+                                    tooltipBody="This section summarizes risks the company disclosed in filings and organizes them into plain-English themes. It helps users inspect risk context faster, not predict outcomes."
                                 >
                                     Highlights risks mentioned in company filings or
                                     analysis. These are things that could negatively
@@ -779,7 +847,7 @@ export default function StockAnalysisClient({
                                 </HelpedKicker>
 
                                 <h2 className="mt-3 text-2xl font-bold text-white">
-                                    Ranked Risk Factors
+                                    Disclosed Risk Signals
                                 </h2>
 
                                 <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -823,7 +891,7 @@ export default function StockAnalysisClient({
 
                             {showLowerReportSections ? (
                                 <div className="stokr-card p-5 sm:p-6">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
                                         MD&amp;A Summary
                                     </p>
 
@@ -868,16 +936,17 @@ export default function StockAnalysisClient({
                                     <HelpedKicker
                                         label="Decision Framing"
                                         tooltipLabel="Explain bull and bear case"
+                                        tooltipTitle="Decision framing"
+                                        tooltipBody="The Upside Thesis summarizes factors that may support a constructive view of the company. The Downside Thesis summarizes risks, pressures, or uncertainties that may challenge that view. These are research perspectives, not predictions or financial advice."
                                     >
-                                        The bull case explains reasons someone might be
-                                        optimistic about the company. The bear case
-                                        explains reasons someone might be cautious or
-                                        negative. These are research perspectives, not
-                                        predictions.
+                                        The Upside Thesis summarizes factors that may
+                                        support a constructive view of the company. The
+                                        Downside Thesis summarizes risks, pressures, or
+                                        uncertainties that may challenge that view.
                                     </HelpedKicker>
 
                                     <h2 className="mt-3 text-2xl font-bold text-white">
-                                        Bull vs Bear Case
+                                        Upside Thesis / Downside Thesis
                                     </h2>
 
                                     <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -894,7 +963,7 @@ export default function StockAnalysisClient({
                                     <div className="mt-6 grid gap-5 md:grid-cols-2">
                                         <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5">
                                             <h3 className="text-lg font-bold text-emerald-300">
-                                                Bull Case
+                                                Upside Thesis
                                             </h3>
 
                                             <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
@@ -906,7 +975,7 @@ export default function StockAnalysisClient({
 
                                         <div className="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
                                             <h3 className="text-lg font-bold text-red-300">
-                                                Bear Case
+                                                Downside Thesis
                                             </h3>
 
                                             <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
@@ -923,6 +992,8 @@ export default function StockAnalysisClient({
                                         <HelpedKicker
                                             label="Revenue Mix"
                                             tooltipLabel="Explain segment contribution"
+                                            tooltipTitle="Company strength snapshot"
+                                            tooltipBody="This section groups key financial signals such as revenue, margins, liquidity, debt, and cash flow into a readable company overview."
                                         >
                                             Breaks down how different business segments,
                                             products, or divisions contribute to the
@@ -973,7 +1044,7 @@ export default function StockAnalysisClient({
                                     </div>
 
                                     <div className="stokr-card p-5 sm:p-6">
-                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
                                             Alert Layer
                                         </p>
 
@@ -998,6 +1069,8 @@ export default function StockAnalysisClient({
                                     <HelpedKicker
                                         label="Source Transparency"
                                         tooltipLabel="Explain source transparency"
+                                        tooltipTitle="Source Trail"
+                                        tooltipBody="Source Trail shows where an insight came from, such as a filing type, section, financial metric, or company disclosure. It helps separate source-backed context from AI interpretation."
                                     >
                                         Shows where the analysis came from, such as
                                         filings, market data, or generated summaries, so
@@ -1069,18 +1142,21 @@ export default function StockAnalysisClient({
 
                                     <p className="text-sm leading-relaxed text-slate-300">
                                         <span className="font-semibold text-white">Disclaimer:</span>{" "}
-                                        This analytics page is for informational analysis only and should not be treated as financial,
-                                        investment, or trading advice. Some sections may display pending placeholders until
-                                        live market data, SEC metrics, and filing comparison tools are fully connected.
+                                        stokr provides informational research tools only and does not provide financial advice.
+                                        Some sections may display pending placeholders until live market data, SEC metrics,
+                                        and filing comparison tools are fully connected.
                                     </p>
                                 </section>
 
                                 {accessPremium === false && (
-                                    <PremiumPreview
-                                        ticker={pageData.ticker}
-                                        source="stock_report"
-                                        showCoupon
-                                    />
+                                    <>
+                                        <PremiumTeaserSections ticker={pageData.ticker} />
+                                        <PremiumPreview
+                                            ticker={pageData.ticker}
+                                            source="stock_report"
+                                            showCoupon
+                                        />
+                                    </>
                                 )}
 
                                 <RelatedStocks ticker={pageData.ticker} />
@@ -1093,21 +1169,75 @@ export default function StockAnalysisClient({
     )
 }
 
+function PremiumTeaserSections({ ticker }: { ticker: string }) {
+    return (
+        <section className="stokr-card mt-8 p-5 sm:p-6">
+            <p className="stokr-kicker">Premium research layers</p>
+            <h2 className="mt-3 text-2xl font-bold text-white">
+                Unlock the evidence behind the {ticker} brief
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#A3AAB8]">
+                These sections show the structure of Full Research Desk without
+                inventing company-specific findings. Upgrade to inspect the
+                filing-backed breakdown when data is available.
+            </p>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                {premiumTeaserSections.map((section) => (
+                    <article
+                        key={section.title}
+                        className="rounded-xl border border-white/[0.08] bg-black/20 p-4"
+                    >
+                        <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#19C37D]">
+                            Locked
+                        </p>
+                        <h3 className="mt-2 text-lg font-semibold text-white">
+                            {section.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-6 text-[#A7ADBA]">
+                            {section.body}
+                        </p>
+                        <ul className="mt-4 space-y-2 text-sm leading-6 text-[#CBD5E1]">
+                            {section.unlocks.map((item) => (
+                                <li key={item}>{item}</li>
+                            ))}
+                        </ul>
+                    </article>
+                ))}
+            </div>
+
+            <Link href="/pricing" className="stokr-button-primary mt-6">
+                Unlock Full Research Desk
+            </Link>
+        </section>
+    )
+}
+
 function HelpedKicker({
     label,
     tooltipLabel,
+    tooltipTitle,
+    tooltipBody,
     children,
 }: {
     label: string
     tooltipLabel: string
+    tooltipTitle?: string
+    tooltipBody?: string
     children: ReactNode
 }) {
     return (
-        <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+        <div className="flex min-w-0 items-center gap-2">
+            <p className="min-w-0 break-words font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#19C37D] sm:text-sm sm:tracking-[0.25em]">
                 {label}
             </p>
-            <InfoTooltip label={tooltipLabel}>{children}</InfoTooltip>
+            <InfoTooltip
+                label={tooltipLabel}
+                title={tooltipTitle}
+                body={tooltipBody}
+            >
+                {children}
+            </InfoTooltip>
         </div>
     )
 }

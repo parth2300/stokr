@@ -72,22 +72,24 @@ export default function PricingPage() {
             <p className="stokr-kicker">Pricing</p>
 
             <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-              Start free. Upgrade when you need unlimited research.
+              Start free. Upgrade when you need the full filing-backed breakdown.
             </h1>
 
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#A3AAB8]">
-              Free users can test stokr with weekly AI reports and a watchlist.
-              Premium unlocks unlimited reports, deeper research, and the full
-              dashboard.
+              Free helps you understand a company at a glance. Premium helps
+              you inspect the evidence behind the company: filings, risk
+              context, Filing Delta, Source Trail, financial depth, and saved
+              research history.
             </p>
           </div>
 
           <div className="grid gap-6 pb-14 lg:grid-cols-2">
             <div className="stokr-card p-6 sm:p-8">
-              <h2 className="text-2xl font-bold">Free</h2>
+              <h2 className="text-2xl font-bold">Starter Research</h2>
 
               <p className="mt-2 text-[#A3AAB8]">
-                For casual stock checks before upgrading.
+                For understanding a company at a glance before deciding whether
+                it deserves deeper research.
               </p>
 
               <div className="mt-8">
@@ -96,35 +98,31 @@ export default function PricingPage() {
               </div>
 
               <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
-                <li>Included: 3 AI stock reports per week</li>
-                <li>Included: Basic company summary</li>
-                <li>Included: Basic stock price and daily change data</li>
-                <li>Included: 1 watchlist</li>
-                <li>Included: Unlimited stocks inside your watchlist</li>
-                <li>Included: Cached stock data</li>
-                <li>Included: Basic filing overview</li>
-                <li className="text-[#6F7685]">Not included: unlimited report access</li>
-                <li className="text-[#6F7685]">Not included: premium dashboard</li>
-                <li className="text-[#6F7685]">
-                  Not included: advanced saved research history
-                </li>
-                <li className="text-[#6F7685]">Not included: priority processing</li>
+                <li>Company snapshot</li>
+                <li>Basic summary</li>
+                <li>Top risk preview</li>
+                <li>Basic upside/downside thesis</li>
+                <li>Limited source-backed insight</li>
+                <li>3 source-backed reports per week</li>
+                <li>1 Research Tracker</li>
+                <li>Unlimited stocks inside your Research Tracker</li>
               </ul>
 
               <Link href="/login" className="stokr-button-secondary mt-8 w-full">
-                Get Started
+                Start Researching
               </Link>
             </div>
 
-            <div className="stokr-card relative border-white/[0.14] bg-[#151923] p-6 sm:p-8">
-              <div className="mb-6 inline-flex rounded-full border border-white/[0.10] bg-[#191E29] px-3 py-1 text-xs font-medium text-[#A3AAB8] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
+            <div className="stokr-card relative border-white/[0.12] bg-[#111722] p-6 sm:p-8">
+              <div className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-[#19C37D] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
                 Best Value
               </div>
 
-              <h2 className="text-2xl font-bold text-[#F4F6FA]">Premium</h2>
+              <h2 className="text-2xl font-bold text-[#F4F6FA]">Full Research Desk</h2>
 
               <p className="mt-2 text-[#A3AAB8]">
-                For users who want deeper, faster stock research.
+                For users who want full filing breakdowns, risk context, Filing
+                Delta, source trails, and saved research history.
               </p>
 
               <div className="mt-8">
@@ -133,21 +131,21 @@ export default function PricingPage() {
               </div>
 
               <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
-                <li>Included: Unlimited AI stock reports</li>
-                <li>Included: Full 10-K and 10-Q breakdowns</li>
-                <li>Included: Complete risk factor analysis</li>
-                <li>Included: What changed filing comparison</li>
-                <li>Included: Financial health insights</li>
-                <li>Included: Bull vs bear case summaries</li>
-                <li>Included: Premium dashboard access</li>
-                <li>Included: Unlimited watchlists</li>
-                <li>Included: Unlimited stocks inside watchlists</li>
-                <li>Included: Saved stock research history</li>
-                <li>Included: Priority processing</li>
+                <li>Unlimited reports</li>
+                <li>Full 10-K and 10-Q breakdowns</li>
+                <li>Filing Delta / what changed</li>
+                <li>Complete disclosed risk analysis</li>
+                <li>Financial health deep dive</li>
+                <li>Valuation context</li>
+                <li>Full Source Trail / research receipts</li>
+                <li>Saved research history</li>
+                <li>Unlimited Research Trackers</li>
+                <li>Unlimited stocks inside Research Trackers</li>
+                <li>Priority processing</li>
               </ul>
 
               <button onClick={handleUpgrade} className="stokr-button-primary mt-8 w-full">
-                Upgrade to Premium
+                Open Full Research Desk
               </button>
 
               {!isLoggedIn && (
@@ -155,6 +153,52 @@ export default function PricingPage() {
                   You will need an account before upgrading.
                 </p>
               )}
+            </div>
+          </div>
+
+          <div className="stokr-card mb-14 p-5 sm:p-6">
+            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <div>
+                <p className="stokr-kicker">Report depth</p>
+                <h2 className="mt-3 text-2xl font-semibold text-white">
+                  What changes when you upgrade
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-[#A3AAB8]">
+                  Starter Research keeps the brief lightweight. Full Research
+                  Desk opens the filing-backed layers behind the summary.
+                </p>
+                <Link href="/stocks/nvda-stock-analysis" className="stokr-button-secondary mt-5">
+                  View full sample Premium report
+                </Link>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <ComparisonList
+                  title="Starter Research"
+                  items={[
+                    "Company snapshot",
+                    "Basic summary",
+                    "Top risk preview",
+                    "Basic upside/downside thesis",
+                    "Limited source-backed insight",
+                    "Limited weekly reports",
+                  ]}
+                />
+                <ComparisonList
+                  title="Full Research Desk"
+                  highlight
+                  items={[
+                    "Full 10-K and 10-Q breakdowns",
+                    "Filing Delta / what changed",
+                    "Complete disclosed risk analysis",
+                    "Financial health deep dive",
+                    "Valuation context",
+                    "Full Source Trail / research receipts",
+                    "Saved research history",
+                    "Unlimited reports",
+                  ]}
+                />
+              </div>
             </div>
           </div>
 
@@ -183,12 +227,33 @@ export default function PricingPage() {
 
             <p className="text-sm leading-relaxed text-[#A3AAB8]">
               <span className="font-semibold text-white">Disclaimer:</span>{" "}
-              stokr provides informational analysis only. It does not provide
-              financial, investment, or trading advice.
+              stokr provides informational research tools only and does not
+              provide financial advice.
             </p>
           </div>
         </div>
       </section>
     </main>
+  )
+}
+
+function ComparisonList({
+  title,
+  items,
+  highlight = false,
+}: {
+  title: string
+  items: string[]
+  highlight?: boolean
+}) {
+  return (
+    <div className={`rounded-xl border p-4 ${highlight ? "border-[#19C37D]/25 bg-[#19C37D]/10" : "border-white/[0.08] bg-black/20"}`}>
+      <h3 className="font-semibold text-white">{title}</h3>
+      <ul className="mt-4 space-y-2 text-sm leading-6 text-[#CBD5E1]">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
   )
 }

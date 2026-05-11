@@ -121,7 +121,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
   return (
     <>
-    <nav className="relative flex w-full items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-[#08090D]/92 px-4 py-3.5 sm:px-5">
+    <nav className="relative flex w-full items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-[#05070A]/94 px-4 py-3.5 sm:px-5">
       <Link href="/" className="flex shrink-0 items-center gap-2">
         <div className="h-8 w-11">
           <svg viewBox="0 0 64 40" className="h-full w-full" fill="none">
@@ -134,16 +134,16 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
       </Link>
 
       {/* Desktop nav */}
-      <div className="hidden min-w-0 items-center gap-1 text-sm text-[#A3AAB8] lg:flex">
+      <div className="hidden min-w-0 items-center gap-1 text-sm text-[#A3AAB8] xl:flex">
         {isSignedIn && isPremium && (
           <Link href="/dashboard" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-            Dashboard
+            Research Desk
           </Link>
         )}
 
         {isSignedIn && (
           <Link href="/watchlist" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-            Watchlist
+            Research Tracker
           </Link>
         )}
 
@@ -171,13 +171,13 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
           <div className="relative" ref={accountMenuRef}>
             <button
               onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-              className="max-w-[180px] truncate rounded-md border border-white/[0.12] bg-[#151923] px-3 py-2 font-medium text-white hover:bg-[#191E29]"
+              className="max-w-[180px] truncate rounded-md border border-white/[0.12] bg-[#0B0F16] px-3 py-2 font-medium text-white hover:bg-[#111722]"
             >
               {username}
             </button>
 
             {accountMenuOpen && (
-              <div className="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-white/[0.10] bg-[#11141C] p-2 text-white shadow-xl">
+              <div className="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-white/[0.10] bg-[#0B0F16] p-2 text-white shadow-xl">
                 <div className="border-b border-white/[0.08] px-3 py-2">
                   <p className="truncate text-sm font-medium text-white">
                     {username || "Account"}
@@ -219,13 +219,13 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
       </div>
 
       {/* Mobile nav */}
-      <div className="lg:hidden" ref={mobileMenuRef}>
+      <div className="xl:hidden" ref={mobileMenuRef}>
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle navigation menu"
           aria-expanded={mobileMenuOpen}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.12] bg-[#151923] text-white hover:bg-[#191E29]"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.12] bg-[#0B0F16] text-white hover:bg-[#111722]"
         >
           <span className="sr-only">Open navigation menu</span>
 
@@ -249,7 +249,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         </button>
 
         {mobileMenuOpen && (
-          <div className="absolute right-0 top-14 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#0B0D12] p-3 text-white shadow-2xl">
+          <div className="absolute right-0 top-14 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#05070A] p-3 text-white shadow-2xl">
             <div className="flex flex-col gap-2">
               {showSearch && (
                 <div className="mb-2">
@@ -263,7 +263,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                   onClick={closeMobileMenu}
                   className="rounded-2xl px-4 py-3 text-sm hover:bg-white/10"
                 >
-                  Dashboard
+                  Research Desk
                 </Link>
               )}
 
@@ -273,7 +273,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                   onClick={closeMobileMenu}
                   className="rounded-2xl px-4 py-3 text-sm hover:bg-white/10"
                 >
-                  Watchlist
+                  Research Tracker
                 </Link>
               )}
 
@@ -314,7 +314,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
               <div className="mt-2 border-t border-white/10 pt-3">
                 {username ? (
                   <>
-                    <div className="mb-2 rounded-lg border border-white/[0.08] bg-[#151923] px-4 py-3 text-sm text-white/80">
+                    <div className="mb-2 rounded-lg border border-white/[0.08] bg-[#0B0F16] px-4 py-3 text-sm text-white/80">
                       <p className="truncate font-medium text-white">{username}</p>
                       {email && (
                         <p className="mt-1 truncate text-xs text-[#6F7685]">
@@ -328,7 +328,7 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                         setMobileMenuOpen(false)
                         setAccountSettingsOpen(true)
                       }}
-                      className="mb-2 w-full rounded-lg border border-white/[0.10] bg-[#151923] px-4 py-3 text-left text-sm font-medium text-white hover:bg-[#191E29]"
+                      className="mb-2 w-full rounded-lg border border-white/[0.10] bg-[#0B0F16] px-4 py-3 text-left text-sm font-medium text-white hover:bg-[#111722]"
                     >
                       Manage account
                     </button>

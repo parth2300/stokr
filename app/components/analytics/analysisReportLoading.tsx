@@ -163,7 +163,7 @@ export default function AnalysisReportLoading({
 
                             <p className="mt-4 max-w-2xl text-sm leading-6 text-[#A3AAB8] md:text-base">
                                 {limitReached
-                                    ? "Free users can access 3 reports. Upgrade to Premium for unlimited report access."
+                                    ? "Starter Research includes 3 weekly reports. Upgrade to Full Research Desk for unlimited reports and the full filing-backed breakdown."
                                     : "The report is being generated from filing data, financial signals, risk factors, management commentary, and investor-facing decision points."}
                             </p>
                         </div>
@@ -188,14 +188,14 @@ export default function AnalysisReportLoading({
                             >
                                 <defs>
                                     <linearGradient id="loadingLine" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stopColor="#7C8CFF" stopOpacity="0.35" />
+                                        <stop offset="0%" stopColor="#19C37D" stopOpacity="0.30" />
                                         <stop offset="50%" stopColor="#8FB3FF" stopOpacity="1" />
                                         <stop offset="100%" stopColor="#34D399" stopOpacity="1" />
                                     </linearGradient>
 
                                     <linearGradient id="loadingFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#7C8CFF" stopOpacity="0.32" />
-                                        <stop offset="100%" stopColor="#7C8CFF" stopOpacity="0.02" />
+                                        <stop offset="0%" stopColor="#19C37D" stopOpacity="0.28" />
+                                        <stop offset="100%" stopColor="#19C37D" stopOpacity="0.02" />
                                     </linearGradient>
                                 </defs>
 
@@ -257,16 +257,16 @@ export default function AnalysisReportLoading({
 
                             {!error && (
                                 <div className="flex gap-1">
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF] [animation-delay:120ms]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#7C8CFF] [animation-delay:240ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D] [animation-delay:120ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D] [animation-delay:240ms]" />
                                 </div>
                             )}
                         </div>
 
                         {!limitReached && (
                             <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] rounded-full bg-[#7C8CFF]" />
+                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] rounded-full bg-[#19C37D]" />
                             </div>
                         )}
 

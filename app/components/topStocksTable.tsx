@@ -55,14 +55,14 @@ export default function TopStocksTable() {
     }, [])
 
     return (
-  <div className="w-full max-w-[460px]">
+  <div className="w-full max-w-[460px] min-w-0">
     <div className="stokr-card p-3">
       <div className="mb-3 px-3 pt-1">
-        <h2 className="text-lg font-semibold text-[#F4F6FA]">Popular Stocks</h2>
-        <p className="text-xs text-[#6F7685]">Commonly searched stocks</p>
+        <h2 className="text-lg font-semibold text-[#F4F6FA]">Common research starting points</h2>
+        <p className="text-xs text-[#6F7685]">Commonly opened company briefs</p>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)_76px_82px] border-b border-white/[0.08] px-3 pb-2 text-xs font-medium uppercase tracking-[0.12em] text-[#6F7685] sm:text-sm sm:normal-case sm:tracking-normal">
+      <div className="grid grid-cols-[minmax(0,1fr)_64px_70px] border-b border-white/[0.08] px-2 pb-2 text-xs font-medium uppercase tracking-[0.08em] text-[#6F7685] sm:grid-cols-[minmax(0,1fr)_76px_82px] sm:px-3 sm:text-sm sm:normal-case sm:tracking-normal">
         <div>Company</div>
         <div className="text-right">Price</div>
         <div className="text-right">Change</div>
@@ -95,22 +95,24 @@ export default function TopStocksTable() {
             <Link
               key={stock.ticker}
               href={getStockAnalysisHref(stock.ticker)}
-              className="grid min-h-[52px] grid-cols-[minmax(0,1fr)_76px_82px] items-center border-b border-white/10 px-3 text-sm transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C8CFF]/60 last:border-b-0"
+              className="grid min-h-[52px] grid-cols-[minmax(0,1fr)_64px_70px] items-center border-b border-white/10 px-2 text-sm transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#19C37D]/45 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_76px_82px] sm:px-3"
               aria-label={`Open ${stock.ticker} stock analysis`}
             >
               <div className="min-w-0">
                 <p className="font-medium text-[#F4F6FA]">{stock.ticker}</p>
-                <p className="truncate text-xs text-[#6F7685]">
-                  Vol {stock.volume ? stock.volume.toLocaleString() : "N/A"}
-                </p>
+                {stock.volume ? (
+                  <p className="truncate text-xs text-[#6F7685]">
+                    Vol {stock.volume.toLocaleString()}
+                  </p>
+                ) : null}
               </div>
 
-              <div className="text-right text-[#A3AAB8]">
+              <div className="text-right text-xs text-[#A3AAB8] sm:text-sm">
                 {formatPrice(stock.price)}
               </div>
 
               <div
-                className={`text-right font-medium ${
+                className={`text-right text-xs font-medium sm:text-sm ${
                   isPositive ? "text-[#7BAE8C]" : "text-[#D26A6A]"
                 }`}
               >

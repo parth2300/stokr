@@ -5,18 +5,19 @@ import { trackClickUpgrade } from "../lib/analytics"
 
 export default function ReportLimitUpgradePrompt() {
   return (
-    <section className="stokr-card mt-6 border-[#7C9DFF]/30 bg-[#111827]/90 p-6 text-left">
-      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C9DFF]">
+    <section className="stokr-card mt-6 border-white/[0.12] bg-[#111722] p-6 text-left">
+      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
         Weekly Limit
       </p>
 
       <h2 className="mt-3 text-2xl font-bold text-white">
-        You&apos;ve used your free weekly reports
+        You&apos;ve used your Starter Research weekly reports
       </h2>
 
       <p className="mt-4 text-sm leading-6 text-[#A3AAB8]">
-        Premium unlocks unlimited stock reports, full filing breakdowns, risk
-        analysis, saved research history, and priority processing.
+        Upgrade when you need the full filing-backed breakdown: unlimited
+        reports, Filing Delta, complete disclosed risk analysis, valuation
+        context, Source Trail, and saved research history.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -25,7 +26,7 @@ export default function ReportLimitUpgradePrompt() {
           onClick={() => trackClickUpgrade("report_limit")}
           className="stokr-button-primary"
         >
-          Upgrade to Premium
+          Unlock Full Research Desk
         </Link>
 
         <p className="text-sm text-[#A3AAB8]">

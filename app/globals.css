@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08090d;
-  --foreground: #f4f6fa;
+  --background: #05070a;
+  --foreground: #f5f5f0;
 }
 
 @theme inline {
@@ -21,13 +21,17 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
 }
 
 @layer components {
   .stokr-page {
-    @apply min-h-screen overflow-x-hidden bg-[#08090D] text-[#F4F6FA];
+    @apply min-h-screen overflow-x-hidden bg-[#05070A] text-[#F5F5F0];
   }
 
   .stokr-shell {
@@ -35,7 +39,7 @@ body {
   }
 
   .stokr-bg {
-    @apply pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0)_22rem),radial-gradient(circle_at_50%_0%,rgba(124,140,255,0.10),transparent_32rem)];
+    @apply pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(245,245,240,0.035),rgba(245,245,240,0)_22rem),radial-gradient(circle_at_50%_0%,rgba(25,195,125,0.055),transparent_30rem)];
   }
 
   .stokr-container {
@@ -43,29 +47,107 @@ body {
   }
 
   .stokr-card {
-    @apply rounded-xl border border-white/[0.09] bg-[#11141C] shadow-none;
+    @apply rounded-lg border border-white/[0.08] bg-[#0D1118] shadow-none;
   }
 
   .stokr-card-muted {
-    @apply rounded-xl border border-white/[0.08] bg-[#0D1017];
+    @apply rounded-lg border border-white/[0.06] bg-[#0B0F16];
   }
 
   .stokr-kicker {
-    @apply text-xs font-medium uppercase tracking-[0.18em] text-[#7C8CFF];
+    @apply font-mono text-xs font-medium uppercase tracking-[0.18em] text-[#19C37D];
   }
 
   .stokr-button-primary {
-    @apply inline-flex min-h-10 items-center justify-center rounded-lg bg-[#7C8CFF] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#8E9BFF] disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex min-h-10 items-center justify-center rounded-md bg-[#19C37D] px-4 py-2.5 text-sm font-medium text-[#05070A] transition hover:bg-[#3DDC97] disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .stokr-button-secondary {
-    @apply inline-flex min-h-10 items-center justify-center rounded-lg border border-white/[0.11] bg-[#151923] px-4 py-2.5 text-sm font-medium text-[#F4F6FA] transition hover:bg-[#191E29] disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex min-h-10 items-center justify-center rounded-md border border-white/[0.10] bg-[#0B0F16] px-4 py-2.5 text-sm font-medium text-[#F5F5F0] transition hover:border-white/[0.18] hover:bg-[#111722] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .stokr-source-tag {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#A7ADBA];
+  }
+}
+
+.stokr-grid-bg {
+  background-image:
+    linear-gradient(180deg, rgba(245, 245, 240, 0.035), rgba(245, 245, 240, 0) 22rem),
+    linear-gradient(rgba(245, 245, 240, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 245, 240, 0.028) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(25, 195, 125, 0.055), transparent 30rem);
+  background-size: auto, 64px 64px, 64px 64px, auto;
+}
+
+.research-build-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 22% 0%, rgba(25, 195, 125, 0.08), transparent 18rem),
+    linear-gradient(180deg, rgba(244, 241, 234, 0.035), transparent 9rem);
+}
+
+.research-build-step {
+  animation: stokr-card-reveal 640ms ease both;
+}
+
+.research-build-step::after {
+  content: "";
+  position: absolute;
+  left: 1.625rem;
+  top: 2.65rem;
+  bottom: -0.8rem;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(25, 195, 125, 0.28), transparent);
+}
+
+.research-build-step:last-child::after {
+  display: none;
+}
+
+.source-trail-card {
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.source-trail-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background-color: #101620;
+}
+
+@keyframes stokr-card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .research-build-step {
+    animation: none !important;
+  }
+
+  .source-trail-card {
+    transition: none;
   }
 }
 
 .search-dropdown-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(124, 157, 255, 0.45) rgba(255, 255, 255, 0.05);
+  scrollbar-color: rgba(25, 195, 125, 0.36) rgba(255, 255, 255, 0.05);
 }
 
 .search-dropdown-scroll::-webkit-scrollbar {
@@ -78,12 +160,12 @@ body {
 }
 
 .search-dropdown-scroll::-webkit-scrollbar-thumb {
-  background: rgba(124, 157, 255, 0.45);
+  background: rgba(25, 195, 125, 0.36);
   border-radius: 999px;
 }
 
 .search-dropdown-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 157, 255, 0.7);
+  background: rgba(25, 195, 125, 0.62);
 }
 
 .stokr-scrollbar {

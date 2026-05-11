@@ -71,7 +71,7 @@ export default function LiveDashboardInsights() {
             setInsights(data.insights || [])
         } catch (err) {
             setError(
-                err instanceof Error ? err.message : "Failed to load dashboard insights."
+                err instanceof Error ? err.message : "Failed to load Research Desk insights."
             )
         } finally {
             setIsLoading(false)
@@ -91,9 +91,9 @@ export default function LiveDashboardInsights() {
     if (isLoading) {
         return (
             <>
-                <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-                        Leaderboard
+                <section className="stokr-card min-w-0 p-5">
+                    <p className="stokr-kicker">
+                        Company Context
                     </p>
                     <div className="mt-5 space-y-3">
                         <div className="h-8 animate-pulse rounded-xl bg-white/10" />
@@ -102,8 +102,8 @@ export default function LiveDashboardInsights() {
                     </div>
                 </section>
 
-                <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+                <section className="stokr-card min-w-0 p-5">
+                    <p className="stokr-kicker">
                         Insights
                     </p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">

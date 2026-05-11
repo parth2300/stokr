@@ -55,7 +55,7 @@ export default function LiveSavedReports() {
       setReports((data.reports || []) as SavedReport[])
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load saved reports."
+        err instanceof Error ? err.message : "Failed to load research briefs."
       )
     } finally {
       setIsLoading(false)
@@ -64,13 +64,13 @@ export default function LiveSavedReports() {
 
   if (isLoading) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Reports
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Continue Research
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Loading Saved Reports
+          Loading research briefs
         </h2>
 
         <div className="mt-6 grid gap-3">
@@ -86,11 +86,11 @@ export default function LiveSavedReports() {
     return (
       <section className="min-w-0 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
-          Reports Error
+          Research Briefs Error
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Could not load saved reports
+          Could not load research briefs
         </h2>
 
         <p className="mt-3 text-sm text-red-100">{error}</p>
@@ -107,29 +107,29 @@ export default function LiveSavedReports() {
 
   if (reports.length === 0) {
     return (
-      <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-          Reports
+      <section className="stokr-card min-w-0 p-5">
+        <p className="stokr-kicker">
+          Continue Research
         </p>
 
         <h2 className="mt-2 text-xl font-bold text-white">
-          Saved AI Reports
+          Recent Research Briefs
         </h2>
 
-        <div className="mt-6 rounded-2xl border border-dashed border-[#7C8CFF]/35 bg-black/20 p-8 text-center">
+        <div className="mt-6 rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-8 text-center">
           <p className="text-lg font-bold text-white">
-            No saved reports yet
+            No research briefs yet.
           </p>
 
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            Generate AI reports for stocks in your watchlist and they will appear here.
+            Search a ticker to generate your first source-backed brief.
           </p>
 
           <a
-            href="/watchlist"
-            className="mt-5 inline-flex rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#0F172A] hover:bg-blue-100"
+            href="/"
+            className="stokr-button-primary mt-5"
           >
-            Open Watchlist
+            Search ticker
           </a>
         </div>
       </section>

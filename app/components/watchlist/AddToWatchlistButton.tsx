@@ -118,7 +118,7 @@ export default function AddToWatchlistButton({
       )
 
       if (alreadyExists) {
-        setMessage(`${normalizedTicker} is already in your watchlist.`)
+        setMessage(`${normalizedTicker} is already in your Research Tracker.`)
         setIsOpen(true)
         return
       }
@@ -153,7 +153,7 @@ export default function AddToWatchlistButton({
       }
 
       trackAddToWatchlist(normalizedTicker)
-      setMessage(`${normalizedTicker} added to ${targetWatchlist.name}.`)
+      setMessage(`${normalizedTicker} saved to Research Tracker.`)
       setIsOpen(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add stock.")
@@ -164,23 +164,23 @@ export default function AddToWatchlistButton({
   }
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0">
       <button
         onClick={handleAddToWatchlist}
         disabled={isSaving}
-        className="inline-flex h-11 items-center gap-2 rounded-2xl border border-white/[0.10] bg-[#151923] px-5 text-sm font-bold text-[#DDE2FF] transition hover:bg-[#191E29] disabled:cursor-not-allowed disabled:opacity-50"
-        title="Add to watchlist"
+        className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-xl border border-white/[0.10] bg-[#0B0F16] px-4 py-2 text-sm font-bold text-[#DDE2FF] transition hover:bg-[#111722] disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
+        title="Save to Research Tracker"
       >
         <span className="text-xl leading-none">+</span>
-        <span>{isSaving ? "Adding..." : "Watchlist"}</span>
+        <span className="truncate">{isSaving ? "Adding..." : "Research Tracker"}</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-3 w-72 rounded-xl border border-white/[0.10] bg-[#11141C] p-4 text-sm shadow-2xl">
+        <div className="absolute right-0 z-50 mt-3 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#0B0F16] p-4 text-sm shadow-2xl max-sm:fixed max-sm:left-4 max-sm:right-4 max-sm:w-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-bold text-white">
-                {requiresLogin ? "Login Required" : error ? "Watchlist Error" : "Watchlist"}
+                {requiresLogin ? "Login Required" : error ? "Research Tracker Error" : "Research Tracker"}
               </p>
 
               <p
@@ -189,7 +189,7 @@ export default function AddToWatchlistButton({
                 }`}
               >
                 {requiresLogin
-                  ? "Create or log in to an account to save stocks to your watchlist."
+                  ? "Create or log in to an account to save stocks to your Research Tracker."
                   : error || message}
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function AddToWatchlistButton({
           {requiresLogin && (
             <Link
               href="/login"
-              className="mt-4 inline-flex rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0F172A] hover:bg-blue-100"
+              className="stokr-button-primary mt-4"
             >
               Login
             </Link>
@@ -214,9 +214,9 @@ export default function AddToWatchlistButton({
           {!requiresLogin && !error && (
             <Link
               href="/watchlist"
-              className="mt-4 inline-flex rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0F172A] hover:bg-blue-100"
+              className="stokr-button-primary mt-4"
             >
-              Open Watchlist
+              Open Research Tracker
             </Link>
           )}
         </div>

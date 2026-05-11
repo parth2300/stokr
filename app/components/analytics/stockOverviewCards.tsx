@@ -63,14 +63,14 @@ export default function StockOverviewCards({
   return (
     <section className="mt-8">
       <div className="mb-3 flex items-center gap-2">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#7C8CFF]">
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#19C37D]">
           Stock overview
         </p>
-        <InfoTooltip label="Explain stock overview">
-          Shows the company&apos;s basic market snapshot, such as price, daily
-          move, market cap, and key identifying details. It helps you quickly
-          understand what stock you are viewing.
-        </InfoTooltip>
+        <InfoTooltip
+          label="Explain stock overview"
+          title="Signal Score"
+          body="Signal Scores are research aids based on available company data and analysis rules. They should be treated as context, not buy, sell, or hold recommendations."
+        />
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -79,7 +79,7 @@ export default function StockOverviewCards({
           Price
         </p>
 
-        <p className="mt-2 text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-bold text-white">
           {loading
             ? "Loading..."
             : error || !overview || !hasPrice
@@ -105,7 +105,7 @@ export default function StockOverviewCards({
           Market Cap
         </p>
 
-        <p className="mt-2 text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-bold text-white">
           {loading
             ? "Loading..."
             : error || !overview
@@ -123,7 +123,7 @@ export default function StockOverviewCards({
           Health Score
         </p>
 
-        <p className="mt-2 text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-bold text-white">
           {fallbackHealthScore}/100
         </p>
 

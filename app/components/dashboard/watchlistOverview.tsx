@@ -5,114 +5,77 @@ function changeClass(direction: WatchlistStock["dailyChangeDirection"]) {
   return direction === "up" ? "text-emerald-300" : "text-red-300"
 }
 
-function scoreColor(score: number) {
-  if (score >= 80) return "bg-emerald-500/20 text-emerald-300"
-  if (score >= 60) return "bg-yellow-500/20 text-yellow-300"
-  return "bg-red-500/20 text-red-300"
-}
-
-function ScorePill({ score }: { score: number }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className={`min-w-7 rounded-md px-2 py-0.5 text-center text-[10px] font-bold ${scoreColor(score)}`}>
-        {score}
-      </span>
-
-      <div className="h-1.5 w-10 rounded-full bg-white/10">
-        <div
-          className="h-1.5 rounded-full bg-[#7C8CFF]"
-          style={{ width: `${score}%` }}
-        />
-      </div>
-    </div>
-  )
-}
-
 export default function WatchlistOverview({
   stocks,
 }: {
   stocks: WatchlistStock[]
 }) {
+  const previewStocks = stocks.slice(0, 5)
+
   return (
-   <section className="flex h-[520px] min-w-0 flex-col overflow-hidden rounded-xl border border-white/[0.09] bg-[#11141C] p-5">
+   <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#0D1118] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
-            Watchlist
+          <p className="stokr-kicker">
+            Research Tracker
           </p>
 
           <h2 className="mt-1 text-xl font-bold text-white">
-            Watchlist Overview
+            Saved Companies
           </h2>
         </div>
-
-        <Link
-          href="/watchlist"
-          className="rounded-lg border border-white/[0.10] bg-[#151923] px-3 py-1.5 text-xs font-semibold text-[#DDE2FF] hover:bg-[#191E29]"
-        >
-          View Watchlist
-        </Link>
       </div>
 
-      <div className="stokr-scrollbar mt-5 min-h-0 flex-1 overflow-auto pr-2">
-        <table className="w-full min-w-[760px] text-left text-xs">
-          <thead>
-            <tr className="border-b border-white/10 text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              <th className="pb-3">Ticker</th>
-              <th className="pb-3">Price</th>
-              <th className="pb-3">Daily Change</th>
-              <th className="pb-3">AI Health</th>
-              <th className="pb-3">Financial</th>
-              <th className="pb-3">Valuation</th>
-              <th className="pb-3 text-right">Updated</th>
-            </tr>
-          </thead>
+      <div className="mt-5 divide-y divide-white/[0.07] border-y border-white/[0.07]">
+        {previewStocks.map((stock) => {
+          const hasCompanyName = stock.companyName && stock.companyName !== "Company name pending"
+          const hasPrice = stock.price && stock.price !== "Pending"
+          const hasChange = stock.dailyChange && stock.dailyChange !== "Pending"
 
-          <tbody>
-            {stocks.map((stock) => (
-              <tr key={stock.ticker} className="border-b border-white/6 last:border-b-0">
-                <td className="py-3">
-                  <Link
-                    href={`/stocks/${stock.ticker.toLowerCase()}-stock-analysis`}
-                    className="font-bold text-white hover:text-[#9AA6FF]"
-                  >
-                    {stock.ticker}
-                  </Link>
-                  <p className="mt-1 text-[10px] text-slate-400">{stock.companyName}</p>
-                </td>
+          return (
+          <article
+            key={stock.ticker}
+            className="py-3"
+          >
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center">
+              <div className="min-w-0">
+                <Link
+                  href={`/stocks/${stock.ticker.toLowerCase()}-stock-analysis`}
+                  className="font-mono text-lg font-semibold text-white hover:text-[#19C37D]"
+                >
+                  {stock.ticker}
+                </Link>
+                {hasCompanyName && (
+                  <p className="mt-1 break-words text-sm leading-5 text-[#A7ADBA]">
+                    {stock.companyName}
+                  </p>
+                )}
+              </div>
 
-                <td className="py-3 font-semibold text-slate-200">
-                  {stock.price}
-                </td>
+              <div className="min-h-5 text-left text-xs sm:text-right">
+                {hasPrice && <p className="font-semibold text-white">{stock.price}</p>}
+                {hasChange && (
+                  <p className={`mt-1 font-semibold ${changeClass(stock.dailyChangeDirection)}`}>
+                    {stock.dailyChange}
+                  </p>
+                )}
+              </div>
 
-                <td className={`py-3 font-bold ${changeClass(stock.dailyChangeDirection)}`}>
-                  {stock.dailyChange}
-                </td>
-
-                <td className="py-3">
-                  <ScorePill score={stock.aiHealthScore} />
-                </td>
-
-                <td className="py-3">
-                  <ScorePill score={stock.financialScore} />
-                </td>
-
-                <td className="py-3">
-                  <ScorePill score={stock.valuationScore} />
-                </td>
-
-                <td className="py-3 text-right text-slate-400">
-                  {stock.lastUpdated}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              <Link
+                href={`/stocks/${stock.ticker.toLowerCase()}-stock-analysis`}
+                className="inline-flex min-h-9 items-center justify-center rounded-md border border-white/[0.10] bg-[#0B0F16] px-3 py-2 text-xs font-medium text-[#CBD5E1] transition hover:border-white/[0.16] hover:bg-[#111722]"
+              >
+                Open
+              </Link>
+            </div>
+          </article>
+          )
+        })}
       </div>
 
-      <p className="mt-3 shrink-0 text-center text-[10px] text-slate-500">
-        Showing {stocks.length} tracked stocks
-      </p>
+      <Link href="/watchlist" className="stokr-button-secondary mt-5 w-full">
+        View all saved companies
+      </Link>
     </section>
   )
 }

@@ -73,20 +73,20 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
   }, [chartResponse])
 
   return (
-    <div className="stokr-card p-4 sm:p-5">
+    <div className="stokr-card min-w-0 p-4 sm:p-5">
       <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#7C8CFF]">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
               Price Action
             </p>
-            <InfoTooltip label="Explain price chart">
-              Shows how the stock price has moved over the selected time range.
-              Charts show price movement, but they do not predict future
-              performance.
-            </InfoTooltip>
+            <InfoTooltip
+              label="Explain price chart"
+              title="Signal Score"
+              body="Signal Scores are research aids based on available company data and analysis rules. They should be treated as context, not buy, sell, or hold recommendations."
+            />
           </div>
-          <h2 className="mt-2 text-2xl font-bold text-white">
+          <h2 className="mt-2 break-words text-2xl font-bold text-white">
             {ticker} Stock Performance
           </h2>
           <p className="mt-2 text-sm text-slate-400">
@@ -94,7 +94,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
           </p>
         </div>
 
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex w-full flex-wrap gap-1.5 md:w-auto md:justify-end">
           {ranges.map((range) => {
             const isActive = selectedRange === range
 
@@ -102,8 +102,8 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
               <button
                 key={range}
                 onClick={() => setSelectedRange(range)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive
-                  ? "bg-[#7C8CFF] text-white"
+                className={`min-w-0 rounded-full px-3 py-2 text-sm font-semibold transition sm:px-4 ${isActive
+                  ? "bg-[#19C37D] text-[#05070A]"
                   : "border border-white/[0.08] bg-[#151923] text-[#A3AAB8] hover:bg-[#191E29] hover:text-white"
                   }`}
               >
@@ -168,13 +168,13 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
               </p>
             </div>
           ) : (
-          <div className="h-[320px] w-full">
+          <div className="h-[320px] w-full min-w-0 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7C8CFF" stopOpacity={0.45} />
-                    <stop offset="95%" stopColor="#7C8CFF" stopOpacity={0.03} />
+                    <stop offset="5%" stopColor="#19C37D" stopOpacity={0.38} />
+                    <stop offset="95%" stopColor="#19C37D" stopOpacity={0.03} />
                   </linearGradient>
                 </defs>
 
@@ -215,7 +215,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
                 <Area
                   type="monotone"
                   dataKey="price"
-                  stroke="#7C8CFF"
+                  stroke="#19C37D"
                   strokeWidth={3}
                   fill="url(#priceFill)"
                 />
