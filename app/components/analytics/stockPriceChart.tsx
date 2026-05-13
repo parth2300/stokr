@@ -82,11 +82,11 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
             </p>
             <InfoTooltip
               label="Explain price chart"
-              title="Signal Score"
-              body="Signal Scores are research aids based on available company data and analysis rules. They should be treated as context, not buy, sell, or hold recommendations."
+              title="Price Chart"
+              body="Shows cached price movement by range. Intraday prices may be delayed and are informational research context only."
             />
           </div>
-          <h2 className="mt-2 break-words text-2xl font-bold text-white">
+          <h2 className="mt-2 break-words text-2xl font-semibold text-white">
             {ticker} Stock Performance
           </h2>
           <p className="mt-2 text-sm text-slate-400">
@@ -102,7 +102,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
               <button
                 key={range}
                 onClick={() => setSelectedRange(range)}
-                className={`min-w-0 rounded-full px-3 py-2 text-sm font-semibold transition sm:px-4 ${isActive
+                className={`min-w-0 rounded-md px-3 py-2 text-sm font-semibold transition sm:px-4 ${isActive
                   ? "bg-[#19C37D] text-[#05070A]"
                   : "border border-white/[0.08] bg-[#151923] text-[#A3AAB8] hover:bg-[#191E29] hover:text-white"
                   }`}
@@ -115,13 +115,16 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
       </div>
 
       {loading && (
-        <div className="flex h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-black/20">
-          <p className="text-sm text-slate-400">Loading chart...</p>
+        <div className="flex h-[320px] items-center justify-center rounded-lg border border-white/10 bg-black/20">
+          <div className="text-center">
+            <p className="font-semibold text-white">Loading chart</p>
+            <p className="mt-2 text-sm text-slate-400">Fetching cached range data for {ticker}.</p>
+          </div>
         </div>
       )}
 
       {!loading && error && (
-        <div className="flex h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-black/20">
+        <div className="flex h-[320px] items-center justify-center rounded-lg border border-white/10 bg-black/20 p-5">
           <div className="text-center">
             <p className="font-semibold text-white">Chart unavailable</p>
             <p className="mt-2 text-sm text-slate-400">{error}</p>
@@ -133,7 +136,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
         <>
           <div className="mb-5 flex items-end gap-4">
             <div>
-              <p className="text-3xl font-bold text-white">
+              <p className="text-3xl font-semibold text-white">
                 {chartResponse.isFallback
                   ? "Unavailable"
                   : typeof chartResponse.price === "number" &&
@@ -161,7 +164,7 @@ export default function StockPriceChart({ ticker }: { ticker: string }) {
           </div>
 
           {chartResponse.isFallback ? (
-            <div className="flex h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-black/20 p-6 text-center">
+            <div className="flex h-[320px] items-center justify-center rounded-lg border border-white/10 bg-black/20 p-6 text-center">
               <p className="max-w-md text-sm leading-relaxed text-slate-400">
                 Live chart data is not available for this range right now.
                 Price trend visuals will appear when verified market data returns.

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { supabase } from "@/app/lib/supabase"
 import WatchlistOverview from "./watchlistOverview"
@@ -145,12 +146,12 @@ export default function LiveDashboardWatchlist() {
             Save companies from any research brief to revisit them later.
           </p>
 
-          <a
+          <Link
             href="/watchlist"
             className="stokr-button-secondary mt-5"
           >
             View all saved companies
-          </a>
+          </Link>
         </div>
       </section>
     )

@@ -126,7 +126,7 @@ const premiumTeaserSections = [
     },
     {
         title: "Valuation Context is a Premium section",
-        body: "Review valuation signals as research context, not a buy or sell call.",
+        body: "Review valuation signals as research context, not as investment advice.",
         unlocks: [
             "market valuation signal context",
             "available market cap and financial metric comparisons",
@@ -219,6 +219,24 @@ function normalizeFilingNotes(notes: AnalysisJson["filingNotes"]) {
         direction: "up",
         text: note.text,
     }))
+}
+
+function formatReportDate(value: string | null | undefined) {
+    if (!value) return "Pending"
+
+    const date = new Date(value)
+
+    if (Number.isNaN(date.getTime())) return value
+
+    return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    }).format(date)
+}
+
+function scoreWidth(score: number) {
+    return `${Math.min(Math.max(score, 0), 100)}%`
 }
 
 function getVisitorId() {
@@ -448,16 +466,37 @@ export default function StockAnalysisClient({
                 <section className="stokr-shell">
                     <div className="stokr-bg" />
 
-                    <div className="relative z-10 mx-auto max-w-7xl">
+                    <div className="relative z-10 mx-auto w-full max-w-7xl">
                         <NavBar showSearch />
 
-                        <div className="stokr-card mt-20 p-8 text-center">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
-                                Loading Report
-                            </p>
-                            <h1 className="mt-3 text-3xl font-bold text-white">
-                                Checking report access...
+                        <div className="stokr-card mx-auto mt-16 max-w-3xl p-6 sm:mt-20 sm:p-8">
+                            <div className="flex items-center gap-3">
+                                <div className="h-2.5 w-2.5 rounded-full bg-[#19C37D]" />
+                                <p className="stokr-kicker">Loading report</p>
+                            </div>
+
+                            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                                Checking report access and cached research
                             </h1>
+
+                            <p className="mt-3 text-sm leading-6 text-[#A3AAB8]">
+                                stokr is verifying report access, then loading the latest cached filing brief and market context.
+                            </p>
+
+                            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                                {["Access", "Filing brief", "Market snapshot"].map((label) => (
+                                    <div
+                                        key={label}
+                                        className="h-24 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03] p-4"
+                                    >
+                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                            {label}
+                                        </p>
+                                        <div className="mt-4 h-3 w-2/3 rounded-full bg-white/10" />
+                                        <div className="mt-3 h-3 w-1/2 rounded-full bg-white/10" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -480,31 +519,37 @@ export default function StockAnalysisClient({
                 <section className="stokr-shell">
                     <div className="stokr-bg" />
 
-                    <div className="relative z-10 mx-auto max-w-7xl">
+                    <div className="relative z-10 mx-auto w-full max-w-7xl">
                         <NavBar showSearch />
 
-                        <div className="stokr-card mt-20 p-8 text-center">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+                        <div className="stokr-card mx-auto mt-16 max-w-3xl p-6 sm:mt-20 sm:p-8">
+                            <p className="stokr-kicker">
                                 {limitReached ? "Limit Reached" : "Report Unavailable"}
                             </p>
 
-                            <h1 className="mt-3 text-4xl font-extrabold text-white">
-                                {ticker} Report Access
+                            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                                {limitReached ? `${ticker} report limit reached` : `${ticker} report is unavailable`}
                             </h1>
 
-                            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-300">
+                            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">
                                 {error || "This report could not be loaded."}
                             </p>
 
                             {limitReached ? (
                                 <ReportLimitUpgradePrompt />
                             ) : (
-                                <div className="mt-6 flex justify-center gap-3">
+                                <div className="mt-6 flex flex-wrap gap-3">
                                     <Link
                                         href="/"
-                                        className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15"
+                                        className="stokr-button-secondary"
                                     >
                                         Back Home
+                                    </Link>
+                                    <Link
+                                        href={`/stocks/${ticker.toLowerCase()}-stock-analysis`}
+                                        className="stokr-button-primary"
+                                    >
+                                        Try Again
                                     </Link>
                                 </div>
                             )}
@@ -533,6 +578,11 @@ export default function StockAnalysisClient({
         companyName: cachedAnalysis.company_name || `${ticker} Stock Analysis`,
         badge: "Source-backed AI brief",
         cacheStatus: "Cached analysis loaded",
+        lastUpdated: formatReportDate(
+            cachedAnalysis.updated_at ||
+            cachedAnalysis.created_at ||
+            cachedAnalysis.filing_date
+        ),
 
         summary:
             aiAnalysis.summary ||
@@ -631,7 +681,7 @@ export default function StockAnalysisClient({
 
         filings: [
             { title: "Cached Form", value: cachedAnalysis.form_type || "Pending" },
-            { title: "Filing Date", value: cachedAnalysis.filing_date || "Pending" },
+            { title: "Filing Date", value: formatReportDate(cachedAnalysis.filing_date) },
             {
                 title: "Accession Number",
                 value: cachedAnalysis.filing_accession_number || "Pending",
@@ -676,19 +726,19 @@ export default function StockAnalysisClient({
                     <NavBar showSearch />
 
                     <div className="mx-auto w-full max-w-7xl min-w-0">
-                        <section className="grid gap-6 py-10 sm:py-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+                        <section className="grid gap-6 py-8 sm:py-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(22rem,0.88fr)] lg:items-start">
                             <div className="min-w-0">
                                 <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                                     <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
-                                        <span className="max-w-full break-words rounded-full border border-white/[0.10] bg-[#151923] px-3 py-1.5 font-mono text-xs font-semibold text-[#DDE2FF] sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words rounded-md border border-white/[0.10] bg-[#151923] px-3 py-1.5 font-mono text-xs font-semibold text-[#DDE2FF] sm:px-4 sm:text-sm">
                                             {pageData.ticker}
                                         </span>
 
-                                        <span className="max-w-full break-words rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 sm:px-4 sm:text-sm">
                                             {pageData.badge}
                                         </span>
 
-                                        <span className="max-w-full break-words rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words rounded-md border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 sm:px-4 sm:text-sm">
                                             {pageData.cacheStatus}
                                         </span>
                                     </div>
@@ -710,15 +760,42 @@ export default function StockAnalysisClient({
                                     </div>
                                 </div>
 
-                                <h1 className="mt-5 max-w-3xl break-words text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                                <h1 className="mt-6 max-w-4xl break-words text-3xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
                                     {pageData.companyName}
                                 </h1>
 
-                                <p className="mt-5 max-w-3xl text-base leading-7 text-[#A3AAB8]">
+                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#CBD5E1]">
                                     {pageData.summary}
                                 </p>
 
-                                <p className="mt-4 max-w-2xl text-sm leading-6 text-[#6F7685]">
+                                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
+                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                            Report updated
+                                        </p>
+                                        <p className="mt-2 text-sm font-semibold text-white">
+                                            {pageData.lastUpdated}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
+                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                            Filing type
+                                        </p>
+                                        <p className="mt-2 text-sm font-semibold text-white">
+                                            {cachedAnalysis.form_type || "Pending"}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
+                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                            Source coverage
+                                        </p>
+                                        <p className="mt-2 text-sm font-semibold text-white">
+                                            Filing, SEC metrics, market data
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p className="mt-5 max-w-2xl text-sm leading-6 text-[#94A3B8]">
                                     {pageData.note}
                                 </p>
 
@@ -729,7 +806,7 @@ export default function StockAnalysisClient({
                                 />
                             </div>
 
-                            <div className="stokr-card p-5 sm:p-6">
+                            <aside className="stokr-card p-5 sm:p-6">
                                 <HelpedKicker
                                     label="Research Brief"
                                     tooltipLabel="Explain AI summary"
@@ -740,15 +817,15 @@ export default function StockAnalysisClient({
                                     data, filings, and metrics. Use it as a starting
                                     point, not as financial advice.
                                 </HelpedKicker>
-                                <h2 className="mt-3 text-2xl font-bold text-white">
+                                <h2 className="mt-3 text-2xl font-semibold text-white">
                                     Source-Backed Brief
                                 </h2>
 
-                                <div className="mt-6 space-y-4">
+                                <div className="mt-6 space-y-3">
                                     {pageData.topSignals.map((signal, index) => (
                                         <div
                                             key={`${signal}-${index}`}
-                                            className="rounded-2xl border border-white/10 bg-black/15 p-4"
+                                            className="rounded-lg border border-white/10 bg-black/15 p-4"
                                         >
                                             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
                                                 Signal {index + 1}
@@ -760,24 +837,33 @@ export default function StockAnalysisClient({
                                     ))}
                                 </div>
 
-                                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                    <p className="text-sm leading-relaxed text-slate-300">
-                                        Research context is most useful when it shows whether the business is getting stronger or weaker,
-                                        where disclosed risk is concentrated, and what changed since the prior filing.
+                                <div className="mt-5 rounded-lg border border-[#19C37D]/20 bg-[#19C37D]/[0.06] p-4">
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-sm font-semibold text-white">
+                                            Source transparency is visible below
+                                        </p>
+                                        <InfoTooltip
+                                            label="Explain source transparency"
+                                            title="Source Transparency"
+                                            body="Shows where stokr pulled or derived the information from."
+                                        />
+                                    </div>
+                                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                                        Filing coverage, accession details, and the source stack are surfaced in the Source Transparency section so users can verify context.
                                     </p>
                                 </div>
-                            </div>
+                            </aside>
                         </section>
 
-                        <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+                        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
                             <StockPriceChart ticker={pageData.ticker} />
 
                             <div className="stokr-card p-5">
                                 <HelpedKicker
                                     label="Company Strength Snapshot"
                                     tooltipLabel="Explain financial health"
-                                    tooltipTitle="Company strength snapshot"
-                                    tooltipBody="This section groups key financial signals such as revenue, margins, liquidity, debt, and cash flow into a readable company overview."
+                                    tooltipTitle="Financial Health Score"
+                                    tooltipBody="A summary signal based on available financial metrics and analysis inputs."
                                 >
                                     Combines available analysis and metrics into a
                                     simple view of financial condition. It is
@@ -791,7 +877,7 @@ export default function StockAnalysisClient({
                                     </div>
 
                                     <div>
-                                        <h2 className="text-2xl font-bold text-white">
+                                        <h2 className="text-2xl font-semibold text-white">
                                             {pageData.rating}
                                         </h2>
                                         <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-400">
@@ -805,9 +891,9 @@ export default function StockAnalysisClient({
                                     {pageData.healthBreakdown.map((item) => (
                                         <div key={item.label}>
                                             <div className="flex items-center justify-between">
-                                                <p className="text-sm font-semibold text-white">
-                                                    {item.label}
-                                                </p>
+                                                    <p className="min-w-0 pr-3 text-sm font-semibold text-white">
+                                                        {item.label}
+                                                    </p>
                                                 <p className="text-sm font-semibold text-[#DDE2FF]">
                                                     {item.score > 0 ? `${item.score}/100` : "Pending"}
                                                 </p>
@@ -816,7 +902,7 @@ export default function StockAnalysisClient({
                                             <div className="mt-2 h-2.5 rounded-full bg-white/10">
                                                 <div
                                                     className="h-2.5 rounded-full bg-[#19C37D]"
-                                                    style={{ width: `${Math.max(item.score, 0)}%` }}
+                                                    style={{ width: scoreWidth(item.score) }}
                                                 />
                                             </div>
 
@@ -836,18 +922,18 @@ export default function StockAnalysisClient({
                         <section className="mt-8 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
                             <div className="stokr-card p-5 sm:p-6">
                                 <HelpedKicker
-                                    label="Disclosed Risk Signals"
+                                    label="Risk Factors"
                                     tooltipLabel="Explain risk factors"
-                                    tooltipTitle="Disclosed risk signals"
-                                    tooltipBody="This section summarizes risks the company disclosed in filings and organizes them into plain-English themes. It helps users inspect risk context faster, not predict outcomes."
+                                    tooltipTitle="Risk Factors"
+                                    tooltipBody="Business risks disclosed in filings or reflected in financial data."
                                 >
                                     Highlights risks mentioned in company filings or
                                     analysis. These are things that could negatively
-                                    affect the business or stock.
+                                    affect the business.
                                 </HelpedKicker>
 
-                                <h2 className="mt-3 text-2xl font-bold text-white">
-                                    Disclosed Risk Signals
+                                <h2 className="mt-3 text-2xl font-semibold text-white">
+                                    Key Risk Factors
                                 </h2>
 
                                 <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -865,15 +951,15 @@ export default function StockAnalysisClient({
                                     {pageData.risks.map((risk) => (
                                         <div
                                             key={risk.title}
-                                            className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                                            className="rounded-lg border border-white/10 bg-black/20 p-4"
                                         >
                                             <div className="flex flex-wrap items-center justify-between gap-3">
-                                                <h3 className="text-base font-bold text-white">
+                                                <h3 className="text-base font-semibold text-white">
                                                     {risk.title}
                                                 </h3>
 
                                                 <span
-                                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${severityStyles(
+                                                    className={`rounded-md px-3 py-1 text-xs font-semibold ${severityStyles(
                                                         risk.severity
                                                     )}`}
                                                 >
@@ -891,35 +977,40 @@ export default function StockAnalysisClient({
 
                             {showLowerReportSections ? (
                                 <div className="stokr-card p-5 sm:p-6">
-                                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
-                                        MD&amp;A Summary
-                                    </p>
+                                    <HelpedKicker
+                                        label="MD&A Summary"
+                                        tooltipLabel="Explain MD&A summary"
+                                        tooltipTitle="Management Discussion"
+                                        tooltipBody="Summarizes management commentary themes when filing analysis has enough context."
+                                    >
+                                        Reviews management commentary themes surfaced from available filing analysis.
+                                    </HelpedKicker>
 
-                                    <h2 className="mt-3 text-2xl font-bold text-white">
+                                    <h2 className="mt-3 text-2xl font-semibold text-white">
                                         Management Discussion
                                     </h2>
 
                                     <div className="mt-6 grid gap-5 md:grid-cols-2">
-                                        <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+                                        <div className="rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-4">
                                             <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-300">
                                                 Performance Drivers
                                             </h3>
 
-                                            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                            <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-slate-300">
                                                 {pageData.mdna.drivers.map((driver) => (
-                                                    <li key={driver}>• {driver}</li>
+                                                    <li key={driver}>{driver}</li>
                                                 ))}
                                             </ul>
                                         </div>
 
-                                        <div className="rounded-2xl border border-orange-400/20 bg-orange-500/10 p-4">
+                                        <div className="rounded-lg border border-orange-400/20 bg-orange-500/10 p-4">
                                             <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
                                                 Management Concerns
                                             </h3>
 
-                                            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                            <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-slate-300">
                                                 {pageData.mdna.concerns.map((concern) => (
-                                                    <li key={concern}>• {concern}</li>
+                                                    <li key={concern}>{concern}</li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -934,19 +1025,16 @@ export default function StockAnalysisClient({
                             <>
                                 <section className="stokr-card mt-8 p-5 sm:p-6">
                                     <HelpedKicker
-                                        label="Decision Framing"
+                                        label="Bull Case / Bear Case"
                                         tooltipLabel="Explain bull and bear case"
-                                        tooltipTitle="Decision framing"
-                                        tooltipBody="The Upside Thesis summarizes factors that may support a constructive view of the company. The Downside Thesis summarizes risks, pressures, or uncertainties that may challenge that view. These are research perspectives, not predictions or financial advice."
+                                        tooltipTitle="Bull Case and Bear Case"
+                                        tooltipBody="Bull Case: Reasons investors may view the company positively. Bear Case: Reasons investors may be cautious."
                                     >
-                                        The Upside Thesis summarizes factors that may
-                                        support a constructive view of the company. The
-                                        Downside Thesis summarizes risks, pressures, or
-                                        uncertainties that may challenge that view.
+                                        Compares potential strengths with potential concerns so users can review both sides of the research context.
                                     </HelpedKicker>
 
-                                    <h2 className="mt-3 text-2xl font-bold text-white">
-                                        Upside Thesis / Downside Thesis
+                                    <h2 className="mt-3 text-2xl font-semibold text-white">
+                                        Bull Case / Bear Case
                                     </h2>
 
                                     <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -961,26 +1049,40 @@ export default function StockAnalysisClient({
                                     </p>
 
                                     <div className="mt-6 grid gap-5 md:grid-cols-2">
-                                        <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5">
-                                            <h3 className="text-lg font-bold text-emerald-300">
-                                                Upside Thesis
-                                            </h3>
+                                        <div className="rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-5">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-lg font-semibold text-emerald-300">
+                                                    Bull Case
+                                                </h3>
+                                                <InfoTooltip
+                                                    label="Explain bull case"
+                                                    title="Bull Case"
+                                                    body="Reasons investors may view the company positively."
+                                                />
+                                            </div>
 
-                                            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                            <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-slate-300">
                                                 {pageData.bullCase.map((item) => (
-                                                    <li key={item}>• {item}</li>
+                                                    <li key={item}>{item}</li>
                                                 ))}
                                             </ul>
                                         </div>
 
-                                        <div className="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
-                                            <h3 className="text-lg font-bold text-red-300">
-                                                Downside Thesis
-                                            </h3>
+                                        <div className="rounded-lg border border-red-400/20 bg-red-500/10 p-5">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-lg font-semibold text-red-300">
+                                                    Bear Case
+                                                </h3>
+                                                <InfoTooltip
+                                                    label="Explain bear case"
+                                                    title="Bear Case"
+                                                    body="Reasons investors may be cautious."
+                                                />
+                                            </div>
 
-                                            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-300">
+                                            <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-slate-300">
                                                 {pageData.bearCase.map((item) => (
-                                                    <li key={item}>• {item}</li>
+                                                    <li key={item}>{item}</li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -1012,7 +1114,7 @@ export default function StockAnalysisClient({
                                             {pageData.revenueBreakdown.map((segment) => (
                                                 <div
                                                     key={`${segment.label}-${segment.note}`}
-                                                    className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                                                    className="rounded-lg border border-white/10 bg-black/20 p-4"
                                                 >
                                                     <div className="flex flex-wrap items-center justify-between gap-3">
                                                         <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">
@@ -1020,7 +1122,7 @@ export default function StockAnalysisClient({
                                                         </p>
 
                                                         {segment.percentage > 0 && (
-                                                            <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                                                            <span className="rounded-md border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
                                                                 {segment.percentage}%
                                                             </span>
                                                         )}
@@ -1044,11 +1146,16 @@ export default function StockAnalysisClient({
                                     </div>
 
                                     <div className="stokr-card p-5 sm:p-6">
-                                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
-                                            Alert Layer
-                                        </p>
+                                        <HelpedKicker
+                                            label="Alert Layer"
+                                            tooltipLabel="Explain red flags"
+                                            tooltipTitle="Potential Concerns"
+                                            tooltipBody="Highlights notable concern signals from the cached report when they are available."
+                                        >
+                                            Highlights notable concern signals from the cached report when available.
+                                        </HelpedKicker>
 
-                                        <h2 className="mt-3 text-2xl font-bold text-white">
+                                        <h2 className="mt-3 text-2xl font-semibold text-white">
                                             Red Flags
                                         </h2>
 
@@ -1056,9 +1163,9 @@ export default function StockAnalysisClient({
                                             {pageData.redFlags.map((flag) => (
                                                 <li
                                                     key={flag}
-                                                    className="rounded-2xl border border-red-400/20 bg-red-500/10 p-4 text-red-100"
+                                                    className="rounded-lg border border-red-400/20 bg-red-500/10 p-4 text-red-100"
                                                 >
-                                                    • {flag}
+                                                    {flag}
                                                 </li>
                                             ))}
                                         </ul>
@@ -1069,16 +1176,16 @@ export default function StockAnalysisClient({
                                     <HelpedKicker
                                         label="Source Transparency"
                                         tooltipLabel="Explain source transparency"
-                                        tooltipTitle="Source Trail"
-                                        tooltipBody="Source Trail shows where an insight came from, such as a filing type, section, financial metric, or company disclosure. It helps separate source-backed context from AI interpretation."
+                                        tooltipTitle="Source Transparency"
+                                        tooltipBody="Shows where stokr pulled or derived the information from."
                                     >
                                         Shows where the analysis came from, such as
                                         filings, market data, or generated summaries, so
                                         users can understand the basis of the research.
                                     </HelpedKicker>
 
-                                    <h2 className="mt-3 text-2xl font-bold text-white">
-                                        Filing Coverage
+                                    <h2 className="mt-3 text-2xl font-semibold text-white">
+                                        Filing Coverage and Source Stack
                                     </h2>
 
                                     <p className="mt-3 text-sm leading-relaxed text-slate-400">
@@ -1096,7 +1203,7 @@ export default function StockAnalysisClient({
                                         {pageData.filings.map((filing) => (
                                             <div
                                                 key={filing.title}
-                                                className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                                                className="rounded-lg border border-white/10 bg-black/20 p-4"
                                             >
                                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                                                     {filing.title}
@@ -1109,14 +1216,14 @@ export default function StockAnalysisClient({
                                         ))}
                                     </div>
 
-                                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                                    <div className="mt-6 rounded-lg border border-white/10 bg-black/20 p-4">
                                         <p className="text-sm font-semibold text-white">
                                             Source Stack
                                         </p>
 
-                                        <ul className="mt-3 space-y-2 text-sm text-slate-400">
+                                        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-400">
                                             {pageData.sources.map((source) => (
-                                                <li key={source}>• {source}</li>
+                                                <li key={source}>{source}</li>
                                             ))}
                                         </ul>
                                     </div>

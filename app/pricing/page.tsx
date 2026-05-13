@@ -83,9 +83,9 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 pb-14 lg:grid-cols-2">
-            <div className="stokr-card p-6 sm:p-8">
-              <h2 className="text-2xl font-bold">Starter Research</h2>
+          <div className="grid items-stretch gap-6 pb-14 lg:grid-cols-2">
+            <div className="stokr-card flex flex-col p-6 sm:p-8">
+              <h2 className="text-2xl font-semibold">Starter Research</h2>
 
               <p className="mt-2 text-[#A3AAB8]">
                 For understanding a company at a glance before deciding whether
@@ -93,11 +93,11 @@ export default function PricingPage() {
               </p>
 
               <div className="mt-8">
-                <span className="text-5xl font-extrabold">$0</span>
+                <span className="text-5xl font-semibold">$0</span>
                 <span className="text-[#6F7685]"> / month</span>
               </div>
 
-              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
+              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#CBD5E1]">
                 <li>Company snapshot</li>
                 <li>Basic summary</li>
                 <li>Top risk preview</li>
@@ -108,17 +108,17 @@ export default function PricingPage() {
                 <li>Unlimited stocks inside your Research Tracker</li>
               </ul>
 
-              <Link href="/login" className="stokr-button-secondary mt-8 w-full">
+              <Link href="/login" className="stokr-button-secondary mt-auto w-full">
                 Start Researching
               </Link>
             </div>
 
-            <div className="stokr-card relative border-white/[0.12] bg-[#111722] p-6 sm:p-8">
-              <div className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-[#19C37D] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
-                Best Value
+            <div className="stokr-card relative flex flex-col border-white/[0.12] bg-[#151B23] p-6 sm:p-8">
+              <div className="mb-6 w-fit rounded-md border border-[#14B8A6]/25 bg-[#14B8A6]/10 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.16em] text-[#2DD4BF] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
+                Full desk
               </div>
 
-              <h2 className="text-2xl font-bold text-[#F4F6FA]">Full Research Desk</h2>
+              <h2 className="text-2xl font-semibold text-[#F4F6FA]">Full Research Desk</h2>
 
               <p className="mt-2 text-[#A3AAB8]">
                 For users who want full filing breakdowns, risk context, Filing
@@ -126,11 +126,11 @@ export default function PricingPage() {
               </p>
 
               <div className="mt-8">
-                <span className="text-5xl font-extrabold">$9.99</span>
+                <span className="text-5xl font-semibold">$9.99</span>
                 <span className="text-[#6F7685]"> / month</span>
               </div>
 
-              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#A3AAB8]">
+              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#CBD5E1]">
                 <li>Unlimited reports</li>
                 <li>Full 10-K and 10-Q breakdowns</li>
                 <li>Filing Delta / what changed</li>
@@ -144,7 +144,7 @@ export default function PricingPage() {
                 <li>Priority processing</li>
               </ul>
 
-              <button onClick={handleUpgrade} className="stokr-button-primary mt-8 w-full">
+              <button onClick={handleUpgrade} className="stokr-button-primary mt-auto w-full">
                 Open Full Research Desk
               </button>
 
@@ -249,7 +249,7 @@ function ComparisonList({
   return (
     <div className={`rounded-xl border p-4 ${highlight ? "border-[#19C37D]/25 bg-[#19C37D]/10" : "border-white/[0.08] bg-black/20"}`}>
       <h3 className="font-semibold text-white">{title}</h3>
-      <ul className="mt-4 space-y-2 text-sm leading-6 text-[#CBD5E1]">
+      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-[#CBD5E1]">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}

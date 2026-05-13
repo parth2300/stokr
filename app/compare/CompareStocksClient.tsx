@@ -247,7 +247,7 @@ export default function CompareStocksClient() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [accessTier, setAccessTier] = useState("free")
-  const [comparisonCount, setComparisonCount] = useState(0)
+  const [comparisonCount, setComparisonCount] = useState(() => readComparisonUsage().count)
   const [limitReached, setLimitReached] = useState(false)
 
   const isPremiumAccess = accessTier === "premium" || accessTier === "pro" || accessTier === "admin"
@@ -258,7 +258,6 @@ export default function CompareStocksClient() {
 
   useEffect(() => {
     trackComparePageView()
-    setComparisonCount(readComparisonUsage().count)
 
     async function loadAccessTier() {
       const { data } = await supabase.auth.getUser()
@@ -351,7 +350,7 @@ export default function CompareStocksClient() {
             Compare Stocks
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-[#A3AAB8] sm:text-lg">
-            Compare two companies side by side using stokr's filing-first research summaries.
+            Compare two companies side by side using stokr&apos;s filing-first research summaries.
           </p>
         </div>
 
@@ -399,8 +398,8 @@ export default function CompareStocksClient() {
       {limitReached && (
         <section className="stokr-card mt-8 border-[#7C9DFF]/30 p-6">
           <p className="stokr-kicker">Premium</p>
-          <h2 className="mt-3 text-2xl font-bold text-white">
-            You've used your free weekly comparisons
+          <h2 className="mt-3 text-2xl font-semibold text-white">
+            You&apos;ve used your free weekly comparisons
           </h2>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
             Premium unlocks unlimited stock comparisons, full filing breakdowns, risk analysis, saved research history, and priority processing.

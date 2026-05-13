@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { supabase } from "@/app/lib/supabase"
 import SavedReportsTable from "./savedReportsTable"
@@ -69,7 +70,7 @@ export default function LiveSavedReports() {
           Continue Research
         </p>
 
-        <h2 className="mt-2 text-xl font-bold text-white">
+        <h2 className="mt-2 text-xl font-semibold text-white">
           Loading research briefs
         </h2>
 
@@ -89,7 +90,7 @@ export default function LiveSavedReports() {
           Research Briefs Error
         </p>
 
-        <h2 className="mt-2 text-xl font-bold text-white">
+        <h2 className="mt-2 text-xl font-semibold text-white">
           Could not load research briefs
         </h2>
 
@@ -112,12 +113,12 @@ export default function LiveSavedReports() {
           Continue Research
         </p>
 
-        <h2 className="mt-2 text-xl font-bold text-white">
+        <h2 className="mt-2 text-xl font-semibold text-white">
           Recent Research Briefs
         </h2>
 
         <div className="mt-6 rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-8 text-center">
-          <p className="text-lg font-bold text-white">
+          <p className="text-lg font-semibold text-white">
             No research briefs yet.
           </p>
 
@@ -125,12 +126,12 @@ export default function LiveSavedReports() {
             Search a ticker to generate your first source-backed brief.
           </p>
 
-          <a
+          <Link
             href="/"
             className="stokr-button-primary mt-5"
           >
             Search ticker
-          </a>
+          </Link>
         </div>
       </section>
     )

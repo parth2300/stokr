@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import NavBar from "@/app/components/navBar"
 import LiveDashboardMetrics from "./liveDashboardMetrics"
@@ -101,9 +102,9 @@ function NextUpPanel({
   let title = "Start your first research flow"
   let body = "Search a ticker to generate your first source-backed research brief."
   let actions = (
-    <a href="/" className="stokr-button-primary">
+    <Link href="/" className="stokr-button-primary">
       Search ticker
-    </a>
+    </Link>
   )
 
   if (isLoading) {
@@ -116,13 +117,13 @@ function NextUpPanel({
     actions = (
       <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
         {latestReport?.href && (
-          <a href={latestReport.href} className="stokr-button-primary">
+          <Link href={latestReport.href} className="stokr-button-primary">
             Open latest brief
-          </a>
+          </Link>
         )}
-        <a href="/watchlist" className="stokr-button-secondary">
+        <Link href="/watchlist" className="stokr-button-secondary">
           View Research Tracker
-        </a>
+        </Link>
       </div>
     )
   } else if ((summary?.savedStockCount || 0) > 0) {
@@ -130,12 +131,12 @@ function NextUpPanel({
     body = "You have saved companies in your Research Tracker. Open the tracker or search a ticker to continue researching."
     actions = (
       <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
-        <a href="/" className="stokr-button-primary">
+        <Link href="/" className="stokr-button-primary">
           Search ticker
-        </a>
-        <a href="/watchlist" className="stokr-button-secondary">
+        </Link>
+        <Link href="/watchlist" className="stokr-button-secondary">
           View Research Tracker
-        </a>
+        </Link>
       </div>
     )
   }
@@ -185,9 +186,9 @@ function PlanPanel({ summary }: { summary: DashboardSummaryResponse | null }) {
           <li>Research Tracker</li>
         </ul>
       )}
-      <a href="/pricing" className="stokr-button-secondary mt-5">
+      <Link href="/pricing" className="stokr-button-secondary mt-5">
         Manage plan
-      </a>
+      </Link>
     </section>
   )
 }
@@ -293,12 +294,12 @@ export default function OptimizedDashboardContent() {
               </div>
 
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row xl:justify-end">
-                <a href="/" className="stokr-button-primary">
+                <Link href="/" className="stokr-button-primary">
                   Search ticker
-                </a>
-                <a href="/watchlist" className="stokr-button-secondary">
+                </Link>
+                <Link href="/watchlist" className="stokr-button-secondary">
                   Open Research Tracker
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -306,14 +307,18 @@ export default function OptimizedDashboardContent() {
               <LiveDashboardMetrics />
             </div>
 
-            <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.85fr)_minmax(320px,1fr)]">
-              {stage >= 1 ? (
-                <LiveSavedReports />
-              ) : (
-                <DashboardPanelSkeleton title="Continue Research" height="h-[360px]" />
-              )}
+            <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.75fr)_minmax(320px,0.85fr)]">
+              <div className="min-w-0 space-y-5">
+                {stage >= 1 ? (
+                  <LiveSavedReports />
+                ) : (
+                  <DashboardPanelSkeleton title="Continue Research" height="h-[360px]" />
+                )}
 
-              <div className="space-y-6">
+                <LiveSavedCompanyMovement />
+              </div>
+
+              <aside className="min-w-0 space-y-5">
                 <NextUpPanel
                   summary={summary}
                   isLoading={isSummaryLoading}
@@ -327,10 +332,8 @@ export default function OptimizedDashboardContent() {
                 )}
 
                 <PlanPanel summary={summary} />
-              </div>
+              </aside>
             </div>
-
-            <LiveSavedCompanyMovement />
           </section>
         </div>
       </section>

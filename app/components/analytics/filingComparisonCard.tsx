@@ -88,11 +88,11 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                         </p>
                         <InfoTooltip
                             label="Explain Filing Delta"
-                            title="Filing Delta"
-                            body="Filing Delta highlights meaningful wording, risk, financial, or operating changes between company filings when enough filing data is available."
+                            title="Filing Comparison"
+                            body="Highlights meaningful wording, risk, financial, or operating changes between company filings when enough filing data is available."
                         />
                     </div>
-                    <h2 className="mt-3 text-2xl font-bold text-white">What Changed Between Filings</h2>
+                    <h2 className="mt-3 text-2xl font-semibold text-white">What Changed Between Filings</h2>
                     <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
                         Compares the latest 10-K against the previous 10-K to identify changes in risk,
                         business discussion, and management commentary.
@@ -103,14 +103,14 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                     type="button"
                     onClick={loadComparison}
                     disabled={loading}
-                    className="rounded-xl bg-[#19C37D] px-5 py-3 text-sm font-semibold text-[#05070A] transition hover:bg-[#3DDC97] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="stokr-button-primary"
                 >
                     {loading ? "Loading..." : comparison ? "Reload Cached Filing Delta" : "Load Filing Delta"}
                 </button>
             </div>
 
             {!hasRequested && !comparison && (
-                <div className="mt-7 rounded-2xl border border-white/10 bg-black/15 p-5">
+                <div className="mt-7 rounded-lg border border-white/10 bg-black/15 p-5">
                     <p className="text-sm leading-relaxed text-slate-300">
                         Load the latest cached Filing Delta when available.
                         If no cached Filing Delta exists for these filings,
@@ -120,7 +120,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
             )}
 
             {error && (
-                <div className="mt-7 rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
+                <div className="mt-7 rounded-lg border border-red-400/20 bg-red-500/10 p-5">
                     <p className="font-semibold text-red-300">Filing Delta unavailable</p>
                     <p className="mt-2 text-sm text-slate-300">{error}</p>
                 </div>
@@ -128,7 +128,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
 
             {comparison && (
                 <div className="mt-7 space-y-6">
-                    <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+                    <div className="rounded-lg border border-white/10 bg-black/20 p-5">
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
                             Compared Filings
                         </p>
@@ -140,8 +140,8 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                         </p>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-black/15 p-5">
-                        <h3 className="text-lg font-bold text-white">Filing Delta Summary</h3>
+                    <div className="rounded-lg border border-white/10 bg-black/15 p-5">
+                        <h3 className="text-lg font-semibold text-white">Filing Delta Summary</h3>
                         <p className="mt-3 text-sm leading-relaxed text-slate-300">
                             {comparison.comparison.summary}
                         </p>
@@ -151,7 +151,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                         {comparison.comparison.changes.map((change, index) => (
                             <div
                                 key={`${change.type}-${index}`}
-                                className="rounded-2xl border border-white/10 bg-black/15 p-5"
+                                className="rounded-lg border border-white/10 bg-black/15 p-5"
                             >
                                 <div className="flex flex-wrap items-center justify-between gap-3">
                                     <span className="rounded-md border border-white/[0.10] bg-white/[0.04] px-3 py-1 text-xs font-semibold text-[#DDE2FF]">
@@ -159,7 +159,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
                                     </span>
 
                                     <span
-                                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${severityStyles(
+                                        className={`rounded-md border px-3 py-1 text-xs font-semibold ${severityStyles(
                                             change.severity
                                         )}`}
                                     >
@@ -187,13 +187,13 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
 
 function ChangeList({ title, items }: { title: string; items: string[] }) {
     return (
-        <div className="rounded-2xl border border-white/10 bg-black/15 p-5">
+        <div className="rounded-lg border border-white/10 bg-black/15 p-5">
             <h3 className="font-semibold text-white">{title}</h3>
 
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-4 list-disc space-y-3 pl-5">
                 {items.map((item, index) => (
                     <li key={`${title}-${index}`} className="text-sm leading-relaxed text-slate-300">
-                        • {item}
+                        {item}
                     </li>
                 ))}
             </ul>

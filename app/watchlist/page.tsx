@@ -515,11 +515,15 @@ export default function WatchlistPage() {
           <div className="relative z-10 w-full">
             <NavBar showSearch />
 
-            <div className="stokr-card mt-16 p-6 text-center sm:p-8">
+            <div className="stokr-card mx-auto mt-16 max-w-2xl p-6 text-center sm:p-8">
               <p className="stokr-kicker">Loading</p>
-              <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
+              <h1 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
                 Preparing your Research Tracker
               </h1>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="h-20 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
+                <div className="h-20 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
+              </div>
             </div>
           </div>
         </section>
@@ -592,7 +596,7 @@ export default function WatchlistPage() {
                     value={tickerInput}
                     onChange={(event) => setTickerInput(event.target.value.toUpperCase())}
                     placeholder="AAPL, NVDA, TSLA..."
-                    className="min-h-11 min-w-0 flex-1 rounded-md border border-white/[0.08] bg-[#05070A] px-4 text-sm uppercase text-white outline-none placeholder:normal-case placeholder:text-[#6F7685] focus:border-[#19C37D]/55"
+                    className="stokr-input min-w-0 flex-1 uppercase placeholder:normal-case"
                   />
                   <button
                     disabled={isSaving || !selectedWatchlistId}
@@ -693,7 +697,7 @@ export default function WatchlistPage() {
                         onChange={(event) => setNewWatchlistName(event.target.value)}
                         disabled={isSaving}
                         placeholder="Long-term research"
-                        className="mt-3 min-h-11 w-full rounded-md border border-white/[0.08] bg-[#05070A] px-4 text-sm text-white outline-none placeholder:text-[#6F7685] focus:border-[#19C37D]/55 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="stokr-input mt-3"
                       />
                       <button disabled={isSaving} className="stokr-button-secondary mt-3 w-full">
                         Create Tracker
@@ -705,7 +709,7 @@ export default function WatchlistPage() {
                     <button
                       onClick={() => handleDeleteWatchlist(selectedWatchlist.id)}
                       disabled={isSaving}
-                      className="mt-4 w-full rounded-md border border-red-400/30 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-200 hover:bg-red-500/20 disabled:opacity-50"
+                      className="stokr-button-danger mt-4 w-full"
                     >
                       Delete Tracker
                     </button>
@@ -730,14 +734,14 @@ export default function WatchlistPage() {
                     value={savedCompanyFilter}
                     onChange={(event) => setSavedCompanyFilter(event.target.value)}
                     placeholder="Filter saved companies"
-                    className="min-h-10 w-full rounded-md border border-white/[0.08] bg-[#0B0F16] px-4 text-sm text-white outline-none placeholder:text-[#6F7685] focus:border-[#19C37D]/55 sm:max-w-xs"
+                    className="stokr-input sm:max-w-xs"
                   />
                 </div>
 
                 {selectedItems.length === 0 ? (
                   <EmptyTrackerState />
                 ) : filteredSelectedItems.length === 0 ? (
-                  <div className="stokr-card p-6 text-sm text-[#A7ADBA]">
+                  <div className="stokr-empty-state text-sm text-[#A7ADBA]">
                     No saved companies match this filter.
                   </div>
                 ) : (
@@ -805,7 +809,7 @@ function SavedCompanyCard({
       : "Research not loaded yet"
 
   return (
-    <article className="stokr-card min-w-0 p-4 transition hover:border-white/[0.14] hover:bg-[#111722]">
+    <article className="stokr-card flex h-full min-w-0 flex-col p-4 transition hover:border-white/[0.14] hover:bg-[#111722]">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="break-words font-mono text-2xl font-semibold text-white">
@@ -839,24 +843,23 @@ function SavedCompanyCard({
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-        <Link href={getStockAnalysisHref(item.ticker)} className="stokr-button-primary sm:flex-1">
+      <div className="mt-4 grid gap-2 border-t border-white/[0.07] pt-4 sm:mt-auto sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center">
+        <Link href={getStockAnalysisHref(item.ticker)} className="stokr-button-primary w-full">
           Open Brief
         </Link>
 
-        <div className="flex flex-wrap gap-2 sm:justify-end">
-          <Link href={getStockAnalysisHref(item.ticker)} className="inline-flex min-h-10 flex-1 items-center justify-center rounded-md border border-white/[0.10] bg-[#0B0F16] px-3 py-2 text-xs font-medium text-[#CBD5E1] transition hover:border-white/[0.16] hover:bg-[#111722] sm:flex-none">
-            Refresh Research
-          </Link>
-          <button
-            type="button"
-            onClick={() => onRemove(item.id, item.ticker)}
-            disabled={isSaving}
-            className="inline-flex min-h-10 flex-1 items-center justify-center rounded-md border border-red-400/25 bg-red-500/10 px-3 py-2 text-xs font-medium text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
-          >
-            Remove
-          </button>
-        </div>
+        <Link href={getStockAnalysisHref(item.ticker)} className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-white/[0.10] bg-[#0B0F16] px-3 py-2 text-xs font-medium text-[#CBD5E1] transition hover:border-white/[0.16] hover:bg-[#111722] sm:w-auto">
+          Refresh Research
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => onRemove(item.id, item.ticker)}
+          disabled={isSaving}
+          className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-red-400/25 bg-red-500/10 px-3 py-2 text-xs font-medium text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        >
+          Remove
+        </button>
       </div>
     </article>
   )
@@ -885,11 +888,11 @@ function EmptyTrackerState() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-[#D8D1C3] bg-[#F4F1EA] p-4 text-[#172033]">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#64748B]">
+        <div className="rounded-lg border border-white/[0.08] bg-[#151B23] p-4 text-[#F8FAFC]">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#94A3B8]">
             Research receipt
           </p>
-          <div className="mt-4 divide-y divide-[#D8D1C3] border-y border-[#D8D1C3]">
+          <div className="mt-4 divide-y divide-white/[0.08] border-y border-white/[0.08]">
             <ReceiptRow label="Company" value="Add ticker" />
             <ReceiptRow label="Brief" value="Research not loaded yet" />
             <ReceiptRow label="Filing" value="Not available" />
@@ -904,10 +907,10 @@ function EmptyTrackerState() {
 function ReceiptRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid gap-2 py-3 sm:grid-cols-[6rem_1fr] sm:gap-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#64748B]">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#94A3B8]">
         {label}
       </p>
-      <p className="break-words text-sm leading-6">{value}</p>
+      <p className="break-words text-sm leading-6 text-[#CBD5E1]">{value}</p>
     </div>
   )
 }

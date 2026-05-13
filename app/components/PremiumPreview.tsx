@@ -45,14 +45,14 @@ export default function PremiumPreview({
   }
 
   return (
-    <section className="stokr-card mt-8 border-white/[0.12] bg-[#111722] p-5 sm:p-6">
+    <section className="stokr-card mt-8 border-white/[0.12] bg-[#151B23] p-5 sm:p-6">
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+          <p className="stokr-kicker">
             Full Research Desk
           </p>
 
-          <h2 className="mt-3 text-2xl font-bold text-white">
+          <h2 className="mt-3 text-2xl font-semibold text-white">
             Unlock the full filing-backed breakdown
           </h2>
 
@@ -64,7 +64,7 @@ export default function PremiumPreview({
           </p>
 
           {showCoupon && (
-            <p className="mt-4 rounded-xl border border-[#19C37D]/25 bg-[#19C37D]/10 px-4 py-3 text-sm font-medium text-[#DDE2FF]">
+            <p className="mt-4 rounded-lg border border-[#14B8A6]/25 bg-[#14B8A6]/10 px-4 py-3 text-sm font-medium text-[#DDE2FF]">
               Early users can try Full Research Desk with code 1MFREE.
             </p>
           )}
@@ -82,7 +82,7 @@ export default function PremiumPreview({
           {premiumFeatures.map((feature) => (
             <li
               key={feature}
-              className="rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3"
+              className="rounded-lg border border-white/[0.08] bg-black/20 px-4 py-3"
             >
               {feature}
             </li>

@@ -172,18 +172,24 @@ export default function LoginPage() {
                 <div className="stokr-container">
                     <NavBar />
 
-                    <div className="grid min-h-[calc(100vh-96px)] grid-cols-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
+                    <div className="grid min-h-[calc(100vh-96px)] grid-cols-1 items-center gap-10 py-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:py-14">
                         <form
                             onSubmit={handleSubmit}
                             className="stokr-card mx-auto w-full max-w-md p-6 text-white sm:p-8"
                         >
-                            <p className="mb-2 text-center text-xs font-medium uppercase tracking-[0.18em] text-[#7C8CFF]">
+                            <p className="stokr-kicker text-center">
                                 Account
                             </p>
 
-                            <h1 className="mb-6 text-center text-2xl font-semibold">
+                            <h1 className="mt-3 text-center text-2xl font-semibold tracking-tight">
                                 {mode === "signup" ? "Sign Up" : "Login"}
                             </h1>
+
+                            <p className="mb-6 mt-2 text-center text-sm leading-6 text-[#94A3B8]">
+                                {mode === "signup"
+                                    ? "Create an account to save research and revisit companies."
+                                    : "Return to your source-backed research workspace."}
+                            </p>
 
                             {mode === "signup" ? (
                                 <>
@@ -192,7 +198,7 @@ export default function LoginPage() {
                                         value={username}
                                         onChange={(event) => setUsername(event.target.value)}
                                         required
-                                        className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
+                                        className="stokr-input mb-4"
                                     />
 
                                     <input
@@ -201,7 +207,7 @@ export default function LoginPage() {
                                         value={email}
                                         onChange={(event) => setEmail(event.target.value)}
                                         required
-                                        className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
+                                        className="stokr-input mb-4"
                                     />
                                 </>
                             ) : (
@@ -210,7 +216,7 @@ export default function LoginPage() {
                                     value={identifier}
                                     onChange={(event) => setIdentifier(event.target.value)}
                                     required
-                                    className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
+                                    className="stokr-input mb-4"
                                 />
                             )}
 
@@ -220,7 +226,7 @@ export default function LoginPage() {
                                 value={password}
                                 onChange={(event) => setPassword(event.target.value)}
                                 required
-                                className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C8CFF]"
+                                className="stokr-input mb-4"
                             />
 
                             {mode === "login" && (
@@ -235,7 +241,7 @@ export default function LoginPage() {
                             )}
 
                             {mode === "signup" && (
-                                <label className="mb-4 flex items-start gap-3 rounded-lg border border-white/[0.10] bg-[#0D1017] p-4 text-sm text-[#A3AAB8]">
+                                <label className="mb-4 flex items-start gap-3 rounded-lg border border-white/[0.10] bg-[#0D1117] p-4 text-sm text-[#A3AAB8]">
                                     <input
                                         type="checkbox"
                                         checked={acceptedTerms}
@@ -262,7 +268,7 @@ export default function LoginPage() {
                             )}
 
                             {error && (
-                                <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+                                <p className="stokr-status-error mb-4">
                                     {error}
                                 </p>
                             )}
@@ -299,6 +305,20 @@ export default function LoginPage() {
                             <h2 className="mx-auto mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:mx-0">
                                 Clear stock research without digging through every filing.
                             </h2>
+                            <div className="mx-auto mt-6 grid max-w-xl gap-3 text-left lg:mx-0">
+                                {[
+                                    "Save companies to your Research Tracker.",
+                                    "Reopen recent source-backed briefs.",
+                                    "Keep filing context and risk notes organized.",
+                                ].map((item) => (
+                                    <div
+                                        key={item}
+                                        className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-[#CBD5E1]"
+                                    >
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

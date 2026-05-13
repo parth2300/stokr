@@ -123,7 +123,7 @@ export default function Home() {
                 <Link href="/stocks/nvda-stock-analysis" className="stokr-button-secondary">
                   View full sample Premium report
                 </Link>
-                <Link href="/pricing" className="inline-flex min-h-10 items-center text-sm font-medium text-[#AFC0FF] hover:text-white">
+                <Link href="/pricing" className="stokr-button-primary">
                   See research plans
                 </Link>
               </div>
@@ -273,17 +273,17 @@ export default function Home() {
 function ReportPreviewCard({ large = false }: { large?: boolean }) {
   return (
     <aside className={`stokr-card min-w-0 overflow-hidden p-4 sm:p-5 ${large ? "" : "lg:ml-auto"}`}>
-      <div className="min-w-0 rounded-lg border border-[#273449] bg-[#F4F1EA] p-4 text-[#172033]">
+      <div className="min-w-0 rounded-lg border border-white/[0.10] bg-[#151B23] p-4 text-[#F8FAFC]">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[#64748B]">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[#94A3B8]">
               Source-backed brief
             </p>
             <h2 className="mt-2 break-words text-2xl font-semibold tracking-tight">NVDA Research Brief</h2>
           </div>
         </div>
-        <p className="mt-2 font-mono text-xs text-[#64748B]">
-          Confidence: High · AI-assisted context
+        <p className="mt-2 font-mono text-xs text-[#94A3B8]">
+          Confidence: High &middot; AI-assisted context
         </p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
@@ -292,8 +292,8 @@ function ReportPreviewCard({ large = false }: { large?: boolean }) {
             ["Freshness", "Updated"],
             ["Signals", "7 found"],
           ].map(([label, value]) => (
-            <div key={label} className="rounded-md border border-[#D8D1C3] bg-white/45 p-3">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#64748B]">
+            <div key={label} className="rounded-md border border-white/[0.08] bg-black/20 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#94A3B8]">
                 {label}
               </p>
               <p className="mt-1 text-sm font-semibold">{value}</p>
@@ -307,11 +307,11 @@ function ReportPreviewCard({ large = false }: { large?: boolean }) {
             ["Upside Thesis", "Growth is supported by demand for accelerated computing and data center products."],
             ["Downside Thesis", "Margin pressure, export limits, or demand shifts could change the outlook."],
           ].map(([label, text]) => (
-            <div key={label} className="rounded-md border border-[#D8D1C3] bg-white/55 p-3">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#64748B]">
+            <div key={label} className="rounded-md border border-white/[0.08] bg-black/20 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#94A3B8]">
                 {label}
               </p>
-              <p className="mt-1 text-sm leading-6">{text}</p>
+              <p className="mt-1 text-sm leading-6 text-[#CBD5E1]">{text}</p>
             </div>
           ))}
         </div>

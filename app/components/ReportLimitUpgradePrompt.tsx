@@ -5,12 +5,12 @@ import { trackClickUpgrade } from "../lib/analytics"
 
 export default function ReportLimitUpgradePrompt() {
   return (
-    <section className="stokr-card mt-6 border-white/[0.12] bg-[#111722] p-6 text-left">
-      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+    <section className="stokr-card mt-6 border-white/[0.12] bg-[#151B23] p-6 text-left">
+      <p className="stokr-kicker">
         Weekly Limit
       </p>
 
-      <h2 className="mt-3 text-2xl font-bold text-white">
+      <h2 className="mt-3 text-2xl font-semibold text-white">
         You&apos;ve used your Starter Research weekly reports
       </h2>
 

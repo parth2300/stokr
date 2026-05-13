@@ -130,7 +130,7 @@ export default function AccountSettingsModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="account-settings-title"
@@ -145,14 +145,14 @@ export default function AccountSettingsModal({
     >
       <div
         ref={dialogRef}
-        className="w-full max-w-2xl rounded-xl border border-white/[0.10] bg-[#0B0F16] p-6 text-white shadow-2xl"
+        className="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-white/[0.10] bg-[#0D1117] p-5 text-white shadow-2xl sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="stokr-kicker">
               Account
             </p>
-            <h2 id="account-settings-title" className="mt-2 text-2xl font-bold">
+            <h2 id="account-settings-title" className="mt-2 text-2xl font-semibold">
               Settings
             </h2>
             <p className="mt-2 text-sm text-slate-400">
@@ -162,16 +162,16 @@ export default function AccountSettingsModal({
 
           <button
             onClick={onClose}
-            className="rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 hover:bg-white/15"
+            className="rounded-md border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 hover:bg-white/15"
           >
             Close
           </button>
         </div>
 
-        <div className="mt-6 flex rounded-2xl border border-white/10 bg-black/20 p-1">
+        <div className="mt-6 flex rounded-lg border border-white/10 bg-black/20 p-1">
           <button
             onClick={() => setActiveTab("settings")}
-            className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold ${
+            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
               activeTab === "settings"
                 ? "bg-white text-[#05070A]"
                 : "text-slate-300 hover:bg-white/10"
@@ -182,7 +182,7 @@ export default function AccountSettingsModal({
 
           <button
             onClick={() => setActiveTab("subscription")}
-            className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold ${
+            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
               activeTab === "subscription"
                 ? "bg-white text-[#05070A]"
                 : "text-slate-300 hover:bg-white/10"
@@ -193,14 +193,14 @@ export default function AccountSettingsModal({
         </div>
 
         {error && (
-          <div className="mt-5 rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          <div className="stokr-status-error mt-5">
             {error}
           </div>
         )}
 
         {activeTab === "settings" && (
           <div className="mt-6 space-y-5">
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Profile
               </p>
@@ -222,12 +222,12 @@ export default function AccountSettingsModal({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Plan
               </p>
 
-              <p className="mt-2 text-lg font-bold text-white">
+              <p className="mt-2 text-lg font-semibold text-white">
                 {isPremium ? "Premium" : "Free"}
               </p>
 
@@ -236,7 +236,7 @@ export default function AccountSettingsModal({
               </p>
             </div>
 
-            <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
+            <div className="rounded-lg border border-red-400/30 bg-red-500/10 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-200">
                 Delete Account
               </p>
@@ -245,7 +245,7 @@ export default function AccountSettingsModal({
                 This permanently deletes your account data. To confirm, type:
               </p>
 
-              <p className="mt-2 rounded-xl bg-black/30 px-3 py-2 text-sm font-bold text-white">
+              <p className="mt-2 rounded-md bg-black/30 px-3 py-2 text-sm font-semibold text-white">
                 {confirmationValue || "No username or email found"}
               </p>
 
@@ -253,13 +253,13 @@ export default function AccountSettingsModal({
                 value={deleteInput}
                 onChange={(event) => setDeleteInput(event.target.value)}
                 placeholder="Type your username or email"
-                className="mt-4 w-full rounded-2xl border border-red-300/20 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-red-300/50"
+                className="mt-4 w-full rounded-md border border-red-300/20 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-red-300/50"
               />
 
               <button
                 onClick={handleDeleteAccount}
                 disabled={!canDelete || isDeleting}
-                className="mt-4 rounded-2xl bg-red-500 px-5 py-3 text-sm font-bold text-white hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-50"
+                className="stokr-button-danger mt-4"
               >
                 {isDeleting ? "Deleting Account..." : "Delete Account"}
               </button>
@@ -269,12 +269,12 @@ export default function AccountSettingsModal({
 
         {activeTab === "subscription" && (
           <div className="mt-6 space-y-5">
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Current Plan
               </p>
 
-              <p className="mt-2 text-2xl font-bold text-white">
+              <p className="mt-2 text-2xl font-semibold text-white">
                 {isPremium ? "Premium" : "Free"}
               </p>
 
@@ -285,14 +285,14 @@ export default function AccountSettingsModal({
               <button
                 onClick={handleManageSubscription}
                 disabled={isManagingSubscription}
-                className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#05070A] hover:bg-[#E9ECF5] disabled:cursor-not-allowed disabled:opacity-50"
+                className="stokr-button-primary mt-5"
               >
                 {isManagingSubscription ? "Opening..." : "Manage Subscription"}
               </button>
             </div>
 
             {!isPremium && (
-              <div className="rounded-2xl border border-[#19C37D]/25 bg-[#19C37D]/10 p-5">
+              <div className="rounded-lg border border-[#19C37D]/25 bg-[#19C37D]/10 p-5">
                 <p className="text-sm font-semibold text-emerald-100">
                   You are currently on the free plan.
                 </p>

@@ -3,7 +3,6 @@ import PWARegister from "./components/PWARegister"
 import "./globals.css"
 import Footer from "./components/Footer"
 import { GoogleAnalytics } from "@next/third-parties/google"
-import Script from "next/script"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stokr.live"),
@@ -38,7 +37,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#05070A",
+  themeColor: "#080A0D",
 }
 
 export default function RootLayout({

@@ -68,8 +68,8 @@ export default function StockOverviewCards({
         </p>
         <InfoTooltip
           label="Explain stock overview"
-          title="Signal Score"
-          body="Signal Scores are research aids based on available company data and analysis rules. They should be treated as context, not buy, sell, or hold recommendations."
+          title="Market Snapshot"
+          body="Shows available price, daily change, market cap, and the current stokr health score context."
         />
       </div>
 
@@ -79,7 +79,7 @@ export default function StockOverviewCards({
           Price
         </p>
 
-        <p className="mt-2 break-words text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-semibold text-white">
           {loading
             ? "Loading..."
             : error || !overview || !hasPrice
@@ -105,7 +105,7 @@ export default function StockOverviewCards({
           Market Cap
         </p>
 
-        <p className="mt-2 break-words text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-semibold text-white">
           {loading
             ? "Loading..."
             : error || !overview
@@ -123,7 +123,7 @@ export default function StockOverviewCards({
           Health Score
         </p>
 
-        <p className="mt-2 break-words text-2xl font-bold text-white">
+        <p className="mt-2 break-words text-2xl font-semibold text-white">
           {fallbackHealthScore}/100
         </p>
 

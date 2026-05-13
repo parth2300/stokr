@@ -61,7 +61,7 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
               <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
                 {label}
               </p>
-              <p className="mt-3 break-words text-2xl font-bold text-white">Loading...</p>
+              <p className="mt-3 break-words text-2xl font-semibold text-white">Loading</p>
               <p className="mt-2 text-sm text-slate-400">SEC data</p>
             </div>
           ))}
@@ -98,7 +98,7 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
             <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
               {metric.label}
             </p>
-            <p className="mt-3 break-words text-2xl font-bold text-white">{metric.value}</p>
+            <p className="mt-3 break-words text-2xl font-semibold text-white">{metric.value}</p>
             <p className="mt-2 break-words text-sm text-emerald-400">
               {metric.form || "SEC"} {metric.filed ? `- ${metric.filed}` : ""}
             </p>
@@ -117,8 +117,8 @@ function FinancialMetricsHeader() {
       </p>
       <InfoTooltip
         label="Explain financial metrics"
-        title="Company strength snapshot"
-        body="This section groups key financial signals such as revenue, margins, liquidity, debt, and cash flow into a readable company overview."
+        title="Financial Metrics"
+        body="SEC companyfacts values used as research context where available."
       />
     </div>
   )

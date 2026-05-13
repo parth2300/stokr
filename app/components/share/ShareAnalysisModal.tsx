@@ -36,15 +36,15 @@ export default function ShareAnalysisModal({
   const [previewScale, setPreviewScale] = useState(0.3)
   const [status, setStatus] = useState("")
   const [isExporting, setIsExporting] = useState(false)
-  const [canNativeShare, setCanNativeShare] = useState(false)
+  const [canNativeShare] = useState(
+    () => typeof navigator !== "undefined" && typeof navigator.share === "function"
+  )
   const previewShellRef = useRef<HTMLDivElement | null>(null)
   const cardRef = useRef<HTMLDivElement | null>(null)
   const data = createShareCardData(report)
 
   useEffect(() => {
     if (!isOpen) return
-
-    setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function")
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose()

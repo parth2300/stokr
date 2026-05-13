@@ -2,10 +2,10 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.08] bg-[#05070A] px-4 py-8 text-sm text-[#6F7685] sm:px-6 md:px-8 lg:px-10">
+    <footer className="border-t border-white/[0.08] bg-[#080A0D] px-4 py-10 text-sm text-[#94A3B8] sm:px-6 md:px-8 lg:px-10">
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
         <div className="min-w-0 space-y-2">
-          <p className="text-lg font-bold text-white">stokr</p>
+          <p className="text-lg font-semibold text-white">stokr</p>
           <p className="max-w-xl leading-6">
             stokr provides informational research tools only and does not
             provide financial advice.
@@ -17,7 +17,7 @@ export default function Footer() {
               href="https://safaraj.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#19C37D] hover:text-white"
+              className="font-semibold text-[#14B8A6] hover:text-white"
             >
               safaraj.com
             </a>
@@ -26,7 +26,7 @@ export default function Footer() {
 
         <div>
           <p className="font-semibold text-white">Research</p>
-          <div className="mt-3 grid gap-2">
+          <div className="mt-3 grid gap-2.5">
             <Link href="/blog" className="hover:text-white">
               Blog
             </Link>
@@ -44,7 +44,7 @@ export default function Footer() {
 
         <div>
           <p className="font-semibold text-white">Legal</p>
-          <div className="mt-3 grid gap-2">
+          <div className="mt-3 grid gap-2.5">
             <Link href="/terms" className="hover:text-white">
               Terms
             </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
 
         <div>
           <p className="font-semibold text-white">Support</p>
-          <div className="mt-3 grid gap-2">
+          <div className="mt-3 grid gap-2.5">
             <a href="mailto:stokrsupport@stokr.live" className="break-all hover:text-white">
               stokrsupport@stokr.live
             </a>

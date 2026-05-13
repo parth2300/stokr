@@ -19,7 +19,7 @@ export default function SavedReportsTable({
             Continue Research
           </p>
 
-          <h2 className="mt-1 text-xl font-bold text-white">
+          <h2 className="mt-1 text-xl font-semibold text-white">
             Recent Research Briefs
           </h2>
         </div>
