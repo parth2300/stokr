@@ -121,7 +121,7 @@ export default function InfoTooltip({
           openTooltip()
         }}
         onFocus={openTooltip}
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/[0.18] bg-[#0B0F16] text-[10px] font-semibold leading-none text-[#A3AAB8] outline-none transition hover:border-[#19C37D]/60 hover:bg-[#111722] hover:text-white focus-visible:ring-2 focus-visible:ring-[#19C37D]/45"
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#2E2D2A] bg-[#0C0C0C] text-[10px] font-semibold leading-none text-[#9A9690] outline-none transition hover:border-[#D63C2F]/70 hover:bg-[#161616] hover:text-[#F0EDE6] focus-visible:ring-2 focus-visible:ring-[#D63C2F]/45"
       >
         ?
       </button>
@@ -130,7 +130,7 @@ export default function InfoTooltip({
         <span
           id={tooltipId}
           role="tooltip"
-          className="fixed z-[100] max-h-[min(18rem,calc(100vh-2rem))] overflow-y-auto rounded-lg border border-white/[0.12] bg-[#05070A] p-3 text-left text-xs font-normal leading-5 text-[#D8DCE6] shadow-[0_18px_60px_rgba(0,0,0,0.34)]"
+          className="fixed z-[100] max-h-[min(18rem,calc(100vh-2rem))] overflow-y-auto border border-[#2E2D2A] bg-[#0C0C0C] p-3 text-left text-xs font-normal leading-5 text-[#F0EDE6]"
           style={{
             left: position.left,
             top: position.top,
@@ -140,12 +140,12 @@ export default function InfoTooltip({
           {hasStructuredContent ? (
             <>
               {title && (
-                <span className="block font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#19C37D]">
+                <span className="block font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D63C2F]">
                   {title}
                 </span>
               )}
               {body && (
-                <span className="mt-2 block leading-5 text-[#CBD5E1]">
+                <span className="mt-2 block leading-5 text-[#9A9690]">
                   {body}
                 </span>
               )}

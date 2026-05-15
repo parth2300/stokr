@@ -157,7 +157,7 @@ export default function AnalysisReportLoading({
                                 {limitReached ? "Report Limit Reached" : "Generating AI Report"}
                             </p>
 
-                            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                            <h1 className="mt-4 text-5xl font-semibold italic leading-[0.98] tracking-normal text-[#F0EDE6] md:text-6xl">
                                 {ticker} Analysis
                             </h1>
 
@@ -168,7 +168,7 @@ export default function AnalysisReportLoading({
                             </p>
                         </div>
 
-                        <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-right">
+                        <div className="border border-[#2E2D2A] bg-[#0C0C0C] px-4 py-3 text-right">
                             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                                 Status
                             </p>
@@ -188,14 +188,14 @@ export default function AnalysisReportLoading({
                             >
                                 <defs>
                                     <linearGradient id="loadingLine" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stopColor="#19C37D" stopOpacity="0.30" />
-                                        <stop offset="50%" stopColor="#8FB3FF" stopOpacity="1" />
-                                        <stop offset="100%" stopColor="#34D399" stopOpacity="1" />
+                                        <stop offset="0%" stopColor="#D63C2F" stopOpacity="0.30" />
+                                        <stop offset="50%" stopColor="#F0EDE6" stopOpacity="0.9" />
+                                        <stop offset="100%" stopColor="#D63C2F" stopOpacity="1" />
                                     </linearGradient>
 
                                     <linearGradient id="loadingFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#19C37D" stopOpacity="0.28" />
-                                        <stop offset="100%" stopColor="#19C37D" stopOpacity="0.02" />
+                                        <stop offset="0%" stopColor="#D63C2F" stopOpacity="0.20" />
+                                        <stop offset="100%" stopColor="#D63C2F" stopOpacity="0.02" />
                                     </linearGradient>
                                 </defs>
 
@@ -232,7 +232,7 @@ export default function AnalysisReportLoading({
                                             cx={cx}
                                             cy={cy}
                                             r="4"
-                                            fill={index === points.length - 1 ? "#34D399" : "#8FB3FF"}
+                                            fill={index === points.length - 1 ? "#D63C2F" : "#F0EDE6"}
                                             opacity="0.95"
                                         >
                                             <animate
@@ -257,16 +257,16 @@ export default function AnalysisReportLoading({
 
                             {!error && (
                                 <div className="flex gap-1">
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D] [animation-delay:120ms]" />
-                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#19C37D] [animation-delay:240ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#D63C2F]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#D63C2F] [animation-delay:120ms]" />
+                                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#D63C2F] [animation-delay:240ms]" />
                                 </div>
                             )}
                         </div>
 
                         {!limitReached && (
-                            <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] rounded-full bg-[#19C37D]" />
+                            <div className="mt-4 h-2 overflow-hidden bg-[#222120]">
+                                <div className="h-full w-1/2 animate-[loadingBar_1.6s_ease-in-out_infinite] bg-[#D63C2F]" />
                             </div>
                         )}
 

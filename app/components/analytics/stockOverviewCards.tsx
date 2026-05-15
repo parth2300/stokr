@@ -63,7 +63,7 @@ export default function StockOverviewCards({
   return (
     <section className="mt-8">
       <div className="mb-3 flex items-center gap-2">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#19C37D]">
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-[#D63C2F]">
           Stock overview
         </p>
         <InfoTooltip
@@ -75,7 +75,7 @@ export default function StockOverviewCards({
 
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="stokr-card p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#9A9690]">
           Price
         </p>
 
@@ -101,7 +101,7 @@ export default function StockOverviewCards({
         </div>
 
         <div className="stokr-card p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#9A9690]">
           Market Cap
         </p>
 
@@ -119,7 +119,7 @@ export default function StockOverviewCards({
         </div>
 
         <div className="stokr-card bg-[#151923] p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#DDE2FF]/80">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#9A9690]">
           Health Score
         </p>
 

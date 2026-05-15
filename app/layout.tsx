@@ -1,8 +1,31 @@
 import type { Metadata, Viewport } from "next"
+import { DM_Mono, Playfair_Display, Syne } from "next/font/google"
 import PWARegister from "./components/PWARegister"
 import "./globals.css"
 import Footer from "./components/Footer"
 import { GoogleAnalytics } from "@next/third-parties/google"
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+})
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono-editorial",
+  display: "swap",
+  weight: ["300", "400", "500"],
+})
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-sans-editorial",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stokr.live"),
@@ -37,7 +60,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#080A0D",
+  themeColor: "#0C0C0C",
 }
 
 export default function RootLayout({
@@ -48,7 +71,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${dmMono.variable} ${syne.variable}`}>
       <body>
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
 

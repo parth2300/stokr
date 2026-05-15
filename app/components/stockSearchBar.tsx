@@ -34,8 +34,12 @@ const clientSearchCache = new Map<string, StockSearchResult[]>()
 
 export default function StockSearchBar({
     variant = "hero",
+    wide = false,
+    onNavigate,
 }: {
     variant?: "hero" | "nav"
+    wide?: boolean
+    onNavigate?: () => void
 }) {
     const router = useRouter()
 
@@ -125,6 +129,7 @@ export default function StockSearchBar({
 
         trackSearchStock(cleanedTicker.toUpperCase())
         router.push(`/stocks/${cleanedTicker}-stock-analysis`)
+        onNavigate?.()
     }
 
     function handleSubmit(event: React.FormEvent) {
@@ -174,18 +179,20 @@ export default function StockSearchBar({
 
     const wrapperClass =
         variant === "nav"
-            ? "relative w-full max-w-[260px]"
+            ? wide
+                ? "relative w-full"
+                : "relative w-full max-w-[260px]"
             : "relative w-full max-w-xl"
 
     const formClass =
         variant === "nav"
-            ? "rounded-md border border-white/[0.08] bg-[#0D1117] px-3 py-2"
-            : "rounded-xl border border-white/[0.12] bg-[#111827] px-4 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.22)] sm:px-5"
+            ? "border border-[#2E2D2A] bg-[#0C0C0C] px-3 py-2"
+            : "border border-[#2E2D2A] bg-[#111111]"
 
     const inputClass =
         variant === "nav"
-            ? "w-full bg-transparent text-sm uppercase text-[#F4F6FA] outline-none placeholder:normal-case placeholder:text-[#6F7685]"
-            : "w-full bg-transparent font-mono text-base uppercase text-white outline-none placeholder:normal-case placeholder:font-sans placeholder:text-[#94A3B8]"
+            ? "w-full bg-transparent font-mono text-sm uppercase tracking-[0.08em] text-[#F0EDE6] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#6B6761]"
+            : "w-full bg-transparent px-5 py-3.5 font-mono text-xl font-medium uppercase tracking-[0.12em] text-[#F0EDE6] outline-none placeholder:tracking-[0.12em] placeholder:text-[#3E3D3A]"
 
     const iconSize = variant === "nav" ? 20 : 28
 
@@ -203,23 +210,23 @@ export default function StockSearchBar({
                     <button
                         type="submit"
                         aria-label="Search ticker"
-                        className={`transition ${variant === "nav" ? "text-[#A3AAB8] hover:text-white" : "text-[#CBD5E1] hover:text-white"}`}
+                        className={variant === "nav" ? "text-[#9A9690] transition hover:text-[#F0EDE6]" : "self-stretch bg-[#F0EDE6] px-5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#0C0C0C] transition hover:opacity-85"}
                     >
-                        <SearchIcon size={iconSize} />
+                        {variant === "nav" ? <SearchIcon size={iconSize} /> : "Analyze"}
                     </button>
                 </div>
             </form>
 
             {isOpen && (
-                <div className="search-dropdown-scroll absolute left-0 right-0 z-50 mt-3 max-h-[228px] overflow-y-auto overflow-x-hidden rounded-xl border border-white/[0.10] bg-[#0D1117] shadow-xl">
+                <div className="search-dropdown-scroll absolute left-0 right-0 z-50 mt-3 max-h-[228px] overflow-y-auto overflow-x-hidden border border-[#2E2D2A] bg-[#0C0C0C]">
                     {isLoading && (
-                        <div className="px-5 py-4 text-sm text-slate-400">
+                        <div className="px-5 py-4 text-sm text-[#9A9690]">
                             Searching...
                         </div>
                     )}
 
                     {!isLoading && results.length === 0 && (
-                        <div className="px-5 py-4 text-sm text-slate-400">
+                        <div className="px-5 py-4 text-sm text-[#9A9690]">
                             No matching stocks found.
                         </div>
                     )}
@@ -234,17 +241,17 @@ export default function StockSearchBar({
                                     type="button"
                                     onClick={() => goToStock(stock.ticker)}
                                     onMouseEnter={() => setActiveIndex(index)}
-                                    className={`flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition ${isActive ? "bg-[#14B8A6]/12" : "hover:bg-white/10"
+                                    className={`flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition ${isActive ? "bg-[#D63C2F]/12" : "hover:bg-[#161616]"
                                         }`}
                                 >
                                     <div>
-                                        <p className="font-semibold text-white">{stock.ticker}</p>
-                                        <p className="max-w-[260px] truncate text-sm text-[#A3AAB8] sm:max-w-[360px]">
+                                        <p className="font-mono font-semibold text-[#F0EDE6]">{stock.ticker}</p>
+                                        <p className="max-w-[260px] truncate text-sm text-[#9A9690] sm:max-w-[360px]">
                                             {stock.name}
                                         </p>
                                     </div>
 
-                                    <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+                                    <span className="border border-[#2E2D2A] bg-[#111111] px-3 py-1 font-mono text-xs uppercase tracking-[0.14em] text-[#9A9690]">
                                         View
                                     </span>
                                 </button>

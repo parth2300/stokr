@@ -68,14 +68,21 @@ export default function PricingPage() {
         <div className="stokr-container">
           <NavBar showSearch />
 
-          <div className="py-12 text-center sm:py-16">
+          <div className="editorial-section-rule mt-10">
+            <span className="editorial-section-number">IV.</span>
+            <span className="editorial-section-tag">Plans / Research Desk</span>
+            <div className="editorial-section-line" />
+            <span className="editorial-section-page">005 / 006</span>
+          </div>
+
+          <div className="pb-12 sm:pb-16">
             <p className="stokr-kicker">Pricing</p>
 
-            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+            <h1 className="mt-4 max-w-4xl font-serif text-5xl font-black italic leading-[0.92] tracking-[-0.035em] text-[#F0EDE6] sm:text-6xl">
               Start free. Upgrade when you need the full filing-backed breakdown.
             </h1>
 
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#A3AAB8]">
+            <p className="mt-5 max-w-2xl text-xs leading-[1.8] text-[#9A9690]">
               Free helps you understand a company at a glance. Premium helps
               you inspect the evidence behind the company: filings, risk
               context, Filing Delta, Source Trail, financial depth, and saved
@@ -83,21 +90,23 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="grid items-stretch gap-6 pb-14 lg:grid-cols-2">
-            <div className="stokr-card flex flex-col p-6 sm:p-8">
-              <h2 className="text-2xl font-semibold">Starter Research</h2>
+          <div className="grid items-stretch border border-[#222120] lg:grid-cols-2">
+            <div className="flex flex-col border-b border-[#222120] p-7 lg:border-b-0 lg:border-r">
+              <div className="mb-5 border-b border-[#222120] pb-4 font-mono text-[9px] uppercase tracking-[0.14em] text-[#3E3D3A]">
+                Free / Starter Research
+              </div>
 
-              <p className="mt-2 text-[#A3AAB8]">
+              <p className="text-xs leading-[1.8] text-[#9A9690]">
                 For understanding a company at a glance before deciding whether
                 it deserves deeper research.
               </p>
 
-              <div className="mt-8">
-                <span className="text-5xl font-semibold">$0</span>
-                <span className="text-[#6F7685]"> / month</span>
+              <div className="mt-8 flex items-baseline gap-2">
+                <span className="editorial-price">$0</span>
+                <span className="text-[11px] text-[#3E3D3A]"> / mo</span>
               </div>
 
-              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#CBD5E1]">
+              <ul className="my-8 grid flex-1 gap-2.5 text-[11px] leading-[1.5] text-[#9A9690]">
                 <li>Company snapshot</li>
                 <li>Basic summary</li>
                 <li>Top risk preview</li>
@@ -113,24 +122,22 @@ export default function PricingPage() {
               </Link>
             </div>
 
-            <div className="stokr-card relative flex flex-col border-white/[0.12] bg-[#151B23] p-6 sm:p-8">
-              <div className="mb-6 w-fit rounded-md border border-[#14B8A6]/25 bg-[#14B8A6]/10 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.16em] text-[#2DD4BF] sm:absolute sm:right-6 sm:top-6 sm:mb-0">
-                Full desk
+            <div className="relative flex flex-col bg-[#111111] p-7">
+              <div className="mb-5 border-b border-[#222120] pb-4 font-mono text-[9px] uppercase tracking-[0.14em] text-[#9A9690]">
+                Premium / Full Research Desk
               </div>
 
-              <h2 className="text-2xl font-semibold text-[#F4F6FA]">Full Research Desk</h2>
-
-              <p className="mt-2 text-[#A3AAB8]">
+              <p className="text-xs leading-[1.8] text-[#9A9690]">
                 For users who want full filing breakdowns, risk context, Filing
                 Delta, source trails, and saved research history.
               </p>
 
-              <div className="mt-8">
-                <span className="text-5xl font-semibold">$9.99</span>
-                <span className="text-[#6F7685]"> / month</span>
+              <div className="mt-8 flex items-baseline gap-2">
+                <span className="editorial-price">$9.99</span>
+                <span className="text-[11px] text-[#3E3D3A]"> / mo</span>
               </div>
 
-              <ul className="mt-8 space-y-3 text-sm leading-6 text-[#CBD5E1]">
+              <ul className="my-8 grid flex-1 gap-2.5 text-[11px] leading-[1.5] text-[#9A9690]">
                 <li>Unlimited reports</li>
                 <li>Full 10-K and 10-Q breakdowns</li>
                 <li>Filing Delta / what changed</li>
@@ -211,14 +218,14 @@ export default function PricingPage() {
               <div className="mt-3 flex flex-wrap justify-center gap-3 text-sm">
                 <Link
                   href="/blog/how-to-read-a-stock-analysis"
-                  className="font-medium text-[#9AA6FF] hover:text-white"
+                  className="font-medium text-[#D63C2F] hover:text-[#F0EDE6]"
                 >
                   How to read a stock analysis
                 </Link>
 
                 <Link
                   href="/blog/what-is-a-10-k"
-                  className="font-medium text-[#9AA6FF] hover:text-white"
+                  className="font-medium text-[#D63C2F] hover:text-[#F0EDE6]"
                 >
                   What is a 10-K?
                 </Link>
@@ -227,8 +234,7 @@ export default function PricingPage() {
 
             <p className="text-sm leading-relaxed text-[#A3AAB8]">
               <span className="font-semibold text-white">Disclaimer:</span>{" "}
-              stokr provides informational research tools only and does not
-              provide financial advice.
+              stokr provides informational research tools only. Not financial advice.
             </p>
           </div>
         </div>
@@ -247,7 +253,7 @@ function ComparisonList({
   highlight?: boolean
 }) {
   return (
-    <div className={`rounded-xl border p-4 ${highlight ? "border-[#19C37D]/25 bg-[#19C37D]/10" : "border-white/[0.08] bg-black/20"}`}>
+    <div className={`border p-4 ${highlight ? "border-[#D63C2F]/30 bg-[#D63C2F]/10" : "border-[#222120] bg-[#0C0C0C]"}`}>
       <h3 className="font-semibold text-white">{title}</h3>
       <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-[#CBD5E1]">
         {items.map((item) => (

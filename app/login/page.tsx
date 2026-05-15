@@ -181,11 +181,11 @@ export default function LoginPage() {
                                 Account
                             </p>
 
-                            <h1 className="mt-3 text-center text-2xl font-semibold tracking-tight">
+                            <h1 className="mt-3 text-center text-4xl font-semibold italic tracking-normal">
                                 {mode === "signup" ? "Sign Up" : "Login"}
                             </h1>
 
-                            <p className="mb-6 mt-2 text-center text-sm leading-6 text-[#94A3B8]">
+                            <p className="mb-6 mt-2 text-center text-sm leading-6 text-[#9A9690]">
                                 {mode === "signup"
                                     ? "Create an account to save research and revisit companies."
                                     : "Return to your source-backed research workspace."}
@@ -233,7 +233,7 @@ export default function LoginPage() {
                                 <div className="mb-4 text-right">
                                     <Link
                                         href="/forgot-password"
-                                        className="text-sm font-medium text-[#7C9DFF] hover:text-white"
+                                        className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#D63C2F] hover:text-[#F0EDE6]"
                                     >
                                         Forgot password?
                                     </Link>
@@ -241,7 +241,7 @@ export default function LoginPage() {
                             )}
 
                             {mode === "signup" && (
-                                <label className="mb-4 flex items-start gap-3 rounded-lg border border-white/[0.10] bg-[#0D1117] p-4 text-sm text-[#A3AAB8]">
+                                <label className="mb-4 flex items-start gap-3 border border-[#2E2D2A] bg-[#111111] p-4 text-sm text-[#9A9690]">
                                     <input
                                         type="checkbox"
                                         checked={acceptedTerms}
@@ -256,7 +256,7 @@ export default function LoginPage() {
                                         <Link
                                             href="/terms"
                                             target="_blank"
-                                            className="font-semibold text-[#9AA6FF] hover:text-white"
+                                            className="font-semibold text-[#D63C2F] hover:text-[#F0EDE6]"
                                         >
                                             Terms of Service
                                         </Link>
@@ -302,7 +302,7 @@ export default function LoginPage() {
 
                         <div className="text-center lg:text-left">
                             <p className="stokr-kicker">Research workspace</p>
-                            <h2 className="mx-auto mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:mx-0">
+                            <h2 className="mx-auto mt-4 max-w-xl text-5xl font-semibold italic leading-[0.98] tracking-normal sm:text-6xl lg:mx-0">
                                 Clear stock research without digging through every filing.
                             </h2>
                             <div className="mx-auto mt-6 grid max-w-xl gap-3 text-left lg:mx-0">
@@ -313,7 +313,7 @@ export default function LoginPage() {
                                 ].map((item) => (
                                     <div
                                         key={item}
-                                        className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-[#CBD5E1]"
+                                        className="border border-[#222120] bg-[#111111] px-4 py-3 text-sm text-[#9A9690]"
                                     >
                                         {item}
                                     </div>

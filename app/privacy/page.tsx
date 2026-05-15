@@ -17,11 +17,11 @@ export default function PrivacyPage() {
           <NavBar />
 
           <article className="stokr-card my-12 p-6 md:p-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#7C8CFF]">
+            <p className="stokr-kicker">
               Legal
             </p>
 
-            <h1 className="mt-4 text-4xl font-extrabold tracking-tight md:text-5xl">
+            <h1 className="mt-4 text-5xl font-semibold italic leading-[0.98] tracking-normal md:text-6xl">
               Privacy Policy
             </h1>
 

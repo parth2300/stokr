@@ -134,7 +134,7 @@ export default function LiveSavedCompanyMovement() {
         <p className="stokr-kicker">Saved Company Movement</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {[1, 2, 3, 4, 5].map((item) => (
-            <div key={item} className="h-16 animate-pulse rounded-lg bg-white/[0.06]" />
+            <div key={item} className="h-16 animate-pulse border border-[#222120] bg-[#111111]" />
           ))}
         </div>
       </section>
@@ -194,7 +194,7 @@ export default function LiveSavedCompanyMovement() {
         />
       </div>
 
-      <div className="mt-5 divide-y divide-white/[0.07] border-y border-white/[0.07]">
+      <div className="mt-5 divide-y divide-[#222120] border-y border-[#222120]">
         {movement.available.map((stock) => {
           const width = `${Math.min(Math.abs(stock.percentChange) * 8, 100)}%`
           const hasCompanyName = stock.companyName && stock.companyName !== "Company name pending"
@@ -211,9 +211,9 @@ export default function LiveSavedCompanyMovement() {
                 )}
               </div>
 
-              <div className="h-2 overflow-hidden rounded-full bg-white/[0.08]">
+              <div className="h-2 overflow-hidden bg-[#222120]">
                 <div
-                  className={`h-full rounded-full ${stock.percentChange >= 0 ? "bg-emerald-400/70" : "bg-red-400/70"}`}
+                  className={`h-full ${stock.percentChange >= 0 ? "bg-[#3A7D44]" : "bg-[#D63C2F]"}`}
                   style={{ width }}
                 />
               </div>
@@ -245,8 +245,8 @@ function MovementMetric({
   tone?: number
 }) {
   return (
-    <div className="rounded-lg border border-white/[0.08] bg-black/20 p-3">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7B8494]">
+    <div className="border border-[#222120] bg-[#0C0C0C] p-3">
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#3E3D3A]">
         {label}
       </p>
       <p className={`mt-2 text-lg font-semibold ${tone === undefined ? "text-white" : percentClass(tone)}`}>

@@ -97,11 +97,11 @@ export default function ResetPasswordPage() {
                             onSubmit={handleSubmit}
                             className="stokr-card mx-auto w-full max-w-md p-6 text-white sm:p-8"
                         >
-                            <p className="mb-2 text-center text-xs font-medium uppercase tracking-[0.18em] text-[#7C9DFF]">
+                            <p className="stokr-kicker mb-2 text-center">
                                 Account security
                             </p>
 
-                            <h1 className="mb-3 text-center text-2xl font-semibold">
+                            <h1 className="mb-3 text-center text-4xl font-semibold italic">
                                 Reset password
                             </h1>
 
@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
                             </p>
 
                             {showMissingSessionMessage && (
-                                <p className="mb-4 rounded-xl border border-white/[0.10] bg-[#0D1017] px-3 py-2 text-sm text-[#A3AAB8]">
+                                <p className="mb-4 border border-[#2E2D2A] bg-[#111111] px-3 py-2 text-sm text-[#9A9690]">
                                     Open this page from the password reset email
                                     link.
                                 </p>
@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
                                 onChange={(event) => setPassword(event.target.value)}
                                 minLength={8}
                                 required
-                                className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C9DFF]"
+                                className="stokr-input mb-4"
                             />
 
                             <input
@@ -135,17 +135,17 @@ export default function ResetPasswordPage() {
                                 }
                                 minLength={8}
                                 required
-                                className="mb-4 w-full rounded-lg border border-white/[0.10] bg-[#0D1017] px-4 py-3 text-white outline-none placeholder:text-[#6F7685] focus:border-[#7C9DFF]"
+                                className="stokr-input mb-4"
                             />
 
                             {error && (
-                                <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+                                <p className="stokr-status-error mb-4">
                                     {error}
                                 </p>
                             )}
 
                             {success && (
-                                <p className="mb-4 rounded-xl border border-[#7C9DFF]/25 bg-[#7C9DFF]/10 px-3 py-2 text-sm text-[#D7DEFF]">
+                                <p className="stokr-status-success mb-4">
                                     {success}
                                 </p>
                             )}
@@ -161,14 +161,14 @@ export default function ResetPasswordPage() {
                             {success ? (
                                 <Link
                                     href="/login"
-                                    className="mt-4 block text-center text-sm font-medium text-[#7C9DFF] hover:text-white"
+                                    className="mt-4 block text-center font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#D63C2F] hover:text-[#F0EDE6]"
                                 >
                                     Go to login
                                 </Link>
                             ) : (
                                 <Link
                                     href="/login"
-                                    className="mt-4 block text-center text-sm font-medium text-[#7C9DFF] hover:text-white"
+                                    className="mt-4 block text-center font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#D63C2F] hover:text-[#F0EDE6]"
                                 >
                                     Back to login
                                 </Link>
@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
 
                         <div className="text-center lg:text-left">
                             <p className="stokr-kicker">Protected research</p>
-                            <h2 className="mx-auto mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:mx-0">
+                            <h2 className="mx-auto mt-4 max-w-xl text-5xl font-semibold italic leading-[0.98] tracking-normal sm:text-6xl lg:mx-0">
                                 Keep your account secure and your research close.
                             </h2>
                         </div>

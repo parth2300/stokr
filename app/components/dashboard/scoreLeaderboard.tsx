@@ -6,7 +6,7 @@ export default function ScoreLeaderboard({
     items: LeaderboardItem[]
 }) {
     return (
-        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#0D1118] p-5">
+        <section className="min-w-0 border border-[#222120] bg-[#111111] p-5">
             <div className="flex items-center justify-between gap-2">
                 <div>
                     <p className="stokr-kicker">
@@ -23,23 +23,23 @@ export default function ScoreLeaderboard({
 
             <div className="mt-5 space-y-3">
                 {items.length === 0 ? (
-                    <p className="rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-5 text-sm leading-6 text-slate-400">
+                    <p className="border border-dashed border-[#2E2D2A] bg-[#0C0C0C] p-5 text-sm leading-6 text-[#9A9690]">
                         Research scores will appear here after briefs are generated.
                     </p>
                 ) : items.map((item) => (
                     <div key={item.ticker} className="grid grid-cols-[18px_44px_1fr_28px] items-center gap-2">
-                        <p className="text-[10px] font-bold text-slate-400">{item.rank}</p>
+                        <p className="font-mono text-[10px] font-bold text-[#3E3D3A]">{item.rank}</p>
 
                         <p className="text-[11px] font-bold text-white">{item.ticker}</p>
 
-                        <div className="h-1.5 rounded-full bg-white/10">
+                        <div className="h-1.5 bg-[#222120]">
                             <div
-                                className="h-1.5 rounded-full bg-emerald-400"
+                                className="h-1.5 bg-[#3A7D44]"
                                 style={{ width: `${item.score}%` }}
                             />
                         </div>
 
-                        <p className="text-right text-[10px] font-bold text-slate-200">
+                        <p className="text-right font-mono text-[10px] font-bold text-[#F0EDE6]">
                             {item.score}
                         </p>
                     </div>

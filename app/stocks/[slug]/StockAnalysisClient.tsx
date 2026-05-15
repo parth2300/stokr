@@ -471,7 +471,7 @@ export default function StockAnalysisClient({
 
                         <div className="stokr-card mx-auto mt-16 max-w-3xl p-6 sm:mt-20 sm:p-8">
                             <div className="flex items-center gap-3">
-                                <div className="h-2.5 w-2.5 rounded-full bg-[#19C37D]" />
+                                <div className="h-2.5 w-2.5 rounded-full bg-[#D63C2F]" />
                                 <p className="stokr-kicker">Loading report</p>
                             </div>
 
@@ -730,15 +730,15 @@ export default function StockAnalysisClient({
                             <div className="min-w-0">
                                 <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                                     <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
-                                        <span className="max-w-full break-words rounded-md border border-white/[0.10] bg-[#151923] px-3 py-1.5 font-mono text-xs font-semibold text-[#DDE2FF] sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words border border-[#2E2D2A] bg-[#111111] px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#F0EDE6] sm:px-4 sm:text-sm">
                                             {pageData.ticker}
                                         </span>
 
-                                        <span className="max-w-full break-words rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words border border-[#2E2D2A] bg-[#0C0C0C] px-3 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-[#9A9690] sm:px-4 sm:text-sm">
                                             {pageData.badge}
                                         </span>
 
-                                        <span className="max-w-full break-words rounded-md border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 sm:px-4 sm:text-sm">
+                                        <span className="max-w-full break-words border border-[#3A7D44]/35 bg-[#3A7D44]/10 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[#8FBF8D] sm:px-4 sm:text-sm">
                                             {pageData.cacheStatus}
                                         </span>
                                     </div>
@@ -760,33 +760,33 @@ export default function StockAnalysisClient({
                                     </div>
                                 </div>
 
-                                <h1 className="mt-6 max-w-4xl break-words text-3xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+                                <h1 className="mt-6 max-w-4xl break-words text-5xl font-semibold italic leading-[0.98] tracking-normal text-[#F0EDE6] sm:text-6xl">
                                     {pageData.companyName}
                                 </h1>
 
-                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#CBD5E1]">
+                                <p className="mt-4 max-w-3xl text-base leading-7 text-[#9A9690]">
                                     {pageData.summary}
                                 </p>
 
                                 <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
-                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                    <div className="border border-[#222120] bg-[#111111] p-4">
+                                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#6B6761]">
                                             Report updated
                                         </p>
                                         <p className="mt-2 text-sm font-semibold text-white">
                                             {pageData.lastUpdated}
                                         </p>
                                     </div>
-                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
-                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                    <div className="border border-[#222120] bg-[#111111] p-4">
+                                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#6B6761]">
                                             Filing type
                                         </p>
                                         <p className="mt-2 text-sm font-semibold text-white">
                                             {cachedAnalysis.form_type || "Pending"}
                                         </p>
                                     </div>
-                                    <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4">
-                                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                                    <div className="border border-[#222120] bg-[#111111] p-4">
+                                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#6B6761]">
                                             Source coverage
                                         </p>
                                         <p className="mt-2 text-sm font-semibold text-white">
@@ -825,19 +825,19 @@ export default function StockAnalysisClient({
                                     {pageData.topSignals.map((signal, index) => (
                                         <div
                                             key={`${signal}-${index}`}
-                                            className="rounded-lg border border-white/10 bg-black/15 p-4"
+                                            className="border border-[#222120] bg-[#0C0C0C] p-4"
                                         >
-                                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                                            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#9A9690]">
                                                 Signal {index + 1}
                                             </p>
-                                            <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                                            <p className="mt-2 text-sm leading-relaxed text-[#F0EDE6]">
                                                 {signal}
                                             </p>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="mt-5 rounded-lg border border-[#19C37D]/20 bg-[#19C37D]/[0.06] p-4">
+                                <div className="mt-5 border border-[#D63C2F]/25 bg-[#D63C2F]/[0.06] p-4">
                                     <div className="flex items-center gap-2">
                                         <p className="text-sm font-semibold text-white">
                                             Source transparency is visible below
@@ -848,7 +848,7 @@ export default function StockAnalysisClient({
                                             body="Shows where stokr pulled or derived the information from."
                                         />
                                     </div>
-                                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                                    <p className="mt-2 text-sm leading-6 text-[#9A9690]">
                                         Filing coverage, accession details, and the source stack are surfaced in the Source Transparency section so users can verify context.
                                     </p>
                                 </div>
@@ -872,7 +872,7 @@ export default function StockAnalysisClient({
                                 </HelpedKicker>
 
                                 <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
-                                    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-white/[0.12] bg-[#151923] text-3xl font-semibold text-white">
+                                    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-[#2E2D2A] bg-[#111111] font-mono text-3xl font-semibold text-[#F0EDE6]">
                                         {pageData.healthScore}
                                     </div>
 
@@ -899,9 +899,9 @@ export default function StockAnalysisClient({
                                                 </p>
                                             </div>
 
-                                            <div className="mt-2 h-2.5 rounded-full bg-white/10">
+                                            <div className="mt-2 h-2.5 bg-[#222120]">
                                                 <div
-                                                    className="h-2.5 rounded-full bg-[#19C37D]"
+                                                    className="h-2.5 bg-[#D63C2F]"
                                                     style={{ width: scoreWidth(item.score) }}
                                                 />
                                             </div>
@@ -940,7 +940,7 @@ export default function StockAnalysisClient({
                                     New to company risk disclosures? Read stokr&apos;s{" "}
                                     <Link
                                         href="/blog/how-to-use-risk-factors"
-                                        className="font-semibold text-[#9AA6FF] hover:text-white"
+                                        className="font-semibold text-[#D63C2F] hover:text-[#F0EDE6]"
                                     >
                                         guide to using risk factors
                                     </Link>
@@ -1041,7 +1041,7 @@ export default function StockAnalysisClient({
                                         Learn how to compare both sides in{" "}
                                         <Link
                                             href="/blog/bull-case-vs-bear-case"
-                                            className="font-semibold text-[#9AA6FF] hover:text-white"
+                                            className="font-semibold text-[#D63C2F] hover:text-[#F0EDE6]"
                                         >
                                             stokr&apos;s bull case vs bear case explainer
                                         </Link>
@@ -1192,7 +1192,7 @@ export default function StockAnalysisClient({
                                         If the filing terminology is new, start with{" "}
                                         <Link
                                             href="/blog/what-is-a-10-k"
-                                            className="font-semibold text-[#9AA6FF] hover:text-white"
+                                            className="font-semibold text-[#D63C2F] hover:text-[#F0EDE6]"
                                         >
                                             what a 10-K is and why it matters
                                         </Link>
@@ -1293,9 +1293,9 @@ function PremiumTeaserSections({ ticker }: { ticker: string }) {
                 {premiumTeaserSections.map((section) => (
                     <article
                         key={section.title}
-                        className="rounded-xl border border-white/[0.08] bg-black/20 p-4"
+            className="border border-[#222120] bg-[#0C0C0C] p-4"
                     >
-                        <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#19C37D]">
+                        <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#D63C2F]">
                             Locked
                         </p>
                         <h3 className="mt-2 text-lg font-semibold text-white">
@@ -1335,7 +1335,7 @@ function HelpedKicker({
 }) {
     return (
         <div className="flex min-w-0 items-center gap-2">
-            <p className="min-w-0 break-words font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#19C37D] sm:text-sm sm:tracking-[0.25em]">
+            <p className="min-w-0 break-words font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#D63C2F] sm:text-sm sm:tracking-[0.25em]">
                 {label}
             </p>
             <InfoTooltip

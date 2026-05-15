@@ -515,14 +515,19 @@ export default function WatchlistPage() {
           <div className="relative z-10 w-full">
             <NavBar showSearch />
 
-            <div className="stokr-card mx-auto mt-16 max-w-2xl p-6 text-center sm:p-8">
-              <p className="stokr-kicker">Loading</p>
-              <h1 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
-                Preparing your Research Tracker
-              </h1>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="h-20 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
-                <div className="h-20 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
+            <div className="flex min-h-[calc(100vh-52px)] items-center justify-center px-6 py-12">
+              <div className="w-full max-w-[720px] border border-[#222120] bg-[#0C0C0C] p-8 text-center sm:p-10">
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#3E3D3A]">
+                  Loading
+                </p>
+                <h1 className="mt-3 font-serif text-4xl font-black italic leading-[0.95] tracking-[-0.03em] text-[#F0EDE6] sm:text-5xl">
+                  Preparing your Research Tracker
+                </h1>
+                <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                  <div className="h-20 animate-pulse border border-[#222120] bg-[#111111]" />
+                  <div className="h-20 animate-pulse border border-[#222120] bg-[#161616]" />
+                </div>
+                <div className="mt-3 h-3 animate-pulse bg-[#222120]" />
               </div>
             </div>
           </div>

@@ -120,7 +120,7 @@ export default function LiveDashboardMetrics() {
         {[1, 2, 3, 4].map((item) => (
           <div
             key={item}
-            className="min-h-[82px] animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.045]"
+            className="min-h-[96px] animate-pulse border border-[#222120] bg-[#111111]"
           />
         ))}
       </>
@@ -129,7 +129,7 @@ export default function LiveDashboardMetrics() {
 
   if (error) {
     return (
-      <div className="rounded-[22px] border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-100 xl:col-span-4">
+      <div className="border border-[#D63C2F]/40 bg-[#D63C2F]/10 p-4 text-sm text-[#F0EDE6] xl:col-span-4">
         {error}
       </div>
     )

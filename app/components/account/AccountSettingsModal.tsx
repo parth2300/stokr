@@ -145,7 +145,7 @@ export default function AccountSettingsModal({
     >
       <div
         ref={dialogRef}
-        className="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-white/[0.10] bg-[#0D1117] p-5 text-white shadow-2xl sm:p-6"
+        className="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto border border-[#2E2D2A] bg-[#0C0C0C] p-5 text-[#F0EDE6] sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -162,19 +162,19 @@ export default function AccountSettingsModal({
 
           <button
             onClick={onClose}
-            className="rounded-md border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 hover:bg-white/15"
+            className="border border-[#2E2D2A] bg-[#111111] px-3 py-2 font-mono text-xs uppercase tracking-[0.14em] text-[#9A9690] hover:bg-[#161616] hover:text-[#F0EDE6]"
           >
             Close
           </button>
         </div>
 
-        <div className="mt-6 flex rounded-lg border border-white/10 bg-black/20 p-1">
+        <div className="mt-6 flex border border-[#222120] bg-[#111111] p-1">
           <button
             onClick={() => setActiveTab("settings")}
-            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
+            className={`flex-1 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.14em] ${
               activeTab === "settings"
-                ? "bg-white text-[#05070A]"
-                : "text-slate-300 hover:bg-white/10"
+                ? "bg-[#F0EDE6] text-[#0C0C0C]"
+                : "text-[#9A9690] hover:bg-[#161616]"
             }`}
           >
             Settings
@@ -182,10 +182,10 @@ export default function AccountSettingsModal({
 
           <button
             onClick={() => setActiveTab("subscription")}
-            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
+            className={`flex-1 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.14em] ${
               activeTab === "subscription"
-                ? "bg-white text-[#05070A]"
-                : "text-slate-300 hover:bg-white/10"
+                ? "bg-[#F0EDE6] text-[#0C0C0C]"
+                : "text-[#9A9690] hover:bg-[#161616]"
             }`}
           >
             Subscription
@@ -200,7 +200,7 @@ export default function AccountSettingsModal({
 
         {activeTab === "settings" && (
           <div className="mt-6 space-y-5">
-            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
+            <div className="border border-[#222120] bg-[#111111] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Profile
               </p>
@@ -222,7 +222,7 @@ export default function AccountSettingsModal({
               </div>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
+            <div className="border border-[#222120] bg-[#111111] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Plan
               </p>
@@ -253,7 +253,7 @@ export default function AccountSettingsModal({
                 value={deleteInput}
                 onChange={(event) => setDeleteInput(event.target.value)}
                 placeholder="Type your username or email"
-                className="mt-4 w-full rounded-md border border-red-300/20 bg-black/30 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-red-300/50"
+                className="stokr-input mt-4 normal-case tracking-normal"
               />
 
               <button
@@ -269,7 +269,7 @@ export default function AccountSettingsModal({
 
         {activeTab === "subscription" && (
           <div className="mt-6 space-y-5">
-            <div className="rounded-lg border border-white/10 bg-black/20 p-5">
+            <div className="border border-[#222120] bg-[#111111] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Current Plan
               </p>
@@ -292,7 +292,7 @@ export default function AccountSettingsModal({
             </div>
 
             {!isPremium && (
-              <div className="rounded-lg border border-[#19C37D]/25 bg-[#19C37D]/10 p-5">
+              <div className="border border-[#D63C2F]/25 bg-[#D63C2F]/10 p-5">
                 <p className="text-sm font-semibold text-emerald-100">
                   You are currently on the free plan.
                 </p>

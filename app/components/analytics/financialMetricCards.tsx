@@ -58,7 +58,7 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
         <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {["Revenue", "Net Income", "Free Cash Flow", "Debt"].map((label) => (
             <div key={label} className="stokr-card p-5">
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#9A9690]">
                 {label}
               </p>
               <p className="mt-3 break-words text-2xl font-semibold text-white">Loading</p>
@@ -95,11 +95,11 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
       <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((metric) => (
           <div key={metric.label} className="stokr-card p-5">
-            <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#9A9690]">
               {metric.label}
             </p>
             <p className="mt-3 break-words text-2xl font-semibold text-white">{metric.value}</p>
-            <p className="mt-2 break-words text-sm text-emerald-400">
+            <p className="mt-2 break-words font-mono text-xs uppercase tracking-[0.14em] text-[#9A9690]">
               {metric.form || "SEC"} {metric.filed ? `- ${metric.filed}` : ""}
             </p>
           </div>
@@ -112,7 +112,7 @@ export default function FinancialMetricCards({ ticker }: { ticker: string }) {
 function FinancialMetricsHeader() {
   return (
     <div className="flex items-center gap-2">
-      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+      <p className="font-mono text-sm font-semibold uppercase tracking-[0.25em] text-[#D63C2F]">
         Financial Metrics
       </p>
       <InfoTooltip

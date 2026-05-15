@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useRef, useState } from "react"
+import type { ReactNode } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { supabase } from "../lib/supabase"
 import StockSearchBar from "./stockSearchBar"
 import { isUserPremium, PremiumProfile } from "../lib/premium"
@@ -13,6 +14,22 @@ type Profile = PremiumProfile & {
   email?: string | null
 }
 
+function MobileSheetLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string
+  onClick: () => void
+  children: ReactNode
+}) {
+  return (
+    <Link href={href} onClick={onClick} className="mobile-sheet-row">
+      {children}
+    </Link>
+  )
+}
+
 export default function NavBar({ showSearch = false }: { showSearch?: boolean }) {
   const [username, setUsername] = useState<string | null>(null)
   const [email, setEmail] = useState<string | null>(null)
@@ -21,9 +38,12 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
   const [accountSettingsOpen, setAccountSettingsOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileButtonVisible, setMobileButtonVisible] = useState(true)
 
   const accountMenuRef = useRef<HTMLDivElement | null>(null)
-  const mobileMenuRef = useRef<HTMLDivElement | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const lastScrollYRef = useRef(0)
+  const sheetId = useId()
 
   useEffect(() => {
     async function loadUser() {
@@ -76,9 +96,6 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         setAccountMenuOpen(false)
       }
 
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
-        setMobileMenuOpen(false)
-      }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
@@ -103,6 +120,47 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
     }
   }, [])
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    closeButtonRef.current?.focus()
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [mobileMenuOpen])
+
+  useEffect(() => {
+    function handleScroll() {
+      if (mobileMenuOpen) {
+        setMobileButtonVisible(true)
+        return
+      }
+
+      const currentY = window.scrollY
+      const lastY = lastScrollYRef.current
+
+      if (currentY < 80) {
+        setMobileButtonVisible(true)
+      } else if (currentY > lastY + 24) {
+        setMobileButtonVisible(false)
+      } else if (currentY < lastY - 12) {
+        setMobileButtonVisible(true)
+      }
+
+      lastScrollYRef.current = currentY
+    }
+
+    lastScrollYRef.current = window.scrollY
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [mobileMenuOpen])
+
   async function handleLogout() {
     await supabase.auth.signOut()
     setUsername(null)
@@ -117,73 +175,57 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
   function closeMobileMenu() {
     setMobileMenuOpen(false)
+    setMobileButtonVisible(true)
   }
 
   return (
     <>
-    <nav className="relative flex w-full items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-[#080A0D]/95 px-4 py-3.5 backdrop-blur sm:px-5">
-      <Link href="/" className="flex shrink-0 items-center gap-2">
-        <div className="h-8 w-11">
-          <svg viewBox="0 0 64 40" className="h-full w-full" fill="none">
-            <path d="M2 32 L20 12 L34 28 L54 4" stroke="#22C55E" strokeWidth="2" />
-            <path d="M47 4 H54 V11" stroke="#22C55E" strokeWidth="2" />
-            <path d="M20 12 L34 28" stroke="#EF4444" strokeWidth="2" />
-          </svg>
+    <nav className="editorial-nav">
+      <div className="flex min-w-0 items-center gap-8">
+        <Link href="/" className="editorial-logo shrink-0">stokr</Link>
+
+        <div className="hidden min-w-0 items-center gap-6 xl:flex">
+          <Link href="/" className="editorial-nav-link">Research</Link>
+          <Link href="/compare" className="editorial-nav-link">Compare</Link>
+          {!isPremium && (
+            <Link href="/pricing" className="editorial-nav-link">Pricing</Link>
+          )}
+          <Link href="/about" className="editorial-nav-link">About</Link>
+          <Link href="/blog" className="editorial-nav-link">Blog</Link>
+          {isSignedIn && isPremium && (
+            <Link href="/dashboard" className="editorial-nav-link">Desk</Link>
+          )}
+          {isSignedIn && (
+            <Link href="/watchlist" className="editorial-nav-link">Tracker</Link>
+          )}
         </div>
-        <span className="text-2xl font-semibold tracking-tight text-white">stokr</span>
-      </Link>
+      </div>
+
+      <div className="editorial-nav-center">
+        Vol. I / Issue No. 01 / SEC Intelligence
+      </div>
 
       {/* Desktop nav */}
-      <div className="hidden min-w-0 items-center gap-1 text-sm text-[#A3AAB8] xl:flex">
-        {isSignedIn && isPremium && (
-          <Link href="/dashboard" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-            Research Desk
-          </Link>
-        )}
-
-        {isSignedIn && (
-          <Link href="/watchlist" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-            Research Tracker
-          </Link>
-        )}
-
-        {!isPremium && (
-          <Link href="/pricing" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-            Pricing
-          </Link>
-        )}
-
-        <Link href="/about" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-          About
-        </Link>
-
-        <Link href="/blog" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-          Blog
-        </Link>
-
-        <Link href="/compare" className="rounded-md px-3 py-2 hover:bg-white/[0.06] hover:text-white">
-          Compare
-        </Link>
-
+      <div className="hidden min-w-0 items-center justify-end gap-5 xl:flex">
         {showSearch && <StockSearchBar variant="nav" />}
 
         {username ? (
           <div className="relative" ref={accountMenuRef}>
             <button
               onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="max-w-[180px] truncate rounded-md border border-white/[0.12] bg-[#0D1117] px-3 py-2 font-medium text-white hover:bg-[#151B23]"
+            className="max-w-[180px] truncate font-mono text-[10px] uppercase tracking-[0.10em] text-[#9A9690] hover:text-[#F0EDE6]"
             >
               {username}
             </button>
 
             {accountMenuOpen && (
-              <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-white/[0.10] bg-[#0D1117] p-2 text-white shadow-xl">
-                <div className="border-b border-white/[0.08] px-3 py-2">
+              <div className="absolute right-0 z-50 mt-2 w-60 border border-[#2E2D2A] bg-[#0C0C0C] p-2 text-[#F0EDE6]">
+                <div className="border-b border-[#222120] px-3 py-2">
                   <p className="truncate text-sm font-medium text-white">
                     {username || "Account"}
                   </p>
                   {email && (
-                    <p className="mt-0.5 truncate text-xs text-[#6F7685]">
+                    <p className="mt-0.5 truncate text-xs normal-case tracking-normal text-[#9A9690]">
                       {email}
                     </p>
                   )}
@@ -194,14 +236,14 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
                     setAccountMenuOpen(false)
                     setAccountSettingsOpen(true)
                   }}
-                  className="mt-1 w-full rounded-md px-3 py-2.5 text-left text-sm text-[#A3AAB8] hover:bg-white/[0.06] hover:text-white"
+                  className="mt-1 w-full px-3 py-2.5 text-left text-xs text-[#9A9690] hover:bg-[#161616] hover:text-[#F0EDE6]"
                 >
                   Manage account
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full rounded-md px-3 py-2.5 text-left text-sm text-[#A3AAB8] hover:bg-white/[0.06] hover:text-white"
+                  className="w-full px-3 py-2.5 text-left text-xs text-[#9A9690] hover:bg-[#161616] hover:text-[#F0EDE6]"
                 >
                   Logout
                 </button>
@@ -209,152 +251,134 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
             )}
           </div>
         ) : (
-          <Link
-            href="/login"
-            className="stokr-button-primary"
-          >
-            Login
-          </Link>
+          <>
+            <Link href="/login" className="editorial-nav-link">Log in</Link>
+            <Link href="/login" className="stokr-button-primary min-h-0 px-[18px] py-2">Start free</Link>
+          </>
         )}
       </div>
 
-      {/* Mobile nav */}
-      <div className="xl:hidden" ref={mobileMenuRef}>
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-white/[0.12] bg-[#0D1117] text-white hover:bg-[#151B23]"
-        >
-          <span className="sr-only">Open navigation menu</span>
-
-          <div className="flex flex-col gap-1.5">
-            <span
-              className={`h-0.5 w-5 rounded-full bg-white transition ${
-                mobileMenuOpen ? "translate-y-2 rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`h-0.5 w-5 rounded-full bg-white transition ${
-                mobileMenuOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`h-0.5 w-5 rounded-full bg-white transition ${
-                mobileMenuOpen ? "-translate-y-2 -rotate-45" : ""
-              }`}
-            />
-          </div>
-        </button>
-
-        {mobileMenuOpen && (
-          <div className="absolute right-0 top-14 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#0D1117] p-3 text-white shadow-2xl">
-            <div className="flex flex-col gap-2">
-              {showSearch && (
-                <div className="mb-2">
-                  <StockSearchBar variant="nav" />
-                </div>
-              )}
-
-              {isSignedIn && isPremium && (
-                <Link
-                  href="/dashboard"
-                  onClick={closeMobileMenu}
-                  className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-                >
-                  Research Desk
-                </Link>
-              )}
-
-              {isSignedIn && (
-                <Link
-                  href="/watchlist"
-                  onClick={closeMobileMenu}
-                  className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-                >
-                  Research Tracker
-                </Link>
-              )}
-
-              {!isPremium && (
-                <Link
-                  href="/pricing"
-                  onClick={closeMobileMenu}
-                  className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-                >
-                  Pricing
-                </Link>
-              )}
-
-              <Link
-                href="/about"
-                onClick={closeMobileMenu}
-                className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-              >
-                About
-              </Link>
-
-              <Link
-                href="/blog"
-                onClick={closeMobileMenu}
-                className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-              >
-                Blog
-              </Link>
-
-              <Link
-                href="/compare"
-                onClick={closeMobileMenu}
-                className="rounded-md px-4 py-3 text-sm hover:bg-white/10"
-              >
-                Compare
-              </Link>
-
-              <div className="mt-2 border-t border-white/10 pt-3">
-                {username ? (
-                  <>
-                    <div className="mb-2 rounded-lg border border-white/[0.08] bg-[#111827] px-4 py-3 text-sm text-white/80">
-                      <p className="truncate font-medium text-white">{username}</p>
-                      {email && (
-                        <p className="mt-1 truncate text-xs text-[#6F7685]">
-                          {email}
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        setMobileMenuOpen(false)
-                        setAccountSettingsOpen(true)
-                      }}
-                      className="mb-2 w-full rounded-md border border-white/[0.10] bg-[#111827] px-4 py-3 text-left text-sm font-medium text-white hover:bg-[#151B23]"
-                    >
-                      Manage account
-                    </button>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full rounded-md bg-white px-4 py-3 text-left text-sm font-semibold text-black hover:bg-white/90"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    href="/login"
-                    onClick={closeMobileMenu}
-                    className="block rounded-md bg-white px-4 py-3 text-center text-sm font-semibold text-black hover:bg-white/90"
-                  >
-                    Login
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <div className="justify-self-end xl:hidden" />
     </nav>
+    <button
+      type="button"
+      onClick={() => setMobileMenuOpen((current) => !current)}
+      aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+      aria-expanded={mobileMenuOpen}
+      aria-controls={sheetId}
+      className={`mobile-floating-nav-button xl:hidden ${mobileMenuOpen ? "is-open" : ""} ${mobileButtonVisible || mobileMenuOpen ? "" : "is-hidden"}`}
+    >
+      <span className="sr-only">
+        {mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+      </span>
+      <span className="mobile-floating-nav-icon" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </span>
+    </button>
+
+    {mobileMenuOpen && (
+      <button
+        type="button"
+        aria-label="Close navigation menu backdrop"
+        className="mobile-nav-backdrop xl:hidden"
+        onClick={closeMobileMenu}
+      />
+    )}
+
+    <section
+      id={sheetId}
+      role="dialog"
+      aria-modal="true"
+      aria-hidden={!mobileMenuOpen}
+      aria-label="Mobile navigation menu"
+      className={`mobile-bottom-sheet xl:hidden ${mobileMenuOpen ? "is-open" : ""}`}
+    >
+      <div className="border-b border-[#222120] px-5 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#3E3D3A]">
+            Navigation
+          </p>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={closeMobileMenu}
+            aria-label="Close navigation menu"
+            className="flex h-10 w-10 items-center justify-center border border-[#2E2D2A] bg-[#111111] text-[#F0EDE6] hover:bg-[#161616]"
+          >
+            <span className="text-xl leading-none" aria-hidden="true">X</span>
+          </button>
+        </div>
+
+        <div className="mobile-bottom-sheet-search mt-4">
+          <StockSearchBar variant="nav" wide onNavigate={closeMobileMenu} />
+        </div>
+      </div>
+
+      <div className="grid">
+        <MobileSheetLink href="/" onClick={closeMobileMenu}>Research</MobileSheetLink>
+        <MobileSheetLink href="/compare" onClick={closeMobileMenu}>Compare</MobileSheetLink>
+        <MobileSheetLink href="/about" onClick={closeMobileMenu}>About</MobileSheetLink>
+        <MobileSheetLink href="/blog" onClick={closeMobileMenu}>Blog</MobileSheetLink>
+        <MobileSheetLink href={isSignedIn && isPremium ? "/dashboard" : isSignedIn ? "/pricing" : "/login"} onClick={closeMobileMenu}>Desk</MobileSheetLink>
+        <MobileSheetLink href={isSignedIn ? "/watchlist" : "/login"} onClick={closeMobileMenu}>Tracker</MobileSheetLink>
+        {!isPremium && (
+          <MobileSheetLink href="/pricing" onClick={closeMobileMenu}>Pricing</MobileSheetLink>
+        )}
+      </div>
+
+      <div className="border-t border-[#222120] px-5 py-4">
+        {username ? (
+          <>
+            <div className="mb-4 border border-[#222120] bg-[#111111] px-4 py-3">
+              <p className="truncate text-sm font-medium text-[#F0EDE6]">{username}</p>
+              {email && (
+                <p className="mt-1 truncate text-xs normal-case tracking-normal text-[#9A9690]">
+                  {email}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false)
+                setAccountSettingsOpen(true)
+              }}
+              className="mobile-sheet-row"
+            >
+              Manage account
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false)
+                setAccountSettingsOpen(true)
+              }}
+              className="mobile-sheet-row"
+            >
+              Delete account
+            </button>
+            <button type="button" onClick={handleLogout} className="mobile-sheet-row text-[#F0EDE6]">
+              Log out
+            </button>
+          </>
+        ) : (
+          <div className="grid gap-3">
+            <Link href="/login" onClick={closeMobileMenu} className="mobile-sheet-row">
+              Log in
+            </Link>
+            <Link
+              href="/login"
+              onClick={closeMobileMenu}
+              className="flex min-h-12 items-center justify-center bg-[#F0EDE6] px-4 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#0C0C0C]"
+            >
+              Start free
+            </Link>
+          </div>
+        )}
+      </div>
+    </section>
     <AccountSettingsModal
       isOpen={accountSettingsOpen}
       onClose={() => setAccountSettingsOpen(false)}

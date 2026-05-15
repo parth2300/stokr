@@ -168,7 +168,7 @@ export default function AddToWatchlistButton({
       <button
         onClick={handleAddToWatchlist}
         disabled={isSaving}
-        className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-xl border border-white/[0.10] bg-[#0B0F16] px-4 py-2 text-sm font-bold text-[#DDE2FF] transition hover:bg-[#111722] disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
+        className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 border border-[#2E2D2A] bg-transparent px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[#F0EDE6] transition hover:bg-[#161616] disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
         title="Save to Research Tracker"
       >
         <span className="text-xl leading-none">+</span>
@@ -176,7 +176,7 @@ export default function AddToWatchlistButton({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-3 w-[min(18rem,calc(100vw-2rem))] rounded-xl border border-white/[0.10] bg-[#0B0F16] p-4 text-sm shadow-2xl max-sm:fixed max-sm:left-4 max-sm:right-4 max-sm:w-auto">
+        <div className="absolute right-0 z-50 mt-3 w-[min(18rem,calc(100vw-2rem))] border border-[#2E2D2A] bg-[#0C0C0C] p-4 text-sm max-sm:fixed max-sm:left-4 max-sm:right-4 max-sm:w-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-bold text-white">
@@ -196,7 +196,7 @@ export default function AddToWatchlistButton({
 
             <button
               onClick={() => setIsOpen(false)}
-              className="rounded-lg px-2 py-1 text-slate-400 hover:bg-white/10 hover:text-white"
+              className="px-2 py-1 text-[#9A9690] hover:bg-[#161616] hover:text-[#F0EDE6]"
             >
               ×
             </button>

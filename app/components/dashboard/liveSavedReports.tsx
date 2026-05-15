@@ -75,9 +75,9 @@ export default function LiveSavedReports() {
         </h2>
 
         <div className="mt-6 grid gap-3">
-          <div className="h-10 animate-pulse rounded-xl bg-white/10" />
-          <div className="h-10 animate-pulse rounded-xl bg-white/10" />
-          <div className="h-10 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-10 animate-pulse bg-[#222120]" />
+          <div className="h-10 animate-pulse bg-[#161616]" />
+          <div className="h-10 animate-pulse bg-[#222120]" />
         </div>
       </section>
     )
@@ -85,7 +85,7 @@ export default function LiveSavedReports() {
 
   if (error) {
     return (
-      <section className="min-w-0 rounded-xl border border-red-400/20 bg-red-500/10 p-5">
+      <section className="min-w-0 border border-[#D63C2F]/35 bg-[#D63C2F]/10 p-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-300">
           Research Briefs Error
         </p>
@@ -98,7 +98,7 @@ export default function LiveSavedReports() {
 
         <button
           onClick={loadSavedReports}
-          className="mt-5 rounded-xl border border-red-300/30 bg-red-500/15 px-4 py-2 text-sm font-semibold text-red-100 hover:bg-red-500/25"
+          className="stokr-button-danger mt-5"
         >
           Retry
         </button>
@@ -117,12 +117,12 @@ export default function LiveSavedReports() {
           Recent Research Briefs
         </h2>
 
-        <div className="mt-6 rounded-xl border border-dashed border-white/[0.14] bg-black/20 p-8 text-center">
+        <div className="mt-6 border border-dashed border-[#2E2D2A] bg-[#0C0C0C] p-8 text-center">
           <p className="text-lg font-semibold text-white">
             No research briefs yet.
           </p>
 
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-400">
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#9A9690]">
             Search a ticker to generate your first source-backed brief.
           </p>
 

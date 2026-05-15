@@ -7,7 +7,7 @@ function severityClass(severity: RiskAlert["severity"]) {
         case "Medium":
             return "border-yellow-400/30 bg-yellow-500/15 text-yellow-300"
         default:
-            return "border-slate-400/30 bg-slate-500/15 text-slate-300"
+            return "border-[#2E2D2A] bg-[#161616] text-[#9A9690]"
     }
 }
 
@@ -17,7 +17,7 @@ export default function RiskAlertsCard({
     alerts: RiskAlert[]
 }) {
     return (
-        <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#0D1118] p-5">
+        <section className="min-w-0 border border-[#222120] bg-[#111111] p-5">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="stokr-kicker">
@@ -29,7 +29,7 @@ export default function RiskAlertsCard({
                     </h2>
                 </div>
 
-                <button className="text-xs font-semibold text-[#19C37D] hover:text-white">
+                <button className="font-mono text-xs uppercase tracking-[0.12em] text-[#D63C2F] hover:text-[#F0EDE6]">
                     Tracked signals
                 </button>
             </div>
@@ -38,16 +38,16 @@ export default function RiskAlertsCard({
                 {alerts.map((alert) => (
                     <div
                         key={`${alert.ticker}-${alert.title}`}
-                        className="rounded-xl border border-white/10 bg-black/20 p-3"
+                        className="border border-[#222120] bg-[#0C0C0C] p-3"
                     >
                         <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <span className="rounded-md border border-white/[0.10] bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold text-[#DDE2FF]">
+                                    <span className="border border-[#2E2D2A] bg-[#161616] px-2 py-0.5 font-mono text-[10px] font-bold text-[#F0EDE6]">
                                         {alert.ticker}
                                     </span>
 
-                                    <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${severityClass(alert.severity)}`}>
+                                    <span className={`border px-2 py-0.5 font-mono text-[10px] font-bold ${severityClass(alert.severity)}`}>
                                         {alert.severity}
                                     </span>
                                 </div>
@@ -56,12 +56,12 @@ export default function RiskAlertsCard({
                                     {alert.title}
                                 </p>
 
-                                <p className="mt-1 text-xs leading-relaxed text-slate-400">
+                                <p className="mt-1 text-xs leading-relaxed text-[#9A9690]">
                                     {alert.description}
                                 </p>
                             </div>
 
-                            <p className="shrink-0 text-[10px] text-slate-500">
+                            <p className="shrink-0 font-mono text-[10px] text-[#3E3D3A]">
                                 {alert.timeAgo}
                             </p>
                         </div>

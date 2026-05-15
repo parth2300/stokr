@@ -12,7 +12,7 @@ export default function SavedReportsTable({
   reports: SavedReport[]
 }) {
   return (
-    <section className="min-w-0 rounded-xl border border-white/[0.09] bg-[#0D1118] p-5">
+    <section className="min-w-0 border border-[#222120] bg-[#111111] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="stokr-kicker">
@@ -24,12 +24,12 @@ export default function SavedReportsTable({
           </h2>
         </div>
 
-        <p className="text-xs text-[#7B8494]">
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-[#3E3D3A]">
           {reports.length} cached {reports.length === 1 ? "brief" : "briefs"}
         </p>
       </div>
 
-      <div className="mt-5 divide-y divide-white/[0.07] border-y border-white/[0.07]">
+      <div className="mt-5 divide-y divide-[#222120] border-y border-[#222120]">
         {reports.slice(0, 6).map((report) => {
           const formType = cleanValue(report.formType, "")
 

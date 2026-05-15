@@ -2,71 +2,102 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.08] bg-[#080A0D] px-4 py-10 text-sm text-[#94A3B8] sm:px-6 md:px-8 lg:px-10">
-      <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
-        <div className="min-w-0 space-y-2">
-          <p className="text-lg font-semibold text-white">stokr</p>
-          <p className="max-w-xl leading-6">
-            stokr provides informational research tools only and does not
-            provide financial advice.
+    <footer className="border-t border-[#222120] bg-[#0C0C0C]">
+      <div className="grid gap-8 border-b border-[#222120] p-6 sm:p-10 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] lg:p-12">
+        <div className="min-w-0 lg:pr-10">
+          <Link href="/" className="editorial-logo mb-4 block text-2xl">
+            stokr
+          </Link>
+          <p className="mb-5 max-w-md text-[11px] leading-[1.75] text-[#9A9690]">
+            The research desk for SEC filing intelligence. Source-backed briefs,
+            risk context, and transparent research trails for investors who want
+            less noise.
           </p>
+          <span className="font-mono text-[9px] uppercase tracking-[0.10em] text-[#3E3D3A]">
+            v1.0.0 / Vol. I / Issue No. 01
+          </span>
+        </div>
 
-          <p>
-            Powered by{" "}
+        <FooterColumn
+          title="Research"
+          links={[
+            ["Blog", "/blog"],
+            ["Compare", "/compare"],
+            ["Resources", "/resources"],
+            ["Glossary", "/glossary"],
+          ]}
+        />
+        <FooterColumn
+          title="Product"
+          links={[
+            ["Pricing", "/pricing"],
+            ["About", "/about"],
+            ["Research Tracker", "/watchlist"],
+          ]}
+        />
+        <FooterColumn
+          title="Legal"
+          links={[
+            ["Terms", "/terms"],
+            ["Privacy", "/privacy"],
+          ]}
+        />
+
+        <div>
+          <div className="mb-4 border-b border-[#222120] pb-2 font-mono text-[9px] uppercase tracking-[0.14em] text-[#3E3D3A]">
+            Connect
+          </div>
+          <div className="grid gap-2.5">
+            <a
+              href="mailto:stokrsupport@stokr.live"
+              className="break-all text-[11px] tracking-[0.02em] text-[#9A9690] transition hover:text-[#F0EDE6]"
+            >
+              stokrsupport@stokr.live
+            </a>
             <a
               href="https://safaraj.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#14B8A6] hover:text-white"
+              className="text-[11px] tracking-[0.02em] text-[#9A9690] transition hover:text-[#F0EDE6]"
             >
               safaraj.com
             </a>
-          </p>
-        </div>
-
-        <div>
-          <p className="font-semibold text-white">Research</p>
-          <div className="mt-3 grid gap-2.5">
-            <Link href="/blog" className="hover:text-white">
-              Blog
-            </Link>
-            <Link href="/compare" className="hover:text-white">
-              Compare Stocks
-            </Link>
-            <Link href="/resources" className="hover:text-white">
-              Resources
-            </Link>
-            <Link href="/glossary" className="hover:text-white">
-              Glossary
-            </Link>
           </div>
         </div>
+      </div>
 
-        <div>
-          <p className="font-semibold text-white">Legal</p>
-          <div className="mt-3 grid gap-2.5">
-            <Link href="/terms" className="hover:text-white">
-              Terms
-            </Link>
-            <Link href="/privacy" className="hover:text-white">
-              Privacy
-            </Link>
-            <Link href="/pricing" className="hover:text-white">
-              Pricing
-            </Link>
-          </div>
-        </div>
-
-        <div>
-          <p className="font-semibold text-white">Support</p>
-          <div className="mt-3 grid gap-2.5">
-            <a href="mailto:stokrsupport@stokr.live" className="break-all hover:text-white">
-              stokrsupport@stokr.live
-            </a>
-          </div>
-        </div>
+      <div className="flex flex-col gap-2 px-6 py-4 font-mono text-[9px] uppercase tracking-[0.10em] text-[#3E3D3A] sm:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+        <span>© MMXXVI stokr / Research Intelligence</span>
+        <span>stokr provides informational research tools only. Not financial advice.</span>
+        <span>SEC Filing Context</span>
       </div>
     </footer>
   )
 }
 
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string
+  links: [string, string][]
+}) {
+  return (
+    <div>
+      <div className="mb-4 border-b border-[#222120] pb-2 font-mono text-[9px] uppercase tracking-[0.14em] text-[#3E3D3A]">
+        {title}
+      </div>
+      <div className="grid gap-2.5">
+        {links.map(([label, href]) => (
+          <Link
+            key={href}
+            href={href}
+            className="text-[11px] tracking-[0.02em] text-[#9A9690] transition hover:text-[#F0EDE6]"
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}

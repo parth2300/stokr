@@ -64,7 +64,7 @@ export default function PremiumPreview({
           </p>
 
           {showCoupon && (
-            <p className="mt-4 rounded-lg border border-[#14B8A6]/25 bg-[#14B8A6]/10 px-4 py-3 text-sm font-medium text-[#DDE2FF]">
+            <p className="mt-4 border border-[#D63C2F]/25 bg-[#D63C2F]/10 px-4 py-3 text-sm font-medium text-[#F0EDE6]">
               Early users can try Full Research Desk with code 1MFREE.
             </p>
           )}
@@ -82,7 +82,7 @@ export default function PremiumPreview({
           {premiumFeatures.map((feature) => (
             <li
               key={feature}
-              className="rounded-lg border border-white/[0.08] bg-black/20 px-4 py-3"
+              className="border border-[#222120] bg-[#0C0C0C] px-4 py-3"
             >
               {feature}
             </li>

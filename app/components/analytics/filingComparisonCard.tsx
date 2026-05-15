@@ -83,7 +83,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                     <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#19C37D]">
+                        <p className="font-mono text-sm font-semibold uppercase tracking-[0.25em] text-[#D63C2F]">
                             Filing Delta
                         </p>
                         <InfoTooltip
@@ -110,7 +110,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
             </div>
 
             {!hasRequested && !comparison && (
-                <div className="mt-7 rounded-lg border border-white/10 bg-black/15 p-5">
+                <div className="mt-7 border border-[#222120] bg-[#0C0C0C] p-5">
                     <p className="text-sm leading-relaxed text-slate-300">
                         Load the latest cached Filing Delta when available.
                         If no cached Filing Delta exists for these filings,
@@ -120,7 +120,7 @@ export default function FilingComparisonCard({ ticker }: { ticker: string }) {
             )}
 
             {error && (
-                <div className="mt-7 rounded-lg border border-red-400/20 bg-red-500/10 p-5">
+                <div className="mt-7 border border-[#D63C2F]/30 bg-[#D63C2F]/10 p-5">
                     <p className="font-semibold text-red-300">Filing Delta unavailable</p>
                     <p className="mt-2 text-sm text-slate-300">{error}</p>
                 </div>

@@ -59,10 +59,10 @@ function DashboardPanelSkeleton({
         {title}
       </p>
 
-      <div className="mt-5 space-y-3">
-        <div className="h-5 w-1/2 animate-pulse rounded-full bg-white/10" />
-        <div className="h-4 w-3/4 animate-pulse rounded-full bg-white/10" />
-        <div className="h-4 w-2/3 animate-pulse rounded-full bg-white/10" />
+        <div className="mt-5 space-y-3">
+        <div className="h-5 w-1/2 animate-pulse bg-[#222120]" />
+        <div className="h-4 w-3/4 animate-pulse bg-[#222120]" />
+        <div className="h-4 w-2/3 animate-pulse bg-[#222120]" />
       </div>
     </section>
   )
@@ -144,7 +144,7 @@ function NextUpPanel({
   return (
     <section className="stokr-card p-5">
       <p className="stokr-kicker">Next Up</p>
-      <h2 className="mt-2 text-xl font-semibold text-white">{title}</h2>
+      <h2 className="mt-2 text-2xl font-semibold italic text-[#F0EDE6]">{title}</h2>
       <p className="mt-3 text-sm leading-6 text-[#A7ADBA]">{body}</p>
       <div className="mt-5">{actions}</div>
       <div className="mt-4 grid gap-2 border-t border-white/[0.07] pt-4 text-xs text-[#7B8494]">
@@ -269,27 +269,26 @@ export default function OptimizedDashboardContent() {
       <section className="stokr-shell">
         <div className="stokr-bg stokr-grid-bg" />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col">
+        <div className="relative z-10 flex w-full flex-col">
           <NavBar showSearch />
 
-          <section className="mt-6 space-y-6 pb-8">
+          <section className="page-inner space-y-8 pb-12 pt-14">
             <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-end">
               <div className="min-w-0">
                 <p className="stokr-kicker">
                   Full Research Desk
                 </p>
 
-                <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white xl:text-5xl">
+                <h1 className="mt-2 text-5xl font-semibold italic leading-[0.98] tracking-normal text-[#F0EDE6] xl:text-6xl">
                   Research Desk
                 </h1>
 
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-[#A3AAB8] xl:text-base">
+                <p className="mt-5 max-w-3xl text-sm leading-6 text-[#9A9690] xl:text-base">
                   Pick up where you left off. Open recent briefs, check your usage, and continue researching from one place.
                 </p>
 
-                <p className="mt-4 max-w-3xl border-l border-white/[0.10] pl-4 text-xs leading-5 text-[#7B8494] sm:text-sm">
-                  stokr provides informational research tools only and does not
-                  provide financial advice.
+                <p className="mt-4 max-w-3xl border-l border-[#2E2D2A] pl-4 font-mono text-xs uppercase leading-5 tracking-[0.14em] text-[#9A9690] sm:text-sm">
+                  stokr provides informational research tools only. Not financial advice.
                 </p>
               </div>
 
@@ -303,12 +302,12 @@ export default function OptimizedDashboardContent() {
               </div>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <LiveDashboardMetrics />
             </div>
 
-            <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.75fr)_minmax(320px,0.85fr)]">
-              <div className="min-w-0 space-y-5">
+            <div className="grid items-start gap-6 2xl:grid-cols-[minmax(0,1.75fr)_minmax(360px,0.85fr)]">
+              <div className="min-w-0 space-y-6">
                 {stage >= 1 ? (
                   <LiveSavedReports />
                 ) : (
@@ -318,7 +317,7 @@ export default function OptimizedDashboardContent() {
                 <LiveSavedCompanyMovement />
               </div>
 
-              <aside className="min-w-0 space-y-5">
+              <aside className="min-w-0 space-y-6">
                 <NextUpPanel
                   summary={summary}
                   isLoading={isSummaryLoading}
