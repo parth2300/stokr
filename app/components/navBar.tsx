@@ -3,6 +3,7 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { useEffect, useId, useRef, useState } from "react"
+import type { User } from "@supabase/supabase-js"
 import { supabase } from "../lib/supabase"
 import StockSearchBar from "./stockSearchBar"
 import { isUserPremium, PremiumProfile } from "../lib/premium"
@@ -24,7 +25,7 @@ function MobileSheetLink({
   children: ReactNode
 }) {
   return (
-    <Link href={href} onClick={onClick} className="mobile-sheet-row">
+    <Link href={href} prefetch={false} onClick={onClick} className="mobile-sheet-row">
       {children}
     </Link>
   )
@@ -43,14 +44,18 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
   const accountMenuRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const lastScrollYRef = useRef(0)
+  const loadedProfileForRef = useRef<string | null>(null)
   const sheetId = useId()
 
   useEffect(() => {
-    async function loadUser() {
-      const { data } = await supabase.auth.getUser()
-      const user = data.user
+    let isMounted = true
+
+    async function loadUser(sessionUser?: User | null) {
+      const user = sessionUser ?? null
 
       if (!user) {
+        loadedProfileForRef.current = null
+        if (!isMounted) return
         setUsername(null)
         setEmail(null)
         setIsSignedIn(false)
@@ -58,9 +63,13 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
         return
       }
 
+      if (!isMounted) return
       setIsSignedIn(true)
       setUsername(user.user_metadata?.username || user.email || "Account")
       setEmail(user.email || null)
+
+      if (loadedProfileForRef.current === user.id) return
+      loadedProfileForRef.current = user.id
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -72,18 +81,22 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
 
       const profile = profileData as Profile | null
 
+      if (!isMounted) return
       setIsPremium(isUserPremium(profile))
       setUsername(profile?.username || user.user_metadata?.username || user.email || "Account")
       setEmail(profile?.email || user.email || null)
     }
 
-    loadUser()
+    supabase.auth.getSession().then(({ data }) => {
+      loadUser(data.session?.user ?? null)
+    })
 
-    const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      loadUser()
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      loadUser(session?.user ?? null)
     })
 
     return () => {
+      isMounted = false
       listener.subscription.unsubscribe()
     }
   }, [])
@@ -182,21 +195,21 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
     <>
     <nav className="editorial-nav">
       <div className="flex min-w-0 items-center gap-8">
-        <Link href="/" className="editorial-logo shrink-0">stokr</Link>
+        <Link href="/" prefetch={false} className="editorial-logo shrink-0">stokr</Link>
 
         <div className="hidden min-w-0 items-center gap-6 xl:flex">
-          <Link href="/" className="editorial-nav-link">Research</Link>
-          <Link href="/compare" className="editorial-nav-link">Compare</Link>
+          <Link href="/" prefetch={false} className="editorial-nav-link">Research</Link>
+          <Link href="/compare" prefetch={false} className="editorial-nav-link">Compare</Link>
           {!isPremium && (
-            <Link href="/pricing" className="editorial-nav-link">Pricing</Link>
+            <Link href="/pricing" prefetch={false} className="editorial-nav-link">Pricing</Link>
           )}
-          <Link href="/about" className="editorial-nav-link">About</Link>
-          <Link href="/blog" className="editorial-nav-link">Blog</Link>
+          <Link href="/about" prefetch={false} className="editorial-nav-link">About</Link>
+          <Link href="/blog" prefetch={false} className="editorial-nav-link">Blog</Link>
           {isSignedIn && isPremium && (
-            <Link href="/dashboard" className="editorial-nav-link">Desk</Link>
+            <Link href="/dashboard" prefetch={false} className="editorial-nav-link">Desk</Link>
           )}
           {isSignedIn && (
-            <Link href="/watchlist" className="editorial-nav-link">Tracker</Link>
+            <Link href="/watchlist" prefetch={false} className="editorial-nav-link">Tracker</Link>
           )}
         </div>
       </div>
@@ -252,8 +265,8 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
           </div>
         ) : (
           <>
-            <Link href="/login" className="editorial-nav-link">Log in</Link>
-            <Link href="/login" className="stokr-button-primary min-h-0 px-[18px] py-2">Start free</Link>
+            <Link href="/login" prefetch={false} className="editorial-nav-link">Log in</Link>
+            <Link href="/login" prefetch={false} className="stokr-button-primary min-h-0 px-[18px] py-2">Start free</Link>
           </>
         )}
       </div>
@@ -365,11 +378,12 @@ export default function NavBar({ showSearch = false }: { showSearch?: boolean })
           </>
         ) : (
           <div className="grid gap-3">
-            <Link href="/login" onClick={closeMobileMenu} className="mobile-sheet-row">
+            <Link href="/login" prefetch={false} onClick={closeMobileMenu} className="mobile-sheet-row">
               Log in
             </Link>
             <Link
               href="/login"
+              prefetch={false}
               onClick={closeMobileMenu}
               className="flex min-h-12 items-center justify-center bg-[#F0EDE6] px-4 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#0C0C0C]"
             >

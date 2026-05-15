@@ -209,7 +209,7 @@ export default function StockSearchBar({
 
                     <button
                         type="submit"
-                        aria-label="Search ticker"
+                        aria-label={variant === "nav" ? "Search ticker" : undefined}
                         className={variant === "nav" ? "text-[#9A9690] transition hover:text-[#F0EDE6]" : "self-stretch bg-[#F0EDE6] px-5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#0C0C0C] transition hover:opacity-85"}
                     >
                         {variant === "nav" ? <SearchIcon size={iconSize} /> : "Analyze"}

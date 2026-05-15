@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="border-t border-[#222120] bg-[#0C0C0C]">
       <div className="grid gap-8 border-b border-[#222120] p-6 sm:p-10 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] lg:p-12">
         <div className="min-w-0 lg:pr-10">
-          <Link href="/" className="editorial-logo mb-4 block text-2xl">
+          <Link href="/" prefetch={false} className="editorial-logo mb-4 block text-2xl">
             stokr
           </Link>
           <p className="mb-5 max-w-md text-[11px] leading-[1.75] text-[#9A9690]">
@@ -92,6 +92,7 @@ function FooterColumn({
           <Link
             key={href}
             href={href}
+            prefetch={false}
             className="text-[11px] tracking-[0.02em] text-[#9A9690] transition hover:text-[#F0EDE6]"
           >
             {label}

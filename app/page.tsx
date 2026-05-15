@@ -86,19 +86,19 @@ export default function Home() {
             <StockSearchBar />
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-[#3E3D3A]">
               Try{" "}
-              <Link href="/stocks/nvda-stock-analysis" className="text-[#9A9690] hover:text-[#F0EDE6]">
+              <Link href="/stocks/nvda-stock-analysis" prefetch={false} className="text-[#9A9690] hover:text-[#F0EDE6]">
                 NVDA
               </Link>{" "}
               /{" "}
-              <Link href="/stocks/aapl-stock-analysis" className="text-[#9A9690] hover:text-[#F0EDE6]">
+              <Link href="/stocks/aapl-stock-analysis" prefetch={false} className="text-[#9A9690] hover:text-[#F0EDE6]">
                 AAPL
               </Link>{" "}
               /{" "}
-              <Link href="/stocks/msft-stock-analysis" className="text-[#9A9690] hover:text-[#F0EDE6]">
+              <Link href="/stocks/msft-stock-analysis" prefetch={false} className="text-[#9A9690] hover:text-[#F0EDE6]">
                 MSFT
               </Link>{" "}
               /{" "}
-              <Link href="/stocks/tsla-stock-analysis" className="text-[#9A9690] hover:text-[#F0EDE6]">
+              <Link href="/stocks/tsla-stock-analysis" prefetch={false} className="text-[#9A9690] hover:text-[#F0EDE6]">
                 TSLA
               </Link>
             </p>
@@ -484,7 +484,7 @@ function PricingColumn({
           </li>
         ))}
       </ul>
-      <Link href={href} className={featured ? "stokr-button-primary w-full" : "stokr-button-secondary w-full"}>
+      <Link href={href} prefetch={false} className={featured ? "stokr-button-primary w-full" : "stokr-button-secondary w-full"}>
         {cta}
       </Link>
     </div>

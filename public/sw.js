@@ -1,14 +1,9 @@
-const CACHE_NAME = "stokr-pwa-v2"
-
-const STATIC_ASSETS = [
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/maskable-icon-512.png",
-]
+const CACHE_NAME = "stokr-pwa-v3"
+const ICON_CACHE_NAME = `${CACHE_NAME}-icons`
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(ICON_CACHE_NAME)
   )
 
   self.skipWaiting()
@@ -21,7 +16,7 @@ self.addEventListener("activate", (event) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key !== CACHE_NAME)
+            .filter((key) => key !== CACHE_NAME && key !== ICON_CACHE_NAME)
             .map((key) => caches.delete(key))
         )
       )
@@ -52,8 +47,13 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/icons/")) {
     event.respondWith(
-      caches.match(request).then((cachedResponse) => {
-        return cachedResponse || fetch(request)
+      caches.open(ICON_CACHE_NAME).then((cache) => {
+        return caches.match(request).then((cachedResponse) => {
+          return cachedResponse || fetch(request).then((networkResponse) => {
+            cache.put(request, networkResponse.clone())
+            return networkResponse
+          })
+        })
       })
     )
   }

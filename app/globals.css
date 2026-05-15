@@ -6,10 +6,10 @@
   --bg3: #161616;
   --white: #F0EDE6;
   --white-dim: #9A9690;
-  --white-faint: #3E3D3A;
-  --white-ghost: #222120;
-  --red: #D63C2F;
-  --green: #3A7D44;
+  --white-faint: #A6A09A;
+  --white-ghost: #7A746E;
+  --red: #F06F63;
+  --green: #78B982;
   --border: #222120;
   --border-mid: #2E2D2A;
   --mono: var(--font-mono-editorial), "DM Mono", monospace;
@@ -36,6 +36,28 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   cursor: default;
+}
+
+.text-\[\#3E3D3A\],
+.placeholder\:text-\[\#3E3D3A\]::placeholder,
+.before\:text-\[\#3E3D3A\]::before {
+  color: var(--white-faint) !important;
+}
+
+.text-\[\#222120\] {
+  color: var(--white-ghost) !important;
+}
+
+.text-\[\#D63C2F\] {
+  color: var(--red) !important;
+}
+
+.text-\[\#B85A50\] {
+  color: #D98278 !important;
+}
+
+.text-\[\#5C9E6A\] {
+  color: var(--green) !important;
 }
 
 html {
